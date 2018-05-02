@@ -1,0 +1,7 @@
+struct Product {
+     int name;
+} p;
+
+int main() {
+     int Product;
+ }

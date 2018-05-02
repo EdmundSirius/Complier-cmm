@@ -1,0 +1,4 @@
+
+     struct Food2 {
+        int weight1 = 2;
+     } food2;
