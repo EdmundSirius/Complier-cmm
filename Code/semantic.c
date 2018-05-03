@@ -110,9 +110,9 @@ int handleStructSpecifier(Node* root, int flag) {
                 createStructNode(Child(1, 0)->text);
             }
         }
-        IN_STRUCT = 1;
+        ++IN_STRUCT;
         handleDefList(Child(3), flag);
-        IN_STRUCT = 0;
+        --IN_STRUCT;
         return getStructNo(Child(1, 0)->text);
     }
 
@@ -253,14 +253,10 @@ void handleVarDec(Node *root, int flag, int specifierNo) {
                 strcpy(thisfield->name, specifierStructName);
                 thistype->u.structure = thisfield;
                 insertVarSymbolTable(Child(0)->text, thistype);
-
-                insertStructList(thisfield);
-
-                // FieldList thisfield = (FieldList)malloc(sizeof(FieldList_));
-                // thisfield->type = thistype;
-                // strcpy(thisfield->name, Child(0, 0, 0)->text);
-                // insertVarSymbolTable(Child(0, 0, 0)->text, thistype);
+                // if (IN_STRUCT == 1) assert(0);
+                // assert(0);
                 // insertStructList(thisfield);
+
             }
             break;
 
@@ -346,6 +342,7 @@ void handleParamDec(Node* root, int flag, Function* function) {
         }
         else {
             insertVarSymbolTable(Child(1, 0)->text, thistype);
+            if (IN_STRUCT) assert(0);
         }
         // function->argbasic[function->argsum++] = thistype->u.basic;
 
@@ -472,7 +469,7 @@ void handleDec(Node* root, int flag, int specifierNo) {
     handleVarDec(Child(0), flag, specifierNo);
     if (Childsum == 3) {
         handleExp(Child(2), flag);
-        if (IN_STRUCT == 1) {
+        if (IN_STRUCT) {
             PrintSemErrorMsg(15, Child(0, 0)->lineno, Child(0, 0)->text);
             Type thistype = (Type)malloc(sizeof(Type_));
             thistype->kind = BASIC;
@@ -496,6 +493,8 @@ void handleDec(Node* root, int flag, int specifierNo) {
                 strcpy(thisfield->name, specifierStructName);
                 thistype->u.structure = thisfield;
                 insertVarSymbolTable(Child(0)->text, thistype);
+                insertStructList(thisfield);
+                // if (IN_STRUCT == 1) assert(0);
             }
         }
     }
