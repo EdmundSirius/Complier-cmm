@@ -68,6 +68,7 @@ test:
 	./parser ../Test/lab2_more/A-8.cmm;
 	./parser ../Test/lab2_more/A-9.cmm;
 	./parser ../Test/lab2_more/A-15.cmm;
+	./parser ../Test/lab2_more/E-3.cmm;
 
 clean:
 	rm -f parser lex.yy.c syntax.tab.c syntax.tab.h syntax.output

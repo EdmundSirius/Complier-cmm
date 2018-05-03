@@ -32,6 +32,12 @@ void insertVarSymbolTable(char* text, Type type) {
     else if (symboltable[key].type->kind == STRUCTURE) {
         printf("insert STRUCTURE[%d %s]: ", key, text);
         printf("name: %s \n", symboltable[key].type->u.structure->name);
+        FieldList fieldlist = symboltable[key].type->u.structure;
+        while (fieldlist->tail != NULL) {
+            fieldlist = fieldlist->tail;
+            printf(" %s; ", fieldlist->name);
+        }
+
     }
     else {
         printf("WTF INSERT!!!\n");
@@ -91,7 +97,6 @@ unsigned int hashPJW(char* name) {
 }
 
 void createStructNode(char* text) {
-    // printf("createStructNode: %s\n", text);
     StructNode structnode = (StructNode)malloc(sizeof(StructNode_));
     strcpy(structnode->name, text);
     strcpy(specifierStructName, text);
@@ -102,12 +107,13 @@ void createStructNode(char* text) {
     if (structlist == NULL) {
         structlist = structnode;
     }
+
     else if (structlist->next == NULL) {
         structlist->next = structnode;
     }
     else {
-        StructNode tmp = structnode->next;
-        while (tmp != NULL) {
+        StructNode tmp = structlist;
+        while (tmp->next != NULL) {
             tmp = tmp->next;
         }
         tmp->next = structnode;
@@ -159,7 +165,6 @@ void insertStructList(FieldList fieldlist) {
            }
            tmp = tmp->next;
         }
-        assert (tmp != NULL);
     }
 }
 
@@ -208,7 +213,6 @@ int getStructNo(char* name) {
 bool isInStructure(int no, char* name) {
     StructNode tmp = structlist;
     if (tmp == NULL) {
-        assert(0);
         return false;
     }
     else {
@@ -216,7 +220,6 @@ bool isInStructure(int no, char* name) {
             if (tmp->no == no) {
                 FieldList child = tmp->children;
                 if (child == NULL) {
-                    // assert(0);
                     return false;
                 }
 
@@ -262,61 +265,44 @@ void printStructChild(FieldList tmpfield) {
     printf("\n");
 }
 
+void printStructNode(StructNode tmp) {
+    int counter = 0;
+    printf("%s(%d)\n", tmp->name, tmp->no);
+    FieldList tmpfield = tmp->children;
+    if (tmpfield != NULL) {
+        if (tmpfield->tail == NULL) {
+            ++counter;
+            printStructChild(tmpfield);
+        }
+        else {
+          ++counter;
+          printStructChild(tmpfield);
+          do {
+              tmpfield = tmpfield->tail;
+              ++counter;
+              printStructChild(tmpfield);
+          } while (tmpfield->tail != NULL);
+      }
+    }
+    printf("Total %d children\n", counter);
+}
+
 void printStructList() {
     printf("------------------------------------------------\n");
     StructNode tmp = structlist;
-    if (tmp == NULL) {
-        return;
-    }
-    else if (tmp->next == NULL) {
-        printf("%s(%d)\n", tmp->name, tmp->no);
-        FieldList tmpfield = tmp->children;
-        if (tmpfield != NULL) {
-            if (tmpfield->tail == NULL) {
-                printStructChild(tmpfield);
-            }
-            else {
-              while (tmpfield->tail != NULL) {
-                  printStructChild(tmpfield);
-                  tmpfield = tmpfield->tail;
-              }
-              printStructChild(tmpfield);
-          }
-
+    if (tmp != NULL) {
+        if (tmp->next == NULL) {
+            printStructNode(tmp);
         }
-    }
-    else {
-        while (tmp != NULL) {
-
-            printf("%s(%d)\n", tmp->name, tmp->no);
-            FieldList tmpfield = tmp->children;
-            if (tmpfield != NULL) {
-                if (tmpfield->tail == NULL) {
-                    if (tmpfield->type->kind == BASIC) {
-                        printf("[%d][%s]", tmpfield->type->u.basic, tmpfield->name);
-                    }
-                    printf("\n");
-                }
-                else {
-                  while (tmpfield->tail != NULL) {
-                      if (tmpfield->type->kind == BASIC) {
-                          printf("[%d][%s]", tmpfield->type->u.basic, tmpfield->name);
-                      }
-                      printf("\n");
-                      tmpfield = tmpfield->tail;
-                  }
-                  if (tmpfield->type->kind == BASIC) {
-                      printf("[%d][%s]", tmpfield->type->u.basic, tmpfield->name);
-                  }
-                  printf("\n");
-              }
-
-            }
-            tmp = tmp->next;
+        else {
+            printStructNode(tmp);
+            do {
+                tmp = tmp->next;
+                printStructNode(tmp);
+            } while (tmp->next != NULL);
         }
     }
 }
-
 
  bool isStructVar(char* name) {
       unsigned int key = hashPJW(name);
@@ -326,16 +312,164 @@ void printStructList() {
       return false;
  }
 
- int getRetValue(char* name) {
-      unsigned int key = hashPJW(name);
-      assert(symboltable[key].occupied);
-      return symboltable[key].type->u.function.returnvalue;
- }
-
  bool isArray(char* name) {
       unsigned int key = hashPJW(name);
       if (symboltable[key].occupied && symboltable[key].type->kind == ARRAY) {
           return true;
       }
       return false;
+ }
+
+bool isEqualStruct(int node1, int node2) {
+    FieldList fieldlist1 = NULL;
+    FieldList fieldlist2 = NULL;
+    int no1 = 0;
+    int no2 = 0;
+    int no1_type[10];
+    int no2_type[10];
+    int no1_subtype[10];
+    int no2_subtype[10];
+
+    StructNode tmp = structlist;
+    assert (tmp != NULL);
+
+    while (tmp != NULL) {
+        if (tmp->no == node1) {
+            fieldlist1 = tmp->children;
+            if (fieldlist1 != NULL) {
+                if (fieldlist1->tail == NULL) {
+                    no1_type[no1] = fieldlist1->type->kind;
+                    if (fieldlist1->type->kind == BASIC) {
+                        no1_subtype[no1++] = fieldlist1->type->u.basic;
+                    }
+                    else if (fieldlist1->type->kind == ARRAY) {
+                        no1_subtype[no1++] = fieldlist1->type->u.array.size;
+                    }
+                    else if (fieldlist1->type->kind == STRUCTURE) {
+                        no1_subtype[no1++] = getStructNo(fieldlist1->type->u.structure->name);
+                    }
+                    else {
+                        assert(0);
+                    }
+                }
+                else {
+                  no1_type[no1] = fieldlist1->type->kind;
+                  if (fieldlist1->type->kind == BASIC) {
+                      no1_subtype[no1++] = fieldlist1->type->u.basic;
+                  }
+                  else if (fieldlist1->type->kind == ARRAY) {
+                      no1_subtype[no1++] = fieldlist1->type->u.array.size;
+                  }
+                  else if (fieldlist1->type->kind == STRUCTURE) {
+                      no1_subtype[no1++] = getStructNo(fieldlist1->type->u.structure->name);
+                  }
+                  else {
+                      assert(0);
+                  }
+                  do {
+                      fieldlist1 = fieldlist1->tail;
+                      no1_type[no1] = fieldlist1->type->kind;
+                      if (fieldlist1->type->kind == BASIC) {
+                          no1_subtype[no1++] = fieldlist1->type->u.basic;
+                      }
+                      else if (fieldlist1->type->kind == ARRAY) {
+                          no1_subtype[no1++] = fieldlist1->type->u.array.size;
+                      }
+                      else if (fieldlist1->type->kind == STRUCTURE) {
+                          no1_subtype[no1++] = getStructNo(fieldlist1->type->u.structure->name);
+                      }
+                      else {
+                          assert(0);
+                      }
+                  } while (fieldlist1->tail != NULL);
+              }
+            }
+            break;
+        }
+        if (tmp->next != NULL)
+            tmp = tmp->next;
+        else {
+            break;
+        }
+    }
+
+    tmp = structlist;
+    while (tmp != NULL) {
+        if (tmp->no == node2) {
+            fieldlist2 = tmp->children;
+            if (fieldlist2 != NULL) {
+                if (fieldlist2->tail == NULL) {
+                  no2_type[no2] = fieldlist2->type->kind;
+                  if (fieldlist2->type->kind == BASIC) {
+                      no2_subtype[no2++] = fieldlist2->type->u.basic;
+                  }
+                  else if (fieldlist2->type->kind == ARRAY) {
+                      no2_subtype[no2++] = fieldlist2->type->u.array.size;
+                  }
+                  else if (fieldlist2->type->kind == STRUCTURE) {
+                      no2_subtype[no2++] = getStructNo(fieldlist2->type->u.structure->name);
+                  }
+                  else {
+                      assert(0);
+                  }
+                }
+                else {
+                  no2_type[no2] = fieldlist2->type->kind;
+                  if (fieldlist2->type->kind == BASIC) {
+                      no2_subtype[no2++] = fieldlist2->type->u.basic;
+                  }
+                  else if (fieldlist2->type->kind == ARRAY) {
+                      no2_subtype[no2++] = fieldlist2->type->u.array.size;
+                  }
+                  else if (fieldlist2->type->kind == STRUCTURE) {
+                      no2_subtype[no2++] = getStructNo(fieldlist2->type->u.structure->name);
+                  }
+                  else {
+                      assert(0);
+                  }
+                  do {
+                      fieldlist2 = fieldlist2->tail;
+                      no2_type[no2] = fieldlist2->type->kind;
+                      if (fieldlist2->type->kind == BASIC) {
+                          no2_subtype[no2++] = fieldlist2->type->u.basic;
+                      }
+                      else if (fieldlist2->type->kind == ARRAY) {
+                          no2_subtype[no2++] = fieldlist2->type->u.array.size;
+                      }
+                      else if (fieldlist2->type->kind == STRUCTURE) {
+                          no2_subtype[no2++] = getStructNo(fieldlist2->type->u.structure->name);
+                      }
+                      else {
+                          assert(0);
+                      }
+                  } while (fieldlist1->tail != NULL);
+              }
+            }
+            break;
+        }
+        if (tmp->next != NULL)
+            tmp = tmp->next;
+        else {
+            break;
+        }
+    }
+
+
+    assert(fieldlist1 != NULL);
+    assert(fieldlist2 != NULL);
+
+    printf("%s %s %d %d\n", fieldlist1->name, fieldlist2->name, no1, no2);
+    int i = 0;
+    for (; i < no1; ++i) printf("%d(%d)", no1_type[i], no1_subtype[i]);
+    printf("\n");
+    i = 0;
+    for (; i < no2; ++i) printf("%d(%d)", no2_type[i], no2_subtype[i]);
+    printf("\n");
+    return false;
+}
+
+ int getRetValue(char* name) {
+      unsigned int key = hashPJW(name);
+      assert(symboltable[key].occupied);
+      return symboltable[key].type->u.function.returnvalue;
  }

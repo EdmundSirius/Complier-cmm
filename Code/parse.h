@@ -9,8 +9,8 @@
 #define MAX_CHILD_NUM 7
 
 // #define PRINT_DEBUG
-#define PHASE_1
-#define PHASE_2
+// #define PHASE_1
+// #define PHASE_2
 
 #ifdef PRINT_DEBUG
 

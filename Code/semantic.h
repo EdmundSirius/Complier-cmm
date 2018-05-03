@@ -141,10 +141,11 @@ void insertFuncSymbolTable(char* name, Function *function);
 bool findSymbolTable(char* text);
 void createStructNode(char* text);
 void insertStructList(FieldList);
-bool isStructVar(char* name);
 
+bool isStructVar(char* name);
 bool isInStructure(int, char*);
 bool isArray(char*);
+bool isEqualStruct(int, int);
 
 extern char functionName[128];
 extern char name[128];

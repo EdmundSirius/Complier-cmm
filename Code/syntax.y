@@ -104,7 +104,7 @@ ParamDec : Specifier VarDec { $$ = createNode("ParamDec", ""); insertNode(2, $$,
 /* Statements */
 
 CompSt : LC DefList StmtList RC { $$ = createNode("CompSt", ""); insertNode(4, $$, $1, $2, $3, $4); }
-  | LC error RC { myerror("Unvalid statement block"); }
+  // | LC error RC { myerror("Unvalid statement block"); }
   ;
 
 StmtList : Stmt StmtList { $$ = createNode("StmtList", ""); insertNode(2, $$, $1, $2); }
@@ -112,7 +112,7 @@ StmtList : Stmt StmtList { $$ = createNode("StmtList", ""); insertNode(2, $$, $1
   ;
 
 Stmt : Exp SEMI { $$ = createNode("Stmt", ""); insertNode(2, $$, $1, $2); }
-  | Exp error SEMI { myerror("Unvalid statement"); }
+  // | Exp error SEMI { myerror("Unvalid statement"); }
   | CompSt { $$ = createNode("Stmt", ""); insertNode(1, $$, $1); }
   | RETURN Exp SEMI { $$ = createNode("Stmt", ""); insertNode(3, $$, $1, $2, $3); }
   | IF LP Exp RP Stmt %prec LOWER_THAN_ELSE { $$ = createNode("Stmt", ""); insertNode(5, $$, $1, $2, $3, $4, $5); }
@@ -129,7 +129,6 @@ DefList : Def DefList { $$ = createNode("DefList", ""); insertNode(2, $$, $1, $2
   ;
 
 Def : Specifier DecList SEMI { $$ = createNode("Def", ""); insertNode(3, $$, $1, $2, $3); }
-  | error DecList SEMI { myerror("Unvalid identifier"); }
   ;
 
 DecList : Dec { $$ = createNode("DecList", ""); insertNode(1, $$, $1); }
@@ -158,8 +157,6 @@ Exp : Exp ASSIGNOP Exp { $$ = createNode("Exp", ""); insertNode(3, $$, $1, $2, $
   | ID LP Args RP { $$ = createNode("Exp", ""); insertNode(4, $$, $1, $2, $3, $4); }
   | ID LP RP { $$ = createNode("Exp", ""); insertNode(3, $$, $1, $2, $3); }
   | Exp LB Exp RB { $$ = createNode("Exp", ""); insertNode(4, $$, $1, $2, $3, $4); }
-  | Exp LB error RB { myerror("Missing \"]\""); }
-  | Exp LB Exp error { myerror("Missing \"]\""); }
   | Exp DOT ID { $$ = createNode("Exp", ""); insertNode(3, $$, $1, $2, $3); }
   | ID { $$ = createNode("Exp", ""); insertNode(1, $$, $1); }
   | INT { $$ = createNode("Exp", ""); insertNode(1, $$, $1); }
