@@ -34,6 +34,29 @@ syntax-c: $(YFILE)
 # 定义的一些伪目标
 .PHONY: clean test
 test:
+	./parser ../Test/final/1.txt;
+	./parser ../Test/final/2.txt;
+	./parser ../Test/final/3.txt;
+	./parser ../Test/final/4.txt;
+	./parser ../Test/final/5.txt;
+	./parser ../Test/final/6.txt;
+	./parser ../Test/final/7.txt;
+	./parser ../Test/final/8.txt;
+	./parser ../Test/final/9.txt;
+	./parser ../Test/final/10.txt;
+	./parser ../Test/final/11.txt;
+	./parser ../Test/final/12.txt;
+	./parser ../Test/final/13.txt;
+	./parser ../Test/final/14.txt;
+	./parser ../Test/final/15.txt;
+	./parser ../Test/final/16.txt;
+	./parser ../Test/final/17.txt;
+	./parser ../Test/final/18.txt;
+	./parser ../Test/final/19.txt;
+	./parser ../Test/final/20.txt;
+	./parser ../Test/final/21.txt;
+	./parser ../Test/final/22.txt;
+	./parser ../Test/final/23.txt;
 	./parser ../Test/pretest/1.txt;
 	./parser ../Test/pretest/2.txt;
 	./parser ../Test/pretest/3.txt;
@@ -64,11 +87,14 @@ test:
 	./parser ../Test/lab2_more/A-5.cmm;
 	./parser ../Test/lab2_more/A-6.cmm;
 	./parser ../Test/lab2_more/A-7.cmm;
-	./parser ../Test/lab2_more/A-12.cmm;
 	./parser ../Test/lab2_more/A-8.cmm;
 	./parser ../Test/lab2_more/A-9.cmm;
+	./parser ../Test/lab2_more/A-12.cmm;
 	./parser ../Test/lab2_more/A-15.cmm;
+	./parser ../Test/lab2_more/D-3.cmm;
 	./parser ../Test/lab2_more/E-3.cmm;
+	./parser ../Test/lab2_more/A-18.cmm;
+
 
 clean:
 	rm -f parser lex.yy.c syntax.tab.c syntax.tab.h syntax.output
