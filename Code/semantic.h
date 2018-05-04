@@ -151,5 +151,6 @@ extern char functionName[128];
 extern char name[128];
 extern char specifierName[128];
 extern char specifierStructName[128];
+extern char specifierSubStructName[128];
 
 #endif

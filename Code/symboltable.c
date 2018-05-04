@@ -1,6 +1,7 @@
 #include "semantic.h"
 
 char specifierStructName[128] = "";
+char specifierSubStructName[128] = "";
 int structNodeNo = -1;
 StructNode structlist;
 
@@ -256,11 +257,18 @@ void printSymbolTable() {
 
 void printStructChild(FieldList tmpfield) {
     if (tmpfield->type->kind == BASIC) {
-        printf("[%s][%d]", tmpfield->name, tmpfield->type->u.basic);
+        printf("*BASIC[%s][%d]", tmpfield->name, tmpfield->type->u.basic);
     }
     else if (tmpfield->type->kind == ARRAY) {
-        printf("[%s]:[%d] ", tmpfield->name, tmpfield->type->u.array.size);
+        printf("*ARRAY[%s]:[%d] ", tmpfield->name, tmpfield->type->u.array.size);
+        printf("kind: %d ", tmpfield->type->u.array.elem->kind);
+        if (tmpfield->type->u.array.elem->kind == BASIC) {
+            printf("basic: %d\n", tmpfield->type->u.array.elem->u.basic);
+        }
 
+    }
+    else if (tmpfield->type->kind == STRUCTURE) {
+        printf("*STRUCTURE[STRUCTURE] ");
     }
     printf("\n");
 }
@@ -284,7 +292,7 @@ void printStructNode(StructNode tmp) {
           } while (tmpfield->tail != NULL);
       }
     }
-    printf("Total %d children\n", counter);
+    printf("Total %d children\n\n", counter);
 }
 
 void printStructList() {
@@ -343,7 +351,7 @@ bool isEqualStruct(int node1, int node2) {
                         no1_subtype[no1++] = fieldlist1->type->u.basic;
                     }
                     else if (fieldlist1->type->kind == ARRAY) {
-                        no1_subtype[no1++] = fieldlist1->type->u.array.size;
+                        no1_subtype[no1++] = fieldlist1->type->u.array.elem->kind;
                     }
                     else if (fieldlist1->type->kind == STRUCTURE) {
                         no1_subtype[no1++] = getStructNo(fieldlist1->type->u.structure->name);
@@ -358,7 +366,7 @@ bool isEqualStruct(int node1, int node2) {
                       no1_subtype[no1++] = fieldlist1->type->u.basic;
                   }
                   else if (fieldlist1->type->kind == ARRAY) {
-                      no1_subtype[no1++] = fieldlist1->type->u.array.size;
+                      no1_subtype[no1++] = fieldlist1->type->u.array.elem->kind;
                   }
                   else if (fieldlist1->type->kind == STRUCTURE) {
                       no1_subtype[no1++] = getStructNo(fieldlist1->type->u.structure->name);
@@ -373,7 +381,7 @@ bool isEqualStruct(int node1, int node2) {
                           no1_subtype[no1++] = fieldlist1->type->u.basic;
                       }
                       else if (fieldlist1->type->kind == ARRAY) {
-                          no1_subtype[no1++] = fieldlist1->type->u.array.size;
+                          no1_subtype[no1++] = fieldlist1->type->u.array.elem->kind;
                       }
                       else if (fieldlist1->type->kind == STRUCTURE) {
                           no1_subtype[no1++] = getStructNo(fieldlist1->type->u.structure->name);
@@ -404,7 +412,7 @@ bool isEqualStruct(int node1, int node2) {
                       no2_subtype[no2++] = fieldlist2->type->u.basic;
                   }
                   else if (fieldlist2->type->kind == ARRAY) {
-                      no2_subtype[no2++] = fieldlist2->type->u.array.size;
+                      no2_subtype[no2++] = fieldlist2->type->u.array.elem->kind;
                   }
                   else if (fieldlist2->type->kind == STRUCTURE) {
                       no2_subtype[no2++] = getStructNo(fieldlist2->type->u.structure->name);
@@ -419,7 +427,7 @@ bool isEqualStruct(int node1, int node2) {
                       no2_subtype[no2++] = fieldlist2->type->u.basic;
                   }
                   else if (fieldlist2->type->kind == ARRAY) {
-                      no2_subtype[no2++] = fieldlist2->type->u.array.size;
+                      no2_subtype[no2++] = fieldlist2->type->u.array.elem->kind;
                   }
                   else if (fieldlist2->type->kind == STRUCTURE) {
                       no2_subtype[no2++] = getStructNo(fieldlist2->type->u.structure->name);
@@ -434,7 +442,7 @@ bool isEqualStruct(int node1, int node2) {
                           no2_subtype[no2++] = fieldlist2->type->u.basic;
                       }
                       else if (fieldlist2->type->kind == ARRAY) {
-                          no2_subtype[no2++] = fieldlist2->type->u.array.size;
+                          no2_subtype[no2++] = fieldlist2->type->u.array.elem->kind;
                       }
                       else if (fieldlist2->type->kind == STRUCTURE) {
                           no2_subtype[no2++] = getStructNo(fieldlist2->type->u.structure->name);
@@ -458,14 +466,27 @@ bool isEqualStruct(int node1, int node2) {
     assert(fieldlist1 != NULL);
     assert(fieldlist2 != NULL);
 
-    printf("%s %s %d %d\n", fieldlist1->name, fieldlist2->name, no1, no2);
     int i = 0;
-    for (; i < no1; ++i) printf("%d(%d)", no1_type[i], no1_subtype[i]);
-    printf("\n");
+    printf("%s %s %d %d\n", fieldlist1->name, fieldlist2->name, no1, no2);
+    if (no1 != no2) return false;
+    else {
+         i = 0;
+        for (; i < no1; ++i) {
+            if (no1_type[i] != no2_type[i]) return false;
+            if (no1_subtype[i] != no2_subtype[i]) return false;
+        }
+    }
+
     i = 0;
-    for (; i < no2; ++i) printf("%d(%d)", no2_type[i], no2_subtype[i]);
+    for (; i < no1; ++i)
+        printf("%d(%d)", no1_type[i], no1_subtype[i]);
     printf("\n");
-    return false;
+
+    i = 0;
+    for (; i < no2; ++i)
+      printf("%d(%d)", no2_type[i], no2_subtype[i]);
+    printf("\n");
+    return true;
 }
 
  int getRetValue(char* name) {
