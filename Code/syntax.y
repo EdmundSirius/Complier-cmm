@@ -104,7 +104,6 @@ ParamDec : Specifier VarDec { $$ = createNode("ParamDec", ""); insertNode(2, $$,
 /* Statements */
 
 CompSt : LC DefList StmtList RC { $$ = createNode("CompSt", ""); insertNode(4, $$, $1, $2, $3, $4); }
-  // | LC error RC { myerror("Unvalid statement block"); }
   ;
 
 StmtList : Stmt StmtList { $$ = createNode("StmtList", ""); insertNode(2, $$, $1, $2); }
@@ -112,7 +111,6 @@ StmtList : Stmt StmtList { $$ = createNode("StmtList", ""); insertNode(2, $$, $1
   ;
 
 Stmt : Exp SEMI { $$ = createNode("Stmt", ""); insertNode(2, $$, $1, $2); }
-  // | Exp error SEMI { myerror("Unvalid statement"); }
   | CompSt { $$ = createNode("Stmt", ""); insertNode(1, $$, $1); }
   | RETURN Exp SEMI { $$ = createNode("Stmt", ""); insertNode(3, $$, $1, $2, $3); }
   | IF LP Exp RP Stmt %prec LOWER_THAN_ELSE { $$ = createNode("Stmt", ""); insertNode(5, $$, $1, $2, $3, $4, $5); }

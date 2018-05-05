@@ -91,9 +91,12 @@ test:
 	./parser ../Test/lab2_more/A-9.cmm;
 	./parser ../Test/lab2_more/A-12.cmm;
 	./parser ../Test/lab2_more/A-15.cmm;
+	./parser ../Test/lab2_more/A-18.cmm;
 	./parser ../Test/lab2_more/D-3.cmm;
 	./parser ../Test/lab2_more/E-3.cmm;
-	./parser ../Test/lab2_more/A-18.cmm;
+	./parser ../Test/lab2_more/A-17.cmm;
+	./parser ../Test/lab2_more/A-16.cmm;
+
 
 
 clean:

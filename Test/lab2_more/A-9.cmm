@@ -2,7 +2,6 @@ struct INTPair {
      int a;
      int b;
 };
-
 struct INT {
      int a2;
      int b2;

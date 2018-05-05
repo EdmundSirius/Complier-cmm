@@ -8,11 +8,10 @@
 
 #define MAX_CHILD_NUM 7
 
-// #define PRINT_DEBUG
-// #define PHASE_1
-// #define PHASE_2
+// #define PRINT_TRACE
+// #define PHASE_SEM
 
-#ifdef PRINT_DEBUG
+#ifdef PRINT_TRACE
 
 #define CreateNode(node_name) \
 yylval.node = createNode(node_name, yytext); printf("%s\n", node_name)

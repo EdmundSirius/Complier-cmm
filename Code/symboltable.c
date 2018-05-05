@@ -21,7 +21,7 @@ void insertVarSymbolTable(char* text, Type type) {
 
     strcpy(symboltable[key].name, text);
 
-#ifdef PHASE_2
+#ifdef PHASE_SEM
     if (symboltable[key].type->kind == BASIC) {
         printf("insert BASIC[%d %s]: kind:", key, text);
         printf("%d\n", symboltable[key].type->u.basic);
@@ -41,7 +41,7 @@ void insertVarSymbolTable(char* text, Type type) {
 
     }
     else {
-        printf("WTF INSERT!!!\n");
+        printf("WT* INSERT!!!\n");
     }
 #endif
 
@@ -51,7 +51,7 @@ void insertFuncSymbolTable(char* name, Function *function) {
 
     unsigned int key = hashPJW(name);
     if (symboltable[key].occupied) {
-        assert("WTF\n");
+        assert(0);
     }
     symboltable[key].occupied = true;
 
@@ -62,7 +62,7 @@ void insertFuncSymbolTable(char* name, Function *function) {
     symboltable[key].type = thistype;
     strcpy(symboltable[key].name, name);
 
-#ifdef PHASE_2
+#ifdef PHASE_SEM
     printf("insert FUNCTION[%d %s]: ", key, name);
     printf("ret[%d]; ", symboltable[key].type->u.function.returnvalue);
     printf("argsum[%d]\n", symboltable[key].type->u.function.argsum);
@@ -199,7 +199,7 @@ int getStructNo(char* name) {
       else {
           while (tmp != NULL) {
               if (!strcmp(tmp->name, name)) {
-                  return (10 + tmp->no);
+                  return (20 + tmp->no);
               }
               if (tmp->next != NULL)
                   tmp = tmp->next;
@@ -210,6 +210,28 @@ int getStructNo(char* name) {
       }
       return 0;
 }
+
+
+ void getStructName(int no, char* name) {
+     StructNode tmp = structlist;
+     if (tmp == NULL) {
+        return;
+     }
+     else {
+         while (tmp != NULL) {
+             if (tmp->no == no) {
+                 strcpy(name, tmp->name);
+                 return;
+             }
+             if (tmp->next != NULL)
+                 tmp = tmp->next;
+             else {
+                 break;
+             }
+         }
+     }
+     return;
+ }
 
 bool isInStructure(int no, char* name) {
     StructNode tmp = structlist;
@@ -257,10 +279,10 @@ void printSymbolTable() {
 
 void printStructChild(FieldList tmpfield) {
     if (tmpfield->type->kind == BASIC) {
-        printf("*BASIC[%s][%d]", tmpfield->name, tmpfield->type->u.basic);
+        printf("* BASIC[%s][%d]", tmpfield->name, tmpfield->type->u.basic);
     }
     else if (tmpfield->type->kind == ARRAY) {
-        printf("*ARRAY[%s]:[%d] ", tmpfield->name, tmpfield->type->u.array.size);
+        printf("* ARRAY[%s]:[%d] ", tmpfield->name, tmpfield->type->u.array.size);
         printf("kind: %d ", tmpfield->type->u.array.elem->kind);
         if (tmpfield->type->u.array.elem->kind == BASIC) {
             printf("basic: %d\n", tmpfield->type->u.array.elem->u.basic);
@@ -268,7 +290,7 @@ void printStructChild(FieldList tmpfield) {
 
     }
     else if (tmpfield->type->kind == STRUCTURE) {
-        printf("*STRUCTURE[STRUCTURE] ");
+        printf("* STRUCTURE[%s] \n", tmpfield->type->u.structure->name);
     }
     printf("\n");
 }
@@ -328,6 +350,14 @@ void printStructList() {
       return false;
  }
 
+ bool isFunction(char* name) {
+     unsigned int key = hashPJW(name);
+     if (symboltable[key].occupied && symboltable[key].type->kind == FUNCTION) {
+         return true;
+     }
+     return false;
+ }
+
 bool isEqualStruct(int node1, int node2) {
     FieldList fieldlist1 = NULL;
     FieldList fieldlist2 = NULL;
@@ -342,7 +372,9 @@ bool isEqualStruct(int node1, int node2) {
     assert (tmp != NULL);
 
     while (tmp != NULL) {
+        // printf("%d %d\n", tmp->no, node1);
         if (tmp->no == node1) {
+
             fieldlist1 = tmp->children;
             if (fieldlist1 != NULL) {
                 if (fieldlist1->tail == NULL) {
@@ -462,12 +494,11 @@ bool isEqualStruct(int node1, int node2) {
         }
     }
 
-
     assert(fieldlist1 != NULL);
     assert(fieldlist2 != NULL);
 
     int i = 0;
-    printf("%s %s %d %d\n", fieldlist1->name, fieldlist2->name, no1, no2);
+
     if (no1 != no2) return false;
     else {
          i = 0;
@@ -477,15 +508,6 @@ bool isEqualStruct(int node1, int node2) {
         }
     }
 
-    i = 0;
-    for (; i < no1; ++i)
-        printf("%d(%d)", no1_type[i], no1_subtype[i]);
-    printf("\n");
-
-    i = 0;
-    for (; i < no2; ++i)
-      printf("%d(%d)", no2_type[i], no2_subtype[i]);
-    printf("\n");
     return true;
 }
 

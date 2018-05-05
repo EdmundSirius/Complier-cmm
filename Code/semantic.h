@@ -91,27 +91,28 @@ printf("Error type \033[;31m%d\033[0m at Line %d: \033[;31m%s\033[0m.\n", type, 
 
 void semanticAnalysis();
 
-void handleCompSt(Node*, int, int);
-void handleExtDef(Node*, int);
-void handleFunDec(Node*, int, Function*, char*);
-void handleVarDec(Node*, int, int);
-int handleSpecifier(Node*, int);
-void handleExtDecList(Node*, int, int);
-void handleExtDefList(Node*, int);
-void handleDefList(Node*, int);
-void handleStmtList(Node*, int, int);
-void handleDef(Node*, int);
-void handleStmt(Node*, int, int);
-void handleDecList(Node*, int, int);
-int handleExp(Node*, int);
-void handleDec(Node*, int, int);
-void handleArgs(Node*,int);
-void handleVarList(Node*, int, Function*);
-void handleParamDec(Node*, int, Function*);
-void handleDecList(Node*, int, int);
-int handleStructSpecifier(Node*, int);
+void handleCompSt(Node*, int);
+void handleExtDef(Node*);
+void handleFunDec(Node*, Function*, char*);
+void handleVarDec(Node*, int);
+int handleSpecifier(Node*);
+void handleExtDecList(Node*, int);
+void handleExtDefList(Node*);
+void handleDefList(Node*);
+void handleStmtList(Node*, int);
+void handleDef(Node*);
+void handleStmt(Node*, int);
+void handleDecList(Node*, int);
+int handleExp(Node*);
+void handleDec(Node*, int);
+void handleArgs(Node*);
+void handleVarList(Node*, Function*);
+void handleParamDec(Node*, Function*);
+void handleDecList(Node*, int);
+int handleStructSpecifier(Node*);
 
 int getStructNo(char*);
+void getStructName(int, char*);
 void getSpecifierName(int, char*, FieldList*);
 int getHandleExpType(Node*);
 
@@ -120,18 +121,16 @@ void compareOperandType(Node*, Node*);
 void initSymbolTable();
 void printSymbolTable();
 void printStructList();
-int getType(char*);
 int getFuncReturnType(char*);
 int getArgSum(Node*);
 int getVarSum(Node*);
 void getVarType(int[], int, Node*);
-int getExpType(Node*);
 void getFuncPrototype(char*, char*);
 void getArgType(int*, Node*);
 void getArguments(char*, int*, int);
 bool isLegalField(Node*, Node*);
 
-int getNodeType(Node* node, int);
+int getNodeType(Node* node);
 int getRetValue(char*);
 // #define HANDLE_DEBUG
 
@@ -146,6 +145,7 @@ bool isStructVar(char* name);
 bool isInStructure(int, char*);
 bool isArray(char*);
 bool isEqualStruct(int, int);
+bool isFunction(char*);
 
 extern char functionName[128];
 extern char name[128];
