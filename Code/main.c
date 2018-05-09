@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "parse.h"
 #include "semantic.h"
+#include "translate.h"
 extern void yyparse();
 extern void yyrestart(FILE*);
 
@@ -15,20 +16,22 @@ int main(int argc, char** argv) {
     yyrestart(f);
     yyparse();
 
-#ifndef PRINT_DEBUG
+#ifndef PRINT_TRACE
     if (!errorNum)
 #endif
 
     {
-#ifdef PRINT_DEBUG
+#ifdef PRINT_TRACE
         printf("errorNum: %d\n", errorNum);
 #endif
 
-#ifdef PHASE_1
+#ifdef PRINT_TRACE
         printTree(root, 0);
 #endif
 
+        preInterCodeGenerate();
         semanticAnalysis();
+        interCodeGenerate();
 
     }
 

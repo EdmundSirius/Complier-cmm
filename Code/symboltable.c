@@ -3,6 +3,7 @@
 char specifierStructName[128] = "";
 char specifierSubStructName[128] = "";
 int structNodeNo = -1;
+int funcNo = 0;
 StructNode structlist;
 
 void insertVarSymbolTable(char* text, Type type) {
@@ -21,7 +22,7 @@ void insertVarSymbolTable(char* text, Type type) {
 
     strcpy(symboltable[key].name, text);
 
-#ifdef PHASE_SEM
+#ifdef PRINT_TABLE
     if (symboltable[key].type->kind == BASIC) {
         printf("insert BASIC[%d %s]: kind:", key, text);
         printf("%d\n", symboltable[key].type->u.basic);
@@ -62,12 +63,19 @@ void insertFuncSymbolTable(char* name, Function *function) {
     symboltable[key].type = thistype;
     strcpy(symboltable[key].name, name);
 
-#ifdef PHASE_SEM
+    functionTable[funcNo].type = thistype;
+    strcpy(functionTable[funcNo++].name, name);
+
+#ifdef PRINT_TABLE
     printf("insert FUNCTION[%d %s]: ", key, name);
     printf("ret[%d]; ", symboltable[key].type->u.function.returnvalue);
     printf("argsum[%d]\n", symboltable[key].type->u.function.argsum);
 #endif
 
+}
+
+void getFuncName(char* name, int no) {
+    strcpy(name, functionTable[no].name);
 }
 
 bool findSymbolTable(char* text) {
@@ -272,8 +280,16 @@ void printSymbolTable() {
     int i = 0;
     for (; i < SYMBOL_TABLE_SIZE; ++i) {
         if (symboltable[i].occupied) {
-            printf("*%s\t\t%d*\n", symboltable[i].name, symboltable[i].type->kind);
+            printf("* %s\t\t%d *\n", symboltable[i].name, symboltable[i].type->kind);
         }
+    }
+
+    printf("------------------------------------------------\n");
+    i = 0;
+    for (; i < funcNo; ++i) {
+        printf("* %d: * %s ", i, functionTable[i].name);
+        printf("ret[%d]; ", functionTable[i].type->u.function.returnvalue);
+        printf("argSum[%d]\n", functionTable[i].type->u.function.argsum);
     }
 }
 
@@ -372,7 +388,7 @@ bool isEqualStruct(int node1, int node2) {
     assert (tmp != NULL);
 
     while (tmp != NULL) {
-        // printf("%d %d\n", tmp->no, node1);
+
         if (tmp->no == node1) {
 
             fieldlist1 = tmp->children;

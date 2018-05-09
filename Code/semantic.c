@@ -13,7 +13,7 @@ void semanticAnalysis() {
     if (!strcmp(root->name, "Program")) {
         handleExtDefList(Child(0));
     }
-#ifdef PHASE_SEM
+#ifdef PRINT_TABLE
     printSymbolTable();
     printStructList();
 #endif

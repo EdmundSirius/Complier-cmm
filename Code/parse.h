@@ -10,6 +10,7 @@
 
 // #define PRINT_TRACE
 // #define PHASE_SEM
+#define PRINT_TABLE
 
 #ifdef PRINT_TRACE
 

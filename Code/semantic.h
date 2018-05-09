@@ -20,6 +20,7 @@ typedef struct Function
     int argbasic[8];
 } Function;
 
+
 typedef struct Type_
 {
     enum { BASIC, ARRAY, STRUCTURE, FUNCTION } kind;
@@ -39,12 +40,16 @@ typedef struct FieldList_
     FieldList tail;
 } FieldList_;
 
-struct SymbolTable {
+typedef struct SymbolTable {
 	 char name[32];
    Type type;
    int lineno;
    bool occupied;
-} symboltable[0x4000];
+} SymbolTable;
+
+struct SymbolTable symboltable[0x4000];
+
+struct SymbolTable functionTable[128];
 
 typedef struct StructNode_ {
     int no;
@@ -130,8 +135,9 @@ void getArgType(int*, Node*);
 void getArguments(char*, int*, int);
 bool isLegalField(Node*, Node*);
 
-int getNodeType(Node* node);
+int getNodeType(Node*);
 int getRetValue(char*);
+void getFuncName(char*, int);
 // #define HANDLE_DEBUG
 
 unsigned int hashPJW(char* name);
