@@ -5,11 +5,11 @@
 %}
 DIGIT [0-9]
 DIGITS {DIGIT}+
-DEC [+-]?(0|([1-9][0-9]*))
-OCT [+-]?0[1-7][0-7]*
-OCT_ERR [+-]?0{DIGITS}
-HEX [+-]?0[Xx][0-9A-Fa-f]+
-HEX_ERR [+-]?0[Xx][0-9A-Za-z_]*
+DEC (0|([1-9][0-9]*))
+OCT 0[1-7][0-7]*
+OCT_ERR 0{DIGITS}
+HEX 0[Xx][0-9A-Fa-f]+
+HEX_ERR 0[Xx][0-9A-Za-z_]*
 INT {DEC}|{OCT}|{HEX}
 FLOAT {DEC}\.{DIGITS}
 FLOAT_ERR ({DIGITS}[0-9A-Za-z_]*\.[0-9A-Za-z_\.+-]*)|(\.{DIGITS}[0-9A-Za-z_+-]*)

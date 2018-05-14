@@ -4,13 +4,12 @@
     extern int yylex(void);
     extern void yyerror(char* msg);
     extern void myerror(char* msg);
-    extern void semerror(char* msg);
-    Node *root = NULL;
+    Node root = NULL;
 
 %}
 
 %union {
-    struct TreeNode* node;
+    Node node;
 }
 
 /* declared tokens */
@@ -175,8 +174,4 @@ void yyerror(char* msg) {
 void myerror(char* msg) {
     errorNum++;
     PrintErrorMsg("B", msg);
-}
-
-void semerror(char* msg) {
-    printf("%s\n", msg);
 }

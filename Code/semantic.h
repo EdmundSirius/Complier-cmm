@@ -41,15 +41,18 @@ typedef struct FieldList_
 } FieldList_;
 
 typedef struct SymbolTable {
-	 char name[32];
-   Type type;
-   int lineno;
-   bool occupied;
+    int t_no;
+  	char name[32];
+    Type type;
+    int lineno;
+    bool occupied;
 } SymbolTable;
 
 struct SymbolTable symboltable[0x4000];
 
 struct SymbolTable functionTable[128];
+
+struct SymbolTable varTable[128];
 
 typedef struct StructNode_ {
     int no;
@@ -96,48 +99,50 @@ printf("Error type \033[;31m%d\033[0m at Line %d: \033[;31m%s\033[0m.\n", type, 
 
 void semanticAnalysis();
 
-void handleCompSt(Node*, int);
-void handleExtDef(Node*);
-void handleFunDec(Node*, Function*, char*);
-void handleVarDec(Node*, int);
-int handleSpecifier(Node*);
-void handleExtDecList(Node*, int);
-void handleExtDefList(Node*);
-void handleDefList(Node*);
-void handleStmtList(Node*, int);
-void handleDef(Node*);
-void handleStmt(Node*, int);
-void handleDecList(Node*, int);
-int handleExp(Node*);
-void handleDec(Node*, int);
-void handleArgs(Node*);
-void handleVarList(Node*, Function*);
-void handleParamDec(Node*, Function*);
-void handleDecList(Node*, int);
-int handleStructSpecifier(Node*);
+void handleCompSt(Node, int);
+void handleExtDef(Node);
+void handleFunDec(Node, Function*, char*);
+void handleVarDec(Node, int);
+int handleSpecifier(Node);
+void handleExtDecList(Node, int);
+void handleExtDefList(Node);
+void handleDefList(Node);
+void handleStmtList(Node, int);
+void handleDef(Node);
+void handleStmt(Node, int);
+void handleDecList(Node, int);
+int handleExp(Node);
+void handleDec(Node, int);
+void handleArgs(Node);
+void handleVarList(Node, Function*);
+void handleParamDec(Node, Function*);
+void handleDecList(Node, int);
+int handleStructSpecifier(Node);
 
 int getStructNo(char*);
 void getStructName(int, char*);
 void getSpecifierName(int, char*, FieldList*);
-int getHandleExpType(Node*);
+int getHandleExpType(Node);
 
-void compareType(Node*, Node*);
-void compareOperandType(Node*, Node*);
+void compareType(Node, Node);
+void compareOperandType(Node, Node);
 void initSymbolTable();
 void printSymbolTable();
 void printStructList();
 int getFuncReturnType(char*);
-int getArgSum(Node*);
-int getVarSum(Node*);
-void getVarType(int[], int, Node*);
+int getArgSum(Node);
+int getVarSum(Node);
+void getVarType(int[], int, Node);
 void getFuncPrototype(char*, char*);
-void getArgType(int*, Node*);
+void getArgType(int*, Node);
 void getArguments(char*, int*, int);
-bool isLegalField(Node*, Node*);
+bool isLegalField(Node, Node);
 
-int getNodeType(Node*);
+int getNodeType(Node);
 int getRetValue(char*);
 void getFuncName(char*, int);
+int getFuncNo(char*);
+int getOpVarNo(char*);
 // #define HANDLE_DEBUG
 
 unsigned int hashPJW(char* name);

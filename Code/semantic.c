@@ -20,7 +20,7 @@ void semanticAnalysis() {
 }
 
 // ExtDefList -> ExtDef ExtDefList | ϵ
-void handleExtDefList(Node* root) {
+void handleExtDefList(Node root) {
     if (Childsum == 0) return;
     // Iteration is better than recursion.
     while (root != NULL) {
@@ -35,7 +35,7 @@ void handleExtDefList(Node* root) {
 
 // ExtDef -> Specifier ExtDecList SEMI
 // | Specifier SEMI | Specifier FunDec CompSt
-void handleExtDef(Node* root) {
+void handleExtDef(Node root) {
     int specifierNo;
     if (!strcmp(Child(1)->name, "ExtDecList")) {
         FLAG = 3;
@@ -73,7 +73,7 @@ void handleExtDef(Node* root) {
 }
 
 // Specifier -> TYPE | StructSpecifier
-int handleSpecifier(Node* root) {
+int handleSpecifier(Node root) {
     if (!strcmp(Child(0)->name, "StructSpecifier")) {
         return handleStructSpecifier(Child(0));
     }
@@ -87,7 +87,7 @@ int handleSpecifier(Node* root) {
 
 
 // StructSpecifier -> STRUCT OptTag LC DefList RC | STRUCT Tag
-int handleStructSpecifier(Node* root) {
+int handleStructSpecifier(Node root) {
 
     if (Childsum == 5) {
         // OptTag -> ID | ϵ
@@ -127,7 +127,7 @@ int handleStructSpecifier(Node* root) {
 }
 
 // ExtDecList -> VarDec | VarDec COMMA ExtDecList
-void handleExtDecList(Node* root, int specifierNo) {
+void handleExtDecList(Node root, int specifierNo) {
 
     handleVarDec(Child(0), specifierNo);
     if (Childsum > 1) {
@@ -140,7 +140,7 @@ void handleExtDecList(Node* root, int specifierNo) {
 }
 
 // VarDec -> ID | VarDec LB INT RB
-void handleVarDec(Node *root, int specifierNo) {
+void handleVarDec(Node root, int specifierNo) {
     Type thistype = (Type)malloc(sizeof(Type_));
     char specifierName[128];
     if (Childsum == 4) {
@@ -163,6 +163,7 @@ void handleVarDec(Node *root, int specifierNo) {
             thistype->u.array.elem = elemtype;
             thistype->u.array.size = atoi(Child(2)->text);
 
+            assert(0);
             insertVarSymbolTable(Child(0, 0)->text, thistype);
 
             FieldList thisfield = (FieldList)malloc(sizeof(FieldList_));
@@ -194,6 +195,7 @@ void handleVarDec(Node *root, int specifierNo) {
             FieldList thisfield = (FieldList)malloc(sizeof(FieldList_));
             thisfield->type = thistype;
             strcpy(thisfield->name, Child(0, 0, 0)->text);
+            assert(0);
             insertVarSymbolTable(Child(0, 0, 0)->text, thistype);
 
             #ifdef PHASE_SEM
@@ -281,6 +283,7 @@ void handleVarDec(Node *root, int specifierNo) {
                 printf("insert_3: %d (%s) %s\n", IN_STRUCT, specifierSubStructName, specifierStructName);
                 #endif
 
+                assert(0);
                 insertVarSymbolTable(Child(0)->text, thistype);
 
                 insertStructList(thisfield);
@@ -298,7 +301,7 @@ void handleVarDec(Node *root, int specifierNo) {
 
 // FunDec -> ID LP VarList RP
 // | ID LP RP
-void handleFunDec(Node* root, Function *function, char* functionName) {
+void handleFunDec(Node root, Function *function, char* functionName) {
     strcpy(functionName, Child(0)->text);
     if (Childsum == 4) {
         handleVarList(Child(2), function);
@@ -316,7 +319,7 @@ void handleFunDec(Node* root, Function *function, char* functionName) {
 }
 
 // VarList -> ParamDec COMMA VarList | ParamDec
-void handleVarList(Node* root, Function *function) {
+void handleVarList(Node root, Function *function) {
     handleParamDec(Child(0), function);
     if (Childsum == 3) {
         handleVarList(Child(2), function);
@@ -330,7 +333,7 @@ void handleVarList(Node* root, Function *function) {
 // ParamDec -> Specifier VarDec
 // Specifier -> TYPE | StructSpecifier
 // VarDec -> ID (| VarDec LB INT RB)
-void handleParamDec(Node* root, Function* function) {
+void handleParamDec(Node root, Function* function) {
 
     PARA = 1;
     if (!strcmp(Child(0, 0)->name, "TYPE")) {
@@ -367,6 +370,7 @@ void handleParamDec(Node* root, Function* function) {
             PrintSemErrorMsg(3, Child(1, 0)->lineno, Child(1, 0)->text);
         }
         else {
+            assert(0);
             insertVarSymbolTable(Child(1, 0)->text, thistype);
         }
 
@@ -379,7 +383,7 @@ void handleParamDec(Node* root, Function* function) {
 
 
 // CompSt -> LC DefList StmtList RC
-void handleCompSt(Node* root, int specifierNo) {
+void handleCompSt(Node root, int specifierNo) {
     handleDefList(Child(1));
     handleStmtList(Child(2), specifierNo);
 
@@ -389,7 +393,7 @@ void handleCompSt(Node* root, int specifierNo) {
 }
 
 // StmtList -> Stmt StmtList | ϵ
-void handleStmtList(Node* root, int specifierNo) {
+void handleStmtList(Node root, int specifierNo) {
     if (root == NULL) return;
     while (root != NULL) {
         handleStmt(Child(0), specifierNo);
@@ -408,7 +412,7 @@ void handleStmtList(Node* root, int specifierNo) {
 // | IF LP Exp RP Stmt
 // | IF LP Exp RP Stmt ELSE Stmt
 // | WHILE LP Exp RP Stmt
-void handleStmt(Node* root, int specifierNo) {
+void handleStmt(Node root, int specifierNo) {
 
     if (!strcmp(Child(0)->name, "Exp")) {
         handleExp(Child(0));
@@ -451,7 +455,7 @@ void handleStmt(Node* root, int specifierNo) {
 
 
 // DefList -> Def DefList | ϵ
-void handleDefList(Node* root) {
+void handleDefList(Node root) {
     if (root == NULL) return;
     while (root != NULL) {
         handleDef(Child(0));
@@ -464,7 +468,7 @@ void handleDefList(Node* root) {
 }
 
 // Def -> Specifier DecList SEMI
-void handleDef(Node* root) {
+void handleDef(Node root) {
 
     int specifierNo =  handleSpecifier(Child(0));
     handleDecList(Child(1), specifierNo);
@@ -475,7 +479,7 @@ void handleDef(Node* root) {
 }
 
 // DecList -> Dec | Dec COMMA DecList
-void handleDecList(Node* root, int specifierNo) {
+void handleDecList(Node root, int specifierNo) {
     handleDec(Child(0), specifierNo);
     if (Childsum == 3) {
         handleDecList(Child(2), specifierNo);
@@ -488,7 +492,7 @@ void handleDecList(Node* root, int specifierNo) {
 
 // Dec -> VarDec | VarDec ASSIGNOP Exp
 // VarDec -> ID (| VarDec LB INT RB)
-void handleDec(Node* root, int specifierNo) {
+void handleDec(Node root, int specifierNo) {
     handleVarDec(Child(0), specifierNo);
     if (Childsum == 3) {
         handleExp(Child(2));
@@ -515,6 +519,7 @@ void handleDec(Node* root, int specifierNo) {
 
                 strcpy(thisfield->name, specifierStructName);
                 thistype->u.structure = thisfield;
+                assert(0);
                 insertVarSymbolTable(Child(0)->text, thistype);
                 #ifdef PHASE_SEM
                 printf("insert_4: %d\n", IN_STRUCT);
@@ -551,7 +556,7 @@ void handleDec(Node* root, int specifierNo) {
 // | INT 6
 // | FLOAT 6
 
-int handleExp(Node *root) {
+int handleExp(Node root) {
 
     switch (getHandleExpType(root)) {
 
@@ -666,8 +671,8 @@ int handleExp(Node *root) {
       case 1:
 
         if (!strcmp(Child(1)->name, "ASSIGNOP")) {
-            Node* node1 = Child(0);
-            Node* node2 = Child(2);
+            Node node1 = Child(0);
+            Node node2 = Child(2);
 
             int node1_type = handleExp(Child(0));
             int node2_type = handleExp(Child(2));
@@ -690,7 +695,7 @@ int handleExp(Node *root) {
                     PrintSemErrorMsg(6, node1->lineno, "");
                     return -1;
                 }
-                Node* root = node1;
+                Node root = node1;
                 if (!strcmp(Child(0)->name, "INT") || !strcmp(Child(0)->name, "FLOAT")) {
                     PrintSemErrorMsg(6, node1->lineno, "");
                     return -1;
@@ -751,7 +756,7 @@ int handleExp(Node *root) {
 // Args -> Exp COMMA Args
 // | Exp
 
-void handleArgs(Node* root) {
+void handleArgs(Node root) {
     handleExp(Child(0));
     if (Childsum == 3) {
         handleArgs(Child(2));
@@ -777,7 +782,7 @@ int getFuncReturnType(char* text) {
 
 // VarDec -> ID | VarDec LB INT RB
 
-int getArgSum(Node* root) {
+int getArgSum(Node root) {
     int argsum = 0;
     if (root->childsum == 4) {
         root = Child(2);
@@ -796,7 +801,7 @@ int getArgSum(Node* root) {
 // ParamDec -> Specifier VarDec
 // VarDec -> ID | VarDec LB INT RB
 // Specifier -> TYPE | StructSpecifier
-void getArgType(int* argType, Node* root) {
+void getArgType(int* argType, Node root) {
     int argno = 0;
     if (root->childsum == 4) {
         if (!strcmp(Child(2)->name, "VarList")) {
@@ -815,7 +820,7 @@ void getArgType(int* argType, Node* root) {
 }
 
 // Args -> Exp COMMA Args | Exp
-int getVarSum(Node* root) {
+int getVarSum(Node root) {
     int argsum = 1;
     while (root->childsum == 3) {
         ++argsum;
@@ -824,7 +829,7 @@ int getVarSum(Node* root) {
     return argsum;
 }
 
-void getVarType(int* p, int argsum, Node* root) {
+void getVarType(int* p, int argsum, Node root) {
     int i = 0;
     for (; i < argsum; ++i) {
         p[i] = getNodeType(Child(0));
@@ -851,7 +856,7 @@ void getVarType(int* p, int argsum, Node* root) {
 // | INT 6
 // | FLOAT 6
 
-int getHandleExpType(Node *root) {
+int getHandleExpType(Node root) {
     if (Childsum == 1) return 6;
     if (!strcmp(Child(0)->name, "LP") || !strcmp(Child(0)->name, "MINUS") || !strcmp(Child(0)->name, "NOT")) {
         return 2;
@@ -923,7 +928,7 @@ void getArguments(char* arguments, int* pargtype, int argsum) {
     strcat(arguments, ")");
 }
 
-bool isLegalField(Node* var, Node* child) {
+bool isLegalField(Node var, Node child) {
     if (!strcmp(var->name, "ID")) {
         if (!strcmp(child->name, "ID")) {
             unsigned int key = hashPJW(var->text);
@@ -939,7 +944,7 @@ bool isLegalField(Node* var, Node* child) {
 }
 
 
-int getNodeType(Node* root) {
+int getNodeType(Node root) {
     int node_type = -1;
     if (!strcmp(root->name, "ID")) {
         unsigned int key = hashPJW(root->text);

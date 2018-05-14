@@ -2,8 +2,11 @@
 #include "ir.h"
 #include "semantic.h"
 #include <stdarg.h>
+#include <stdlib.h>
 
-// Function writefunction;
+int label_no = 0;
+int temp_no = 0;
+int var_no = 0;
 
 void preInterCodeGenerate() {
     Function *readfunction = (Function*)malloc(sizeof(Function));
@@ -19,215 +22,359 @@ void preInterCodeGenerate() {
 
     /* read(), return(int)
        write(int)，return(0) */
+    INIT_LIST_HEAD(&interCodes_head);
+}
+
+void printInterCodes(InterCode head) {
+    InterCode pos;
+    list_for_each(pos, head) {
+        printInterCode(pos);
+    }
 }
 
 void interCodeGenerate() {
 
-    InterCode ir1, ir2, ir3, ir4, ir5;
+    if (root == NULL) return;
+    if (!strcmp(root->name, "Program")) {
+        translate_ExtDefList(Child(0));
+    }
 
-    ir1 = intercodeConstruct(IR_FUNC, 2);
-    ir2 = intercodeConstruct(IR_READ, OP_TEMPORARY, 1);
-    ir3 = intercodeConstruct(IR_ASSIGN, OP_VARIABLE, 1, OP_TEMPORARY, 1);
-    ir4 = intercodeConstruct(IR_ASSIGN, OP_TEMPORARY, 2, OP_ADDRESS, 0);
-    ir5 = intercodeConstruct(IR_IFGOTO, OP_VARIABLE, 1, OP_TEMPORARY, 2, OP_LABEL, 1);
+    // InterCode ir[64];
 
-    printInterCode(ir1);
-    printInterCode(ir2);
-    printInterCode(ir3);
-    printInterCode(ir4);
-    printInterCode(ir5);
+    // ir[0] = intercodeConstruct(IR_PARAM, OP_VARIABLE, 1);
+    // ir[1] = intercodeConstruct(IR_ARG, OP_TEMPORARY, 1);
+    // ir[2] = intercodeConstruct(IR_CALL, OP_TEMPORARY, 5, OP_FUNCTION, 2);
+/*
+    ir[0] = intercodeConstruct(IR_FUNC, 2);
+    ir[1] = intercodeConstruct(IR_READ, OP_TEMPORARY, 1);
+    ir[2] = intercodeConstruct(IR_ASSIGN, OP_VARIABLE, 1, OP_TEMPORARY, 1);
+    ir[3] = intercodeConstruct(IR_ASSIGN, OP_TEMPORARY, 2, OP_ADDRESS, 0);
+    ir[4] = intercodeConstruct(IR_IFGOTO, OP_VARIABLE, 1, OP_TEMPORARY, 2, OP_LABEL, 1, RELGT);
+    ir[5] = intercodeConstruct(IR_GOTO, OP_LABEL, 2);
+    ir[6] = intercodeConstruct(IR_LABEL, OP_LABEL, 1);
+    ir[7] = intercodeConstruct(IR_ASSIGN, OP_TEMPORARY, 3, OP_ADDRESS, 1);
+    ir[8] = intercodeConstruct(IR_WRITE, OP_TEMPORARY, 3);
+    ir[9] = intercodeConstruct(IR_GOTO, OP_LABEL, 3);
+    ir[10] = intercodeConstruct(IR_LABEL, OP_LABEL, 2);
+    ir[11] = intercodeConstruct(IR_ASSIGN, OP_TEMPORARY, 4, OP_ADDRESS, 0);
+    ir[12] = intercodeConstruct(IR_IFGOTO, OP_VARIABLE, 1, OP_TEMPORARY, 4, OP_LABEL, 4, RELLT);
+    ir[13] = intercodeConstruct(IR_GOTO, OP_LABEL, 5);
+    ir[14] = intercodeConstruct(IR_LABEL, OP_LABEL, 4);
+    ir[15] = intercodeConstruct(IR_ASSIGN, OP_TEMPORARY, 5, OP_ADDRESS, 1);
+    ir[16] = intercodeConstruct(IR_SUB, OP_TEMPORARY, 6, OP_ADDRESS, 0, OP_TEMPORARY, 5);
+    ir[17] = intercodeConstruct(IR_WRITE, OP_TEMPORARY, 6);
+    ir[18] = intercodeConstruct(IR_GOTO, OP_LABEL, 6);
+    ir[19] = intercodeConstruct(IR_LABEL, OP_LABEL, 5);
+    ir[20] = intercodeConstruct(IR_ASSIGN, OP_TEMPORARY, 7, OP_ADDRESS, 0);
+    ir[21] = intercodeConstruct(IR_WRITE, OP_TEMPORARY, 7);
+    ir[22] = intercodeConstruct(IR_LABEL, OP_LABEL, 6);
+    ir[23] = intercodeConstruct(IR_LABEL, OP_LABEL, 3);
+    ir[24] = intercodeConstruct(IR_ASSIGN, OP_TEMPORARY, 8, OP_ADDRESS, 0);
+    ir[25] = intercodeConstruct(IR_RET, OP_TEMPORARY, 8);
+*/
+
+    printInterCodes(&interCodes_head);
 
 }
 
-InterCode intercodeConstruct(int kind,...) {
-    InterCode ir;
-    va_list va_ptr;
-    ir.kind = kind;
-    int argSum, arg1, arg2, arg3, arg4, arg5, arg6;
-    switch (kind) {
-      case IR_FUNC:
-          argSum = 1;
-          va_start(va_ptr, kind);
-          arg1 = va_arg(va_ptr, int);
-          va_end(va_ptr);
-          break;
-      case IR_READ:
-          argSum = 2;
-          va_start(va_ptr, kind);
-          arg1 = va_arg(va_ptr, int);
-          arg2 = va_arg(va_ptr, int);
-          va_end(va_ptr);
-          break;
-      case IR_ASSIGN:
-          argSum = 4;
-          va_start(va_ptr, kind);
-          arg1 = va_arg(va_ptr, int);
-          arg2 = va_arg(va_ptr, int);
-          arg3 = va_arg(va_ptr, int);
-          arg4 = va_arg(va_ptr, int);
-          va_end(va_ptr);
-          break;
-      case IR_IFGOTO:
-          argSum = 6;
-          va_start(va_ptr, kind);
-          arg1 = va_arg(va_ptr, int);
-          arg2 = va_arg(va_ptr, int);
-          arg3 = va_arg(va_ptr, int);
-          arg4 = va_arg(va_ptr, int);
-          arg5 = va_arg(va_ptr, int);
-          arg6 = va_arg(va_ptr, int);
-          va_end(va_ptr);
-          break;
-    }
-    Operand x = (Operand)malloc(sizeof(Operand_));
-    Operand y = (Operand)malloc(sizeof(Operand_));
-    Operand z = (Operand)malloc(sizeof(Operand_));
-    switch (kind) {
-        case IR_FUNC:
-            x->kind = OP_FUNCTION;
-            x->u.no = arg1;
-            ir.op.x = x;
-            break;
-        case IR_READ:
-        case IR_WRITE:
-            x->kind = arg1;
-            x->u.no = arg2;
-            ir.op.x = x;
-            break;
-        case IR_ASSIGN:
-            x->kind = arg1;
-            x->u.no = arg2;
-            ir.biop.x = x;
-            y->kind = arg3;
-            y->u.no = arg4;
-            ir.biop.y = y;
-            break;
-        case IR_IFGOTO:
-            x->kind = arg1;
-            x->u.no = arg2;
-            ir.triop.x = x;
-            y->kind = arg3;
-            y->u.no = arg4;
-            ir.triop.y = y;
-            z->kind = arg5;
-            z->u.no = arg6;
-            ir.triop.z = z;
-    }
-    return ir;
-}
-
-void printInterCode(InterCode intercode) {
-    char func[128];
-    char op1[128];
-    char op2[128];
-    char op3[128];
-    char op4[128];
-    char op5[128];
-    char op6[128];
-
-    switch (intercode.kind) {
-        case IR_LABEL:
-            symbolHandle(op1, intercode.op.x);
-            printf("LABEL %s :\n", op1); break;
-
-        case IR_FUNC:
-            getFuncName(func, intercode.op.x->u.no);
-            printf("FUNCTION %s:\n", func); break;
-
-        case IR_ASSIGN:
-            symbolHandle(op1, intercode.biop.x);
-            symbolHandle(op2, intercode.biop.y);
-            printf("%s := %s\n", op1, op2); break;
-
-        case IR_ADD:
-            symbolHandle(op1, intercode.triop.x);
-            symbolHandle(op2, intercode.triop.y);
-            symbolHandle(op3, intercode.triop.z);
-            printf("%s := %s + %s\n", op1, op2, op3); break;
-
-        case IR_SUB:
-            symbolHandle(op1, intercode.triop.x);
-            symbolHandle(op2, intercode.triop.y);
-            symbolHandle(op3, intercode.triop.z);
-            printf("%s := %s - %s\n", op1, op2, op3); break;
-
-        case IR_MUL:
-            symbolHandle(op1, intercode.triop.x);
-            symbolHandle(op2, intercode.triop.y);
-            symbolHandle(op3, intercode.triop.z);
-            printf("%s := %s * %s\n", op1, op2, op3); break;
-
-        case IR_DIV:
-            symbolHandle(op1, intercode.triop.x);
-            symbolHandle(op2, intercode.triop.y);
-            symbolHandle(op3, intercode.triop.z);
-            printf("%s := %s / %s\n", op1, op2, op3); break;
-
-        case IR_GETADD:
-            symbolHandle(op1, intercode.biop.x);
-            symbolHandle(op2, intercode.biop.y);
-            printf("%s := &%s\n", op1, op2); break;
-
-        case IR_GETVAL:
-            symbolHandle(op1, intercode.biop.x);
-            symbolHandle(op2, intercode.biop.y);
-            printf("%s := *%s\n", op1, op2); break;
-
-        case IR_SETVAL:
-            symbolHandle(op1, intercode.biop.x);
-            symbolHandle(op2, intercode.biop.y);
-            printf("*%s := %s\n", op1, op2); break;
-
-        case IR_GOTO:
-            symbolHandle(op1, intercode.op.x);
-            printf("GOTO %s\n", op1); break;
-
-        case IR_IFGOTO:
-            symbolHandle(op1, intercode.triop.x);
-            symbolHandle(op2, intercode.triop.y);
-            symbolHandle(op3, intercode.triop.z);
-            printf("IF %s [relop] %s GOTO %s\n", op1, op2, op3); break;
-
-        case IR_RET:
-            symbolHandle(op1, intercode.triop.x);
-            printf("RETURN %s\n", op1); break;
-
-        case IR_DEC:
-            symbolHandle(op1, intercode.op.x);
-            printf("DEC %s [size]", op1); break;
-
-        case IR_ARG:
-            symbolHandle(op1, intercode.op.x);
-            printf("ARG %s\n", op1); break;
-
-        case IR_CALL:
-            symbolHandle(op1, intercode.biop.x);
-            getFuncName(func, intercode.biop.y->u.no);
-            printf("%s := CALL %s\n", op1, func); break;
-
-        case IR_PARAM:
-            symbolHandle(op1, intercode.op.x);
-            printf("PARAM %s\n", op1); break;
-
-        case IR_READ:
-            symbolHandle(op1, intercode.op.x);
-            printf("READ %s\n", op1); break;
-
-        case IR_WRITE:
-            symbolHandle(op1, intercode.op.x);
-            printf("WRITE %s\n", op1); break;
-
-        default: assert(0);
+// ExtDefList -> ExtDef ExtDefList | ϵ
+void translate_ExtDefList(Node root) {
+    InterCode intercode;
+    if (Childsum == 0) return;
+    while (root != NULL) {
+        intercode = translate_ExtDef(Child(0));
+        assert(intercode != NULL);
+        // insertInterCode(intercode);
+        root = Child(1);
     }
 }
 
 
-void symbolHandle(char *name, Operand operand) {
-    switch (operand->kind) {
-        case OP_VARIABLE: sprintf(name, "v%d", operand->u.no); break;
-        case OP_TEMPORARY: sprintf(name, "t%d", operand->u.no); break;
-        case OP_ADDRESS: sprintf(name, "#%d", operand->u.no); break;
-        case OP_LABEL: sprintf(name, "label%d", operand->u.no); break;
-        default: assert(0);
+//
+// void insertInterCodes(InterCodes codes) {
+//     InterCodes *pos;
+//     list_for_each(pos, &codes) {
+//         list_add_tail(pos, &interCodes_head);
+//     }
+// }
+
+// ExtDef -> Specifier ExtDecList SEMI
+// | Specifier SEMI | Specifier FunDec CompSt
+
+InterCode translate_ExtDef(Node root) {
+    InterCode intercode;
+    assert(!strcmp(Child(1)->name, "FunDec"));
+    // intercode = translate_Specifier(Child(0));
+    // assert(intercode != NULL);
+    intercode = translate_FunDec(Child(1));
+    /*TODO:*/
+    assert(intercode != NULL);
+    intercode = translate_CompSt(Child(2));
+    assert(intercode != NULL);
+    return intercode;
+}
+
+// Specifier -> TYPE | StructSpecifier
+InterCode translate_Specifier(Node root) {
+    InterCode intercode;
+    assert(!strcmp(Child(0)->text, "int"));
+    return intercode;
+}
+
+// FunDec -> ID LP VarList RP | ID LP RP
+InterCode translate_FunDec(Node root) {
+    assert(Childsum == 3);
+    InterCode intercode = intercodeConstruct(IR_FUNC, getFuncNo(Child(0)->text));
+    // insertInterCode(intercode);
+    return intercode;
+}
+
+// CompSt -> LC DefList StmtList RC
+InterCode translate_CompSt(Node root) {
+    return translate_StmtList(Child(2));
+}
+
+// StmtList -> Stmt StmtList | ϵ
+InterCode translate_StmtList(Node root) {
+    InterCode intercode;
+    while (root != NULL) {
+        intercode = translate_Stmt(Child(0));
+        // insertInterCode(intercode);
+        root = Child(1);
     }
+    return intercode;
+}
+
+// Stmt -> Exp SEMI
+// | CompSt
+// | RETURN Exp SEMI
+// | IF LP Exp RP Stmt
+// | IF LP Exp RP Stmt ELSE Stmt
+// | WHILE LP Exp RP Stmt
+InterCode translate_Stmt(Node root) {
+    InterCode intercode = (InterCode)malloc(sizeof(InterCode_));
+    if (!strcmp(Child(0)->name, "Exp")) {
+        intercode = translate_Exp(Child(0), NULL);
+    }
+    else if (!strcmp(Child(0)->name, "CompSt")) {
+        intercode = translate_CompSt(Child(0));
+    }
+
+    else if (!strcmp(Child(0)->name, "RETURN")) {
+        intercode = translate_Exp(Child(1), NULL);
+        intercode = intercodeConstruct(IR_RET, OP_TEMPORARY, temp_no);
+    }
+
+    else if (!strcmp(Child(0)->name, "IF")) {
+
+        if (Childsum == 5) {
+            assert(0);
+        }
+        if (Childsum == 7) {
+            int label1 = ++label_no;
+            int label2 = ++label_no;
+            int label3 = ++label_no;
+            intercode = translate_Exp(Child(2), NULL);
+            intercode = translate_Cond(Child(2), label1, label2);
+            intercode = intercodeConstruct(IR_LABEL, OP_LABEL, label1);
+            // insertInterCode(intercode);
+
+            intercode = translate_Stmt(Child(4));
+            intercode = intercodeConstruct(IR_GOTO, OP_LABEL, label3);
+            // insertInterCode(intercode);
+
+            intercode = intercodeConstruct(IR_LABEL, OP_LABEL, label2);
+            // insertInterCode(intercode);
+
+            intercode = translate_Stmt(Child(6));
+            intercode = intercodeConstruct(IR_LABEL, OP_LABEL, label3);
+            // insertInterCode(intercode);
+        }
+
+    }
+
+    else {
+        assert(0);
+    }
+    return intercode;
+}
+
+int get_relop(Node root) {
+    assert(!strcmp(root->name, "RELOP"));
+    if (!strcmp(root->text, ">")) {
+        return RELGT;
+    }
+    else if (!strcmp(root->text, "<")) {
+        return RELLT;
+    }
+    else {
+        assert(0);
+    }
+    return 0;
+}
+
+InterCode translate_Cond(Node root, int label_true, int label_false) {
+    int type = getTranslateExpType(root);
+    Operand t1 = (Operand)malloc(sizeof(Operand_));
+    Operand t2 = (Operand)malloc(sizeof(Operand_));
+    int op;
+    InterCode intercode, code1, code2, code3, ir;
+    code1 = (InterCode)malloc(sizeof(InterCode_));
+    code2 = (InterCode)malloc(sizeof(InterCode_));
+    ir = (InterCode)malloc(sizeof(InterCode_));
+    switch(type) {
+        case 60:
+            t1->kind = OP_TEMPORARY;
+            t1->u.no = ++temp_no;
+            code1 = translate_Exp(Child(0), t1);
+
+            t2->kind = OP_TEMPORARY;
+            t2->u.no = ++temp_no;
+            code2 = translate_Exp(Child(2), t2);
+            code2->next = NULL;
+
+            op = get_relop(Child(1));
+            code3 = intercodeConstruct(IR_IFGOTO, t1->kind, t1->u.no, t2->kind, t2->u.no, OP_LABEL, label_true, op);
+
+            insertInterCode(intercodeConstruct(IR_GOTO, OP_LABEL, label_false));
+            break;
+    }
+    return intercode;
+}
+
+// Exp ->
+//   Exp ASSIGNOP Exp 3
+// | Exp AND Exp 62
+// | Exp OR Exp 63
+// | Exp RELOP Exp 60
+// | Exp PLUS Exp 4
+// | Exp MINUS Exp 4
+// | Exp STAR Exp 4
+// | Exp DIV Exp 4
+// | LP Exp RP
+// | MINUS Exp 5
+// | NOT Exp 61
+// | ID LP Args RP 8
+// | ID LP RP 7
+// | Exp LB Exp RB
+// | Exp DOT ID 0
+// | ID 2
+// | INT 1
+// | FLOAT 0
+
+int getTranslateExpType(Node root) {
+    if (Childsum == 1) {
+        if (!strcmp(Child(0)->name, "INT")) return 1;
+        else if (!strcmp(Child(0)->name, "ID")) return 2;
+    }
+    else if (Childsum == 2) {
+        if (!strcmp(Child(0)->name, "MINUS")) return 5;
+    }
+    else if (Childsum == 3) {
+        if (!strcmp(Child(1)->name, "ASSIGNOP")) return 3;
+        if (!strcmp(Child(1)->name, "PLUS")) return 4;
+        if (!strcmp(Child(1)->name, "MINUS")) return 4;
+        if (!strcmp(Child(1)->name, "STAR")) return 4;
+        if (!strcmp(Child(1)->name, "DIV")) return 4;
+        if (!strcmp(Child(1)->name, "AND")) return 62;
+        if (!strcmp(Child(1)->name, "OR")) return 63;
+        if (!strcmp(Child(1)->name, "RELOP")) return 60;
+        if (!strcmp(Child(0)->name, "ID")) return 7;
+    }
+    else if (Childsum == 4) {
+        if (!strcmp(Child(0)->name, "ID")) return 8;
+    }
+
+    return 0;
+}
+
+InterCode translate_Args(Node root, Operand *arg_list) {
+    if (Childsum == 1) {
+        Operand t1 = (Operand)malloc(sizeof(Operand_));
+        t1->kind = OP_TEMPORARY;
+        t1->u.no = ++temp_no;
+        InterCode code1 = translate_Exp(Child(0), t1);
+        *arg_list = t1;
+        // insertInterCode(code1);
+        return code1;
+    }
+    assert(0);
+}
+
+InterCode translate_Exp(Node root, Operand operand) {
+    int type = getTranslateExpType(root);
+    InterCode intercode = (InterCode)malloc(sizeof(InterCode_));
+    InterCode code1, code2;
+    Operand var = (Operand)malloc(sizeof(Operand_));
+    Operand t1 = (Operand)malloc(sizeof(Operand_));
+    Operand *arg_list = (Operand *)malloc(sizeof(Operand));
+    int no = -1;
+    switch (type) {
+      case 8:
+          code1 = translate_Args(Child(2), arg_list);
+          // insertInterCode(code1);
+          if (!strcmp(Child(0)->text, "write")) {
+              intercode = intercodeConstruct(IR_WRITE, OP_TEMPORARY, (*arg_list)->u.no);
+              insertInterCode(intercode);
+              assert(arg_list != NULL);
+          }
+          if (operand != NULL) assert(0);
+          break;
+      case 7:
+          if (!strcmp(Child(0)->text, "read")) {
+              intercode = intercodeConstruct(IR_READ, OP_TEMPORARY, operand->u.no);
+              no = getFuncNo(Child(0)->text);
+              if (no == -1) assert(0);
+              functionTable[no].t_no = temp_no;
+              insertInterCode(intercode);
+          }
+          break;
+      case 3:
+          // Exp -> Exp(ID) ASSIGNOP Exp
+          t1->kind = OP_TEMPORARY;
+          t1->u.no = ++temp_no;
+          code1 = translate_Exp(Child(2), t1);
+          code2 = intercodeConstruct(IR_ASSIGN, OP_VARIABLE, getOpVarNo(Child(0, 0)->text) + 1, OP_TEMPORARY, t1->u.no);
+          insertInterCode(code2);
+          if (operand != NULL) assert(0);
+          break;
+      case 6:
+          var->kind = OP_VARIABLE;
+          var->u.no = getOpVarNo(Child(0, 0)->text) + 1;
+          intercode->code.kind = IR_ASSIGN;
+          intercode->code.biop.x = operand;
+          intercode->code.biop.y = var;
+          break;
+      case 2:
+          assert(!strcmp(Child(0)->name, "ID"));
+          var->kind = OP_VARIABLE;
+          var->u.no = functionTable[getOpVarNo(Child(0)->text)].t_no;
+          intercode->code.kind = IR_ASSIGN;
+          intercode->code.biop.x = operand;
+          intercode->code.biop.y = var;
+          break;
+      case 1:
+          assert(!strcmp(Child(0)->name, "INT"));
+          var->kind = OP_CONSTANT;
+          // strcpy(var->u.value, Child(0)->text);
+          var->u.no = atoi(Child(0)->text);
+          intercode->code.kind = IR_ASSIGN;
+          intercode->code.biop.x = operand;
+          intercode->code.biop.y = var;
+
+          break;
+      case 5:
+          t1->kind = OP_TEMPORARY;
+          t1->u.no = ++temp_no;
+          code1 = translate_Exp(Child(1), t1);
+          // insertInterCode(code1);
+          code2 = intercodeConstruct(IR_SUB, operand->kind, operand->u.no, OP_CONSTANT, 0, t1->kind, t1->u.no);
+          insertInterCode(code2);
+          break;
+        case 60:
+          break;
+      default: printf("%d\n", type); assert(0);
+
+    }
+    return intercode;
 }

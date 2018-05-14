@@ -4,6 +4,7 @@ char specifierStructName[128] = "";
 char specifierSubStructName[128] = "";
 int structNodeNo = -1;
 int funcNo = 0;
+int varNo = 0;
 StructNode structlist;
 
 void insertVarSymbolTable(char* text, Type type) {
@@ -26,12 +27,16 @@ void insertVarSymbolTable(char* text, Type type) {
     if (symboltable[key].type->kind == BASIC) {
         printf("insert BASIC[%d %s]: kind:", key, text);
         printf("%d\n", symboltable[key].type->u.basic);
+        strcpy(varTable[varNo].name, text);
+        varTable[varNo++].type = thistype;
     }
     else if (symboltable[key].type->kind == ARRAY) {
+        assert(0);
         printf("insert ARRAY[%d %s]: ", key, text);
         printf("%d\n", symboltable[key].type->u.array.size);
     }
     else if (symboltable[key].type->kind == STRUCTURE) {
+        assert(0);
         printf("insert STRUCTURE[%d %s]: ", key, text);
         printf("name: %s \n", symboltable[key].type->u.structure->name);
         FieldList fieldlist = symboltable[key].type->u.structure;
@@ -76,6 +81,16 @@ void insertFuncSymbolTable(char* name, Function *function) {
 
 void getFuncName(char* name, int no) {
     strcpy(name, functionTable[no].name);
+}
+
+int getFuncNo(char* name) {
+    int i = 0;
+    for (; i < funcNo; ++i) {
+        if (!strcmp(name, functionTable[i].name)) {
+            return i;
+        }
+    }
+    return -1;
 }
 
 bool findSymbolTable(char* text) {
@@ -241,6 +256,15 @@ int getStructNo(char* name) {
      return;
  }
 
+int getOpVarNo(char* name) {
+    int i = 0;
+    for (; i < varNo; ++i) {
+        if (!strcmp(name, varTable[i].name)) {
+            return i;
+        }
+    }
+    return -1;
+}
 bool isInStructure(int no, char* name) {
     StructNode tmp = structlist;
     if (tmp == NULL) {
@@ -290,6 +314,12 @@ void printSymbolTable() {
         printf("* %d: * %s ", i, functionTable[i].name);
         printf("ret[%d]; ", functionTable[i].type->u.function.returnvalue);
         printf("argSum[%d]\n", functionTable[i].type->u.function.argsum);
+    }
+
+    printf("------------------------------------------------\n");
+    i = 0;
+    for (; i < varNo; ++i) {
+        printf("* %d: * %s ", i, varTable[i].name);
     }
 }
 

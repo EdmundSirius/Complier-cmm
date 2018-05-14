@@ -1,0 +1,2832 @@
+FUNCTION fact:
+READ t1
+v1 := t1
+t2 := #0
+IF v1 > t2 GOTO label1
+GOTO label2
+LABEL label1 :
+t3 := #1
+WRITE t3
+GOTO label3
+LABEL label2 :
+t4 := #0
+IF v1 < t4 GOTO label4
+GOTO label5
+LABEL label4 :
+t5 := #1
+t6 := #0 - t5
+WRITE t6
+GOTO label6
+LABEL label5 :
+t7 := #0
+WRITE t7
+LABEL label6 :
+LABEL label3 :
+t8 := #0
+RETURN t8
+FUNCTION fact:
+READ t1
+v1 := t1
+t2 := #0
+IF v1 > t2 GOTO label1
+GOTO label2
+LABEL label1 :
+t3 := #1
+WRITE t3
+GOTO label3
+LABEL label2 :
+t4 := #0
+IF v1 < t4 GOTO label4
+GOTO label5
+LABEL label4 :
+t5 := #1
+t6 := #0 - t5
+WRITE t6
+GOTO label6
+LABEL label5 :
+t7 := #0
+WRITE t7
+LABEL label6 :
+LABEL label3 :
+t8 := #0
+RETURN t8
+FUNCTION fact:
+READ t1
+v1 := t1
+t2 := #0
+IF v1 > t2 GOTO label1
+GOTO label2
+LABEL label1 :
+t3 := #1
+WRITE t3
+GOTO label3
+LABEL label2 :
+t4 := #0
+IF v1 < t4 GOTO label4
+GOTO label5
+LABEL label4 :
+t5 := #1
+t6 := #0 - t5
+WRITE t6
+GOTO label6
+LABEL label5 :
+t7 := #0
+WRITE t7
+LABEL label6 :
+LABEL label3 :
+t8 := #0
+RETURN t8
+PARAM v1
+ARG t1
+PARAM v1
+ARG t1
+PARAM v1
+ARG t1
+t5 := CALL fact
+FUNCTION main:
+FUNCTION main:
+FUNCTION main:
+FUNCTION main:
+FUNCTION main:
+FUNCTION main:
+FUNCTION main:
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+LABEL label3 :
+LABEL label3 :
+FUNCTION main:
+LABEL label2 :
+GOTO label4
+LABEL label3 :
+LABEL label2 :
+GOTO label4
+LABEL label3 :
+LABEL label4 :
+LABEL label7 :
+FUNCTION main:
+LABEL label2 :
+GOTO label4
+LABEL label3 :
+LABEL label2 :
+GOTO label4
+LABEL label3 :
+LABEL label4 :
+LABEL label7 :
+FUNCTION main:
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+LABEL label3 :
+LABEL label6 :
+FUNCTION main:
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+LABEL label3 :
+LABEL label6 :
+FUNCTION main:
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label9 :
+LABEL label9 :
+FUNCTION main:
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+LABEL label3 :
+LABEL label3 :
+FUNCTION main:
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label7 :
+GOTO label9
+LABEL label8 :
+LABEL label9 :
+LABEL label9 :
+FUNCTION main:
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label6 :
+FUNCTION main:
+LABEL label1 :
+GOTO label2
+LABEL label3 :
+LABEL label4 :
+GOTO label5
+LABEL label6 :
+LABEL label5 :
+LABEL label2 :
+FUNCTION main:
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+FUNCTION main:
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+FUNCTION main:
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+RETURN t1
+FUNCTION main:
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+RETURN t1
+FUNCTION main:
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+RETURN t1
+FUNCTION main:
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+RETURN t1
+FUNCTION main:
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+v1 := v0
+RETURN t1
+FUNCTION main:
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+FUNCTION main:
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+v1 := #0
+RETURN t1
+FUNCTION main:
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+v1 := #0
+RETURN t1
+FUNCTION main:
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+v1 := #0
+RETURN t1
+FUNCTION main:
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+v1 := #0
+RETURN t1
+FUNCTION main:
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+v1 := #0
+RETURN t1
+FUNCTION main:
+READ t1
+READ t2
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+v1 := #0
+RETURN t3
+FUNCTION main:
+READ t1
+READ t2
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+v1 := #0
+RETURN t3
+FUNCTION main:
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+v1 := #0
+RETURN t3
+FUNCTION main:
+READ t1
+READ t2
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+v1 := #0
+RETURN t3
+FUNCTION main:
+READ t1
+READ t2
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+v1 := #0
+RETURN t3
+FUNCTION main:
+READ t1
+READ t2
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+v1 := #0
+RETURN t3
+FUNCTION main:
+READ t1
+READ t2
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+v1 := #0
+RETURN t3
+FUNCTION main:
+READ t1
+READ t2
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+v1 := #0
+RETURN t3
+FUNCTION main:
+READ t1
+READ t2
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+v1 := #0
+RETURN t3
+FUNCTION main:
+READ t1
+READ t2
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+v1 := #0
+RETURN t3
+FUNCTION main:
+READ t1
+READ t2
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+v1 := #0
+RETURN t3
+FUNCTION main:
+READ t1
+READ t2
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+v1 := #0
+RETURN t3
+FUNCTION main:
+READ t1
+READ t2
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+v1 := #0
+RETURN t3
+FUNCTION main:
+READ t1
+READ t2
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+v1 := #0
+RETURN t3
+FUNCTION main:
+READ t1
+READ t2
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+v1 := #0
+RETURN t3
+FUNCTION main:
+READ t1
+READ t2
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+v1 := #0
+RETURN t3
+FUNCTION main:
+READ t1
+READ t2
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+v1 := #0
+RETURN t3
+FUNCTION main:
+READ t1
+READ t2
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+v1 := #0
+RETURN t3
+FUNCTION main:
+READ t1
+READ t2
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+v1 := #0
+RETURN t3
+FUNCTION main:
+READ t1
+READ t2
+v1 := #0
+RETURN t3
+FUNCTION main:
+READ t1
+READ t2
+FUNCTION main:
+READ t1
+FUNCTION main:
+READ t1
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+v1 := #0
+RETURN t2
+FUNCTION main:
+READ t1
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+t2 := #0
+RETURN t2
+FUNCTION main:
+READ t1
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+t2 := #0
+RETURN t2
+FUNCTION main:
+READ t1
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+t2 := #0
+RETURN t2
+FUNCTION main:
+READ t1
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+t2 := #0
+RETURN t2
+FUNCTION main:
+READ t1
+t2 := #0
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+t3 := #0
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+t4 := #0
+RETURN t4
+FUNCTION main:
+READ t1
+t2 := #0
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+t3 := #0
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+t4 := #0
+RETURN t4
+FUNCTION main:
+READ t1
+t2 := #0
+IF v0 > v0 GOTO label1
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+t3 := #0
+IF v0 < v0 GOTO label4
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+t4 := #0
+RETURN t4
+FUNCTION main:
+READ t1
+t2 := #0
+IF v0 > v0 GOTO label1
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+t3 := #0
+IF v0 < v0 GOTO label4
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+t4 := #0
+RETURN t4
+FUNCTION main:
+READ t1
+t2 := #0
+IF v0 > v0 GOTO label1
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+t3 := #0
+IF v0 < v0 GOTO label4
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+t4 := #0
+RETURN t4
+FUNCTION main:
+READ t1
+v0 := v0
+t2 := #0
+IF v0 > v0 GOTO label1
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+v0 := v0
+t3 := #0
+IF v0 < v0 GOTO label4
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+t4 := #0
+RETURN t4
+FUNCTION main:
+READ t1
+v0 := v0
+IF v0 > v0 GOTO label1
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+v0 := v0
+IF v0 < v0 GOTO label4
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+RETURN t4
+FUNCTION main:
+READ t1
+v0 := v0
+t2 := #0
+IF v0 > v0 GOTO label1
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+v0 := v0
+t3 := #0
+IF v0 < v0 GOTO label4
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+RETURN t4
+FUNCTION main:
+READ t1
+v0 := v0
+v0 := #0
+IF v0 > v0 GOTO label1
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+v0 := v0
+v0 := #0
+IF v0 < v0 GOTO label4
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+RETURN t1
+FUNCTION main:
+READ t1
+v0 := t0
+v0 := #0
+IF v0 > v0 GOTO label1
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+v0 := t0
+v0 := #0
+IF v0 < v0 GOTO label4
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+RETURN t1
+FUNCTION main:
+READ t1
+t0 := t0
+t0 := #0
+IF t0 > t0 GOTO label1
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+t0 := t0
+t0 := #0
+IF t0 < t0 GOTO label4
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+RETURN t1
+FUNCTION main:
+READ t1
+t2 := t0
+t3 := #0
+IF t2 > t3 GOTO label1
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+t4 := t0
+t5 := #0
+IF t4 < t5 GOTO label4
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+RETURN t5
+FUNCTION main:
+READ t1
+t2 := v0
+t3 := #0
+IF t2 > t3 GOTO label1
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+t4 := v0
+t5 := #0
+IF t4 < t5 GOTO label4
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+RETURN t5
+FUNCTION main:
+READ t1
+v0 := v0
+v0 := #0
+IF v0 > v0 GOTO label1
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+v0 := v0
+v0 := #0
+IF v0 < v0 GOTO label4
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+RETURN t1
+FUNCTION main:
+READ t1
+v0 := t0
+v0 := #0
+IF v0 > v0 GOTO label1
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+v0 := t0
+v0 := #0
+IF v0 < v0 GOTO label4
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+RETURN t1
+FUNCTION main:
+READ t1
+v0 := t0
+v0 := #0
+IF v0 > v0 GOTO label1
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+v0 := t0
+v0 := #0
+IF v0 < v0 GOTO label4
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+RETURN t1
+FUNCTION main:
+READ t1
+v0 := t0
+t2 := #0
+IF v0 > t2 GOTO label1
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+v0 := t0
+t3 := #0
+IF v0 < t3 GOTO label4
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+RETURN t3
+FUNCTION main:
+READ t1
+v0 := v0
+t2 := #0
+IF v0 > t2 GOTO label1
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+v0 := v0
+t3 := #0
+IF v0 < t3 GOTO label4
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+RETURN t3
+FUNCTION main:
+READ t1
+FUNCTION main:
+READ t1
+v0 := v0
+t2 := #0
+IF v0 > t2 GOTO label1
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+v0 := v0
+t3 := #0
+IF v0 < t3 GOTO label4
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+RETURN t3
+FUNCTION main:
+READ t1
+t0 := v0
+t2 := #0
+IF t0 > t2 GOTO label1
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+t0 := v0
+t3 := #0
+IF t0 < t3 GOTO label4
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+RETURN t3
+FUNCTION main:
+READ t1
+v0 := v0
+t2 := #0
+IF v0 > t2 GOTO label1
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+v0 := v0
+t3 := #0
+IF v0 < t3 GOTO label4
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+RETURN t3
+FUNCTION main:
+READ t1
+v1 := v0
+t2 := #0
+IF v1 > t2 GOTO label1
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+v1 := v0
+t3 := #0
+IF v1 < t3 GOTO label4
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+RETURN t3
+FUNCTION main:
+READ t1
+v1 := v0
+t2 := #0
+IF v1 > t2 GOTO label1
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+v2 := v0
+t3 := #0
+IF v2 < t3 GOTO label4
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+RETURN t3
+FUNCTION main:
+READ t1
+v1 := v0
+t2 := #0
+IF v1 > t2 GOTO label1
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+v2 := v0
+t3 := #0
+IF v2 < t3 GOTO label4
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+RETURN t3
+FUNCTION main:
+READ t1
+v1 := t0
+t2 := #0
+IF v1 > t2 GOTO label1
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+v2 := t0
+t3 := #0
+IF v2 < t3 GOTO label4
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+RETURN t3
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := #0
+IF v1 > t2 GOTO label1
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+v2 := t1
+t3 := #0
+IF v2 < t3 GOTO label4
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+RETURN t3
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := #0
+IF v1 > t2 GOTO label1
+GOTO label2
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+v2 := t1
+t3 := #0
+IF v2 < t3 GOTO label4
+GOTO label5
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+RETURN t3
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := #0
+IF v1 > t2 GOTO label1
+GOTO label2
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+v2 := t1
+t3 := #0
+IF v2 < t3 GOTO label4
+GOTO label5
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+RETURN t3
+FUNCTION main:
+READ t1
+t2 := t1
+t3 := #0
+IF t2 > t3 GOTO label1
+GOTO label2
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+t4 := t1
+t5 := #0
+IF t4 < t5 GOTO label4
+GOTO label5
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+RETURN t5
+FUNCTION main:
+READ t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+GOTO label2
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+t4 := v1
+t5 := #0
+IF t4 < t5 GOTO label4
+GOTO label5
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+RETURN t5
+FUNCTION main:
+READ t3
+v1 := t1
+t4 := v3
+t6 := #0
+IF t4 > t6 GOTO label1
+GOTO label2
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+t9 := v3
+t11 := #0
+IF t9 < t11 GOTO label4
+GOTO label5
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+RETURN t15
+FUNCTION main:
+READ t3
+v1 := t1
+t4 := v3
+t6 := #0
+IF t4 > t6 GOTO label1
+GOTO label2
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+t9 := v3
+t11 := #0
+IF t9 < t11 GOTO label4
+GOTO label5
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+RETURN t15
+FUNCTION main:
+READ t3
+v0 := t1
+t4 := v3
+t6 := #0
+IF t4 > t6 GOTO label1
+GOTO label2
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+t9 := v3
+t11 := #0
+IF t9 < t11 GOTO label4
+GOTO label5
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+RETURN t15
+FUNCTION main:
+READ t1
+v0 := t1
+t3 := v2
+t5 := #0
+IF t3 > t5 GOTO label1
+GOTO label2
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+t8 := v2
+t10 := #0
+IF t8 < t10 GOTO label4
+GOTO label5
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+RETURN t14
+FUNCTION main:
+READ t1
+v0 := t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+GOTO label2
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+t4 := v1
+t5 := #0
+IF t4 < t5 GOTO label4
+GOTO label5
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+RETURN t5
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+GOTO label2
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+t4 := v1
+t5 := #0
+IF t4 < t5 GOTO label4
+GOTO label5
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+RETURN t5
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+GOTO label2
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+t5 := v1
+t6 := #0
+IF t5 < t6 GOTO label4
+GOTO label5
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+RETURN t8
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+GOTO label2
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+t5 := v1
+t6 := #0
+IF t5 < t6 GOTO label4
+GOTO label5
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+RETURN t8
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+GOTO label2
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+t5 := v1
+t6 := #0
+IF t5 < t6 GOTO label4
+GOTO label5
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+RETURN t8
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+GOTO label2
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+t5 := v1
+t6 := #0
+IF t5 < t6 GOTO label4
+GOTO label5
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+RETURN t8
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+GOTO label2
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+t5 := v1
+t6 := #0
+IF t5 < t6 GOTO label4
+GOTO label5
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+RETURN t8
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+GOTO label2
+LABEL label1 :
+GOTO label3
+LABEL label2 :
+t5 := v1
+t6 := #0
+IF t5 < t6 GOTO label4
+GOTO label5
+LABEL label4 :
+GOTO label6
+LABEL label5 :
+LABEL label6 :
+LABEL label3 :
+RETURN t8
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+GOTO label2
+LABEL label1 :
+WRITE t4
+GOTO label3
+LABEL label2 :
+t5 := v1
+t6 := #0
+IF t5 < t6 GOTO label4
+GOTO label5
+LABEL label4 :
+WRITE t7
+GOTO label6
+LABEL label5 :
+WRITE t8
+LABEL label6 :
+LABEL label3 :
+RETURN t8
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+GOTO label2
+LABEL label1 :
+t4 := #1
+WRITE t4
+GOTO label3
+LABEL label2 :
+t5 := v1
+t6 := #0
+IF t5 < t6 GOTO label4
+GOTO label5
+LABEL label4 :
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+GOTO label2
+LABEL label1 :
+t4 := #1
+WRITE t4
+GOTO label3
+LABEL label2 :
+t5 := v1
+t6 := #0
+IF t5 < t6 GOTO label4
+GOTO label5
+LABEL label4 :
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+GOTO label2
+LABEL label1 :
+t4 := #1
+WRITE t4
+GOTO label3
+LABEL label2 :
+t5 := v1
+t6 := #0
+IF t5 < t6 GOTO label4
+GOTO label5
+LABEL label4 :
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+GOTO label2
+LABEL label1 :
+t4 := #1
+WRITE t4
+GOTO label3
+LABEL label2 :
+t5 := v1
+t6 := #0
+IF t5 < t6 GOTO label4
+GOTO label5
+LABEL label4 :
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+GOTO label2
+LABEL label1 :
+t4 := #1
+WRITE t4
+GOTO label3
+LABEL label2 :
+t5 := v1
+t6 := #0
+IF t5 < t6 GOTO label4
+GOTO label5
+LABEL label4 :
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+GOTO label2
+LABEL label1 :
+t4 := #1
+WRITE t4
+GOTO label3
+LABEL label2 :
+t5 := v1
+t6 := #0
+IF t5 < t6 GOTO label4
+GOTO label5
+LABEL label4 :
+t8 := #1
+t7 := # - t8
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+GOTO label2
+LABEL label1 :
+t4 := #1
+WRITE t4
+GOTO label3
+LABEL label2 :
+t5 := v1
+t6 := #0
+IF t5 < t6 GOTO label4
+GOTO label5
+LABEL label4 :
+t8 := #1
+t7 := #0 - t8
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+GOTO label2
+LABEL label1 :
+t4 := #1
+WRITE t4
+GOTO label3
+LABEL label2 :
+t5 := v1
+t6 := #0
+IF t5 < t6 GOTO label4
+GOTO label5
+LABEL label4 :
+t8 := #1
+t7 := #0 - t8
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+GOTO label2
+LABEL label1 :
+t4 := #1
+WRITE t4
+GOTO label3
+LABEL label2 :
+t5 := v1
+t6 := #0
+IF t5 < t6 GOTO label4
+GOTO label5
+LABEL label4 :
+t8 := #1
+t7 := #0 - t8
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+GOTO label2
+LABEL label1 :
+t4 := #1
+WRITE t4
+GOTO label3
+LABEL label2 :
+t5 := v1
+t6 := #0
+IF t5 < t6 GOTO label4
+GOTO label5
+LABEL label4 :
+t8 := #1
+t7 := #0 - t8
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+GOTO label2
+LABEL label1 :
+t4 := #1
+WRITE t4
+GOTO label3
+LABEL label2 :
+t5 := v1
+t6 := #0
+IF t5 < t6 GOTO label4
+GOTO label5
+LABEL label4 :
+t8 := #1
+t7 := #0 - t8
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+GOTO label2
+LABEL label1 :
+t4 := #1
+WRITE t4
+GOTO label3
+LABEL label2 :
+t5 := v1
+t6 := #0
+IF t5 < t6 GOTO label4
+GOTO label5
+LABEL label4 :
+t8 := #1
+t7 := #0 - t8
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+GOTO label2
+LABEL label1 :
+t4 := #1
+WRITE t4
+GOTO label3
+LABEL label2 :
+t5 := v1
+t6 := #0
+IF t5 < t6 GOTO label4
+GOTO label5
+LABEL label4 :
+t8 := #1
+t7 := #0 - t8
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+GOTO label2
+LABEL label1 :
+t4 := #1
+WRITE t4
+GOTO label3
+LABEL label2 :
+t5 := v1
+t6 := #0
+IF t5 < t6 GOTO label4
+GOTO label5
+LABEL label4 :
+t8 := #1
+t7 := #0 - t8
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+GOTO label2
+LABEL label1 :
+t4 := #1
+WRITE t4
+GOTO label3
+LABEL label2 :
+t5 := v1
+t6 := #0
+IF t5 < t6 GOTO label4
+GOTO label5
+LABEL label4 :
+t8 := #1
+t7 := #0 - t8
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+GOTO label2
+LABEL label1 :
+t4 := #1
+WRITE t4
+GOTO label3
+LABEL label2 :
+t5 := v1
+t6 := #0
+IF t5 < t6 GOTO label4
+GOTO label5
+LABEL label4 :
+t8 := #1
+t7 := #0 - t8
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+GOTO label2
+LABEL label1 :
+t4 := #1
+WRITE t4
+GOTO label3
+LABEL label2 :
+t5 := v1
+t6 := #0
+IF t5 < t6 GOTO label4
+GOTO label5
+LABEL label4 :
+t8 := #1
+t7 := #0 - t8
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+GOTO label2
+LABEL label1 :
+t4 := #1
+WRITE t4
+GOTO label3
+LABEL label2 :
+t5 := v1
+t6 := #0
+IF t5 < t6 GOTO label4
+GOTO label5
+LABEL label4 :
+t8 := #1
+t7 := #0 - t8
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+GOTO label2
+LABEL label1 :
+t4 := #1
+WRITE t4
+GOTO label3
+LABEL label2 :
+t5 := v1
+t6 := #0
+IF t5 < t6 GOTO label4
+GOTO label5
+LABEL label4 :
+t8 := #1
+t7 := #0 - t8
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+GOTO label2
+LABEL label1 :
+t4 := #1
+WRITE t4
+GOTO label3
+LABEL label2 :
+t5 := v1
+t6 := #0
+IF t5 < t6 GOTO label4
+GOTO label5
+LABEL label4 :
+t8 := #1
+t7 := #0 - t8
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+GOTO label2
+LABEL label1 :
+t4 := #1
+WRITE t4
+GOTO label3
+LABEL label2 :
+t5 := v1
+t6 := #0
+IF t5 < t6 GOTO label4
+GOTO label5
+LABEL label4 :
+t8 := #1
+t7 := #0 - t8
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+LABEL label1 :
+t4 := #1
+WRITE t4
+GOTO label3
+LABEL label2 :
+t5 := v1
+t6 := #0
+IF t5 < t6 GOTO label4
+LABEL label4 :
+t8 := #1
+t7 := #0 - t8
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+LABEL label1 :
+t4 := #1
+WRITE t4
+GOTO label3
+LABEL label2 :
+t5 := v1
+t6 := #0
+IF t5 < t6 GOTO label4
+LABEL label4 :
+t8 := #1
+t7 := #0 - t8
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+LABEL label1 :
+t4 := #1
+WRITE t4
+GOTO label3
+LABEL label2 :
+t5 := v1
+t6 := #0
+IF t5 < t6 GOTO label4
+LABEL label4 :
+t8 := #1
+t7 := #0 - t8
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+LABEL label1 :
+t4 := #1
+WRITE t4
+GOTO label3
+LABEL label2 :
+t5 := v1
+t6 := #0
+IF t5 < t6 GOTO label4
+LABEL label4 :
+t8 := #1
+t7 := #0 - t8
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+LABEL label1 :
+t4 := #1
+WRITE t4
+GOTO label3
+LABEL label2 :
+t5 := v1
+t6 := #0
+IF t5 < t6 GOTO label4
+LABEL label4 :
+t8 := #1
+t7 := #0 - t8
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+LABEL label1 :
+t4 := #1
+WRITE t4
+GOTO label3
+LABEL label2 :
+t5 := v1
+t6 := #0
+IF t5 < t6 GOTO label4
+LABEL label4 :
+t8 := #1
+t7 := #0 - t8
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+LABEL label1 :
+t4 := #1
+WRITE t4
+GOTO label3
+LABEL label2 :
+t5 := v1
+t6 := #0
+IF t5 < t6 GOTO label4
+LABEL label4 :
+t8 := #1
+t7 := #0 - t8
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+LABEL label1 :
+t4 := #1
+WRITE t4
+GOTO label3
+LABEL label2 :
+t5 := v1
+t6 := #0
+IF t5 < t6 GOTO label4
+LABEL label4 :
+t8 := #1
+t7 := #0 - t8
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+GOTO label2
+LABEL label1 :
+t4 := #1
+WRITE t4
+GOTO label3
+LABEL label2 :
+t5 := v1
+t6 := #0
+IF t5 < t6 GOTO label4
+GOTO label5
+LABEL label4 :
+t8 := #1
+t7 := #0 - t8
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+LABEL label1 :
+t4 := #1
+WRITE t4
+GOTO label3
+LABEL label2 :
+t5 := v1
+t6 := #0
+IF t5 < t6 GOTO label4
+LABEL label4 :
+t8 := #1
+t7 := #0 - t8
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+LABEL label1 :
+t4 := #1
+WRITE t4
+GOTO label3
+LABEL label2 :
+t5 := v1
+t6 := #0
+IF t5 < t6 GOTO label4
+LABEL label4 :
+t8 := #1
+t7 := #0 - t8
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+GOTO label2
+LABEL label1 :
+t4 := #1
+WRITE t4
+GOTO label3
+LABEL label2 :
+t5 := v1
+t6 := #0
+IF t5 < t6 GOTO label4
+GOTO label5
+LABEL label4 :
+t8 := #1
+t7 := #0 - t8
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+GOTO label2
+LABEL label1 :
+t4 := #1
+WRITE t4
+GOTO label3
+LABEL label2 :
+t5 := v1
+t6 := #0
+IF t5 < t6 GOTO label4
+GOTO label5
+LABEL label4 :
+t8 := #1
+t7 := #0 - t8
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+GOTO label2
+LABEL label1 :
+t4 := #1
+WRITE t4
+GOTO label3
+LABEL label2 :
+t5 := v1
+t6 := #0
+IF t5 < t6 GOTO label4
+GOTO label5
+LABEL label4 :
+t8 := #1
+t7 := #0 - t8
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+GOTO label2
+LABEL label1 :
+t4 := #1
+WRITE t4
+GOTO label3
+LABEL label2 :
+t5 := v1
+t6 := #0
+IF t5 < t6 GOTO label4
+GOTO label5
+LABEL label4 :
+t8 := #1
+t7 := #0 - t8
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+GOTO label2
+LABEL label1 :
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+GOTO label2
+LABEL label1 :
+t4 := #1
+WRITE t4
+GOTO label3
+LABEL label2 :
+t5 := v1
+t6 := #0
+IF t5 < t6 GOTO label4
+GOTO label5
+LABEL label4 :
+t8 := #1
+t7 := #0 - t8
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+GOTO label2
+LABEL label1 :
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+GOTO label2
+LABEL label1 :
+t4 := #1
+t4 := #1
+t4 := #1
+t4 := #1
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+GOTO label2
+LABEL label1 :
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+GOTO label2
+LABEL label1 :
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+GOTO label2
+LABEL label1 :
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+GOTO label2
+LABEL label1 :
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+GOTO label2
+LABEL label1 :
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+GOTO label2
+LABEL label1 :
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+GOTO label2
+LABEL label1 :
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+GOTO label2
+LABEL label1 :
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+GOTO label2
+LABEL label1 :
+t4 := #1
+WRITE t4
+GOTO label3
+LABEL label2 :
+t5 := v1
+t6 := #0
+IF t5 < t6 GOTO label4
+GOTO label5
+LABEL label4 :
+t8 := #1
+t7 := #0 - t8
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+GOTO label2
+LABEL label1 :
+t4 := #1
+WRITE t4
+GOTO label3
+LABEL label2 :
+t5 := v1
+t6 := #0
+IF t5 < t6 GOTO label4
+GOTO label5
+LABEL label4 :
+t8 := #1
+t7 := #0 - t8
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+GOTO label2
+LABEL label1 :
+WRITE t4
+GOTO label3
+LABEL label2 :
+t5 := v1
+t6 := #0
+IF t5 < t6 GOTO label4
+GOTO label5
+LABEL label4 :
+t8 := #1
+t7 := #0 - t8
+WRITE t7
+GOTO label6
+LABEL label5 :
+WRITE t9
+LABEL label6 :
+LABEL label3 :
+RETURN t9
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+GOTO label2
+LABEL label1 :
+WRITE t4
+GOTO label3
+LABEL label2 :
+t5 := v1
+t6 := #0
+IF t5 < t6 GOTO label4
+GOTO label5
+LABEL label4 :
+t8 := #1
+t7 := #0 - t8
+WRITE t7
+GOTO label6
+LABEL label5 :
+WRITE t9
+LABEL label6 :
+LABEL label3 :
+RETURN t9
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+GOTO label2
+LABEL label1 :
+WRITE t4
+GOTO label3
+LABEL label2 :
+t5 := v1
+t6 := #0
+IF t5 < t6 GOTO label4
+GOTO label5
+LABEL label4 :
+t8 := #1
+t7 := #0 - t8
+WRITE t7
+GOTO label6
+LABEL label5 :
+WRITE t9
+LABEL label6 :
+LABEL label3 :
+RETURN t9
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+GOTO label2
+LABEL label1 :
+WRITE t4
+GOTO label3
+LABEL label2 :
+t5 := v1
+t6 := #0
+IF t5 < t6 GOTO label4
+GOTO label5
+LABEL label4 :
+t8 := #1
+t7 := #0 - t8
+WRITE t7
+GOTO label6
+LABEL label5 :
+WRITE t9
+LABEL label6 :
+LABEL label3 :
+RETURN t9
+t4 := #1
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+GOTO label2
+LABEL label1 :
+WRITE t4
+GOTO label3
+LABEL label2 :
+t5 := v1
+t6 := #0
+IF t5 < t6 GOTO label4
+GOTO label5
+LABEL label4 :
+t8 := #1
+t7 := #0 - t8
+WRITE t7
+GOTO label6
+LABEL label5 :
+WRITE t9
+LABEL label6 :
+LABEL label3 :
+RETURN t9
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+GOTO label2
+LABEL label1 :
+t4 := #1
+WRITE t4
+GOTO label3
+LABEL label2 :
+t5 := v1
+t6 := #0
+IF t5 < t6 GOTO label4
+GOTO label5
+LABEL label4 :
+t8 := #1
+t7 := #0 - t8
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+GOTO label2
+LABEL label1 :
+t4 := #1
+WRITE t4
+GOTO label3
+LABEL label2 :
+t5 := v1
+t6 := #0
+IF t5 < t6 GOTO label4
+GOTO label5
+LABEL label4 :
+t8 := #1
+t7 := #0 - t8
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+GOTO label2
+LABEL label1 :
+t4 := #1
+WRITE t4
+GOTO label3
+LABEL label2 :
+t5 := v1
+t6 := #0
+IF t5 < t6 GOTO label4
+GOTO label5
+LABEL label4 :
+t8 := #1
+t7 := #0 - t8
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+GOTO label2
+LABEL label1 :
+t4 := #1
+WRITE t4
+GOTO label3
+LABEL label2 :
+t5 := v1
+t6 := #0
+IF t5 < t6 GOTO label4
+GOTO label5
+LABEL label4 :
+t8 := #1
+t7 := #0 - t8
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+GOTO label2
+LABEL label1 :
+t4 := #1
+WRITE t4
+GOTO label3
+LABEL label2 :
+t5 := v1
+t6 := #0
+IF t5 < t6 GOTO label4
+GOTO label5
+LABEL label4 :
+t8 := #1
+t7 := #0 - t8
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+GOTO label2
+LABEL label1 :
+t4 := #1
+WRITE t4
+GOTO label3
+LABEL label2 :
+t5 := v1
+t6 := #0
+IF t5 < t6 GOTO label4
+GOTO label5
+LABEL label4 :
+t8 := #1
+t7 := #0 - t8
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+GOTO label2
+LABEL label1 :
+t4 := #1
+WRITE t4
+GOTO label3
+LABEL label2 :
+t5 := v1
+t6 := #0
+IF t5 < t6 GOTO label4
+GOTO label5
+LABEL label4 :
+t8 := #1
+t7 := #0 - t8
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+GOTO label2
+LABEL label1 :
+t4 := #1
+WRITE t4
+GOTO label3
+LABEL label2 :
+t5 := v1
+t6 := #0
+IF t5 < t6 GOTO label4
+GOTO label5
+LABEL label4 :
+t8 := #1
+t7 := #0 - t8
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+GOTO label2
+LABEL label1 :
+t4 := #1
+WRITE t4
+GOTO label3
+LABEL label2 :
+t5 := v1
+t6 := #0
+IF t5 < t6 GOTO label4
+GOTO label5
+LABEL label4 :
+t8 := #1
+t7 := #0 - t8
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+GOTO label2
+LABEL label1 :
+t4 := #1
+t4 := #1
+GOTO label3
+LABEL label2 :
+t5 := v1
+t6 := #0
+IF t5 < t6 GOTO label4
+GOTO label5
+LABEL label4 :
+t8 := #1
+t7 := #0 - t8
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+GOTO label2
+LABEL label1 :
+t4 := #1
+t4 := #1
+GOTO label3
+LABEL label2 :
+t5 := v1
+t6 := #0
+IF t5 < t6 GOTO label4
+GOTO label5
+LABEL label4 :
+t8 := #1
+t7 := #0 - t8
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+GOTO label2
+LABEL label1 :
+t4 := #1
+t4 := #1
+GOTO label3
+LABEL label2 :
+t5 := v1
+t6 := #0
+IF t5 < t6 GOTO label4
+GOTO label5
+LABEL label4 :
+t8 := #1
+t7 := #0 - t8
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+GOTO label2
+LABEL label1 :
+t4 := #1
+t4 := #1
+GOTO label3
+LABEL label2 :
+t5 := v1
+t6 := #0
+IF t5 < t6 GOTO label4
+GOTO label5
+LABEL label4 :
+t8 := #1
+t7 := #0 - t8
+t7 := #0 - t8
+t7 := #0 - t8
+GOTO label6
+LABEL label5 :
+t9 := #0
+t9 := #0
+LABEL label6 :
+LABEL label3 :
+RETURN t9
+FUNCTION main:
+READ t1
+v1 := t1
+t2 := v1
+t3 := #0
+IF t2 > t3 GOTO label1
+GOTO label2
+LABEL label1 :
+t4 := #1
+t4 := #1
+GOTO label3
+LABEL label2 :
+t5 := v1
+t6 := #0
+IF t5 < t6 GOTO label4
+GOTO label5
+LABEL label4 :
+t8 := #1
+t7 := #0 - t8
+t7 := #0 - t8
+GOTO label6
+LABEL label5 :
+t9 := #0
+t9 := #0
+LABEL label6 :
+LABEL label3 :
+RETURN t9
+RETURN t9
+FUNCTION main:
+FUNCTION main:
+FUNCTION main:
+FUNCTION main:
+FUNCTION main:
+FUNCTION main:
+t2 := v1
+t5 := v1
+FUNCTION main:
+t3 := #0
+t6 := #0
+FUNCTION main:
+t2 := v1
+t3 := #0
+t5 := v1
+t6 := #0
+FUNCTION main:
+t2 := v1
+t3 := #0
+t5 := v1
+t6 := #0
+FUNCTION main:
+FUNCTION main:
+RETURN t9
+t2 := v1
+t3 := #0
+t5 := v1
+t6 := #0
+RETURN t9
+t2 := v1
+t3 := #0
+t5 := v1
+t6 := #0
+RETURN t9
+t2 := v0
+t3 := v0
+t5 := v0
+t6 := v0
+RETURN t9
+t2 := 
+t5 := 
+RETURN t9
+t2 := 
+t5 := 
+RETURN t9
+t2 := 
+t3 := v0
+t5 := v0
+t6 := v0
+RETURN t9
+t2 := 
+t3 := v0
+t5 := v0
+t6 := v0
+RETURN t9
+t2 := 
+t5 := 
+RETURN t9
+RETURN t9
+t2 := v0
+t5 := v0
+RETURN t9
+RETURN t9
+t2 := v1
+t5 := v1
+RETURN t9
+t2 := v1
+t5 := v1
+RETURN t9
+t2 := v1
+t3 := #0
+t5 := v1
+t6 := #0
+RETURN t9
+t2 := v1
+t3 := #0
+t5 := v1
+t6 := #0
+RETURN t9
+t2 := v1
+t3 := #0
+t5 := v1
+t6 := #0
+RETURN t9
+t2 := v0
+t3 := v0
+t5 := v0
+t6 := v0
+RETURN t9
+t2 := v0
+t3 := v0
+t5 := v0
+t6 := v0
+RETURN t9
+t2 := v0
+t3 := v0
+t5 := v0
+t6 := v0
+RETURN t9
+t2 := v0
+t3 := v0
+t5 := v0
+t6 := v0
+RETURN t9
+t2 := v0
+t3 := v0
+t5 := v0
+t6 := v0
+RETURN t9
+t2 := v0
+t3 := v0
+t5 := v0
+t6 := v0
+RETURN t9
+t2 := v0
+t3 := v0
+t5 := v0
+t6 := v0
+RETURN t9
+t2 := v0
+t3 := v0
+t5 := v0
+t6 := v0
+RETURN t9
+t2 := v0
+t3 := v0
+t5 := v0
+t6 := v0
+RETURN t9
+t2 := v0
+t3 := v0
+t5 := v0
+t6 := v0
+RETURN t9
+t2 := v0
+t3 := v0
+t5 := v0
+t6 := v0
+RETURN t9
+t2 := v0
+t3 := v0
+t5 := v0
+t6 := v0
+RETURN t9
+t2 := v0
+t3 := v0
+t5 := v0
+t6 := v0
+RETURN t9
+t2 := v0
+t3 := v0
+t5 := v0
+t6 := v0
+RETURN t9
+t2 := v0
+t3 := v0
+t2 := v0
+t5 := v0
+t6 := v0
+t5 := v0
+RETURN t9
+t2 := v0
+t5 := v0
+RETURN t9
+t2 := v0
+t3 := v0
+t5 := v0
+t6 := v0
+RETURN t9
+t2 := v0
+t2 := v0
+t5 := v0
+RETURN t9
+t2 := v0
+t5 := v0
+t2 := v1
+t2 := v0
+t5 := v0
+t2 := v0
+t5 := v0
+GOTO label2
+GOTO label5
+GOTO label2
+GOTO label5
+GOTO label2
+GOTO label5
+GOTO label2
+GOTO label5
+GOTO label2
+GOTO label5
+GOTO label2
+WRITE t4
+GOTO label5
+WRITE t7
+WRITE t9
+READ t1
+GOTO label2
+WRITE t4
+GOTO label5
+WRITE t7
+WRITE t9
+READ t1
+v1 := t1
+GOTO label2
+WRITE t4
+GOTO label5
+t7 := #0 - t8
+WRITE t7
+WRITE t9
+READ t1
+v1 := t1
+GOTO label2
+WRITE t4
+GOTO label5
+t7 := #0 - t8
+WRITE t7
+WRITE t9
