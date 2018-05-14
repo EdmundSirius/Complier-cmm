@@ -1,0 +1,20 @@
+struct MilkShake{
+ float milk;
+ float cream;
+ }rabbit[];
+
+ struct Spirit{
+ int bottle;
+ float amount;
+ }dog;
+
+int main() {
+ int t;
+ t = ;
+ while(t < ) {
+ rabbit[t].milk = .;
+ dog[t].bottle = ;
+ t = t + t;
+ }
+ return t;
+ }
