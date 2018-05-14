@@ -6,6 +6,7 @@
 
 int label_no = 0;
 int temp_no = 0;
+int func_no = 0;
 // int var_no = 0;
 
 void preInterCodeGenerate() {
@@ -27,6 +28,9 @@ void preInterCodeGenerate() {
 
 void printInterCodes(InterCode head) {
     InterCode pos;
+    FILE *fp = fopen("out.ir", "wt");
+    if(fp == NULL)
+        assert(0);
     list_for_each(pos, head) {
         printInterCode(pos);
     }
@@ -185,7 +189,15 @@ InterCode translate_Stmt(Node root) {
     else if (!strcmp(Child(0)->name, "IF")) {
 
         if (Childsum == 5) {
-            assert(0);
+            int label1 = ++label_no;
+            int label2 = ++label_no;
+            translate_Cond(Child(2), label1, label2);
+            intercode = intercodeConstruct(IR_LABEL, OP_LABEL, label1);
+            insertInterCode(intercode);
+
+            translate_Stmt(Child(4));
+            intercode = intercodeConstruct(IR_LABEL, OP_LABEL, label2);
+            insertInterCode(intercode);
         }
         if (Childsum == 7) {
             int label1 = ++label_no;
@@ -211,7 +223,27 @@ InterCode translate_Stmt(Node root) {
     }
 
     else {
-        assert(0);
+        assert(!strcmp(Child(0)->name, "WHILE"));
+
+        int label1 = ++label_no;
+        int label2 = ++label_no;
+        int label3 = ++label_no;
+
+        intercode = intercodeConstruct(IR_LABEL, OP_LABEL, label1);
+        insertInterCode(intercode);
+
+        translate_Cond(Child(2), label2, label3);
+
+        intercode = intercodeConstruct(IR_LABEL, OP_LABEL, label2);
+        insertInterCode(intercode);
+
+        translate_Stmt(Child(4));
+
+        intercode = intercodeConstruct(IR_GOTO, OP_LABEL, label1);
+        insertInterCode(intercode);
+
+        intercode = intercodeConstruct(IR_LABEL, OP_LABEL, label3);
+        insertInterCode(intercode);
     }
     return intercode;
 }
@@ -226,6 +258,12 @@ int get_relop(Node root) {
     }
     else if (!strcmp(root->text, "==")) {
         return EQUAL;
+    }
+    else if (!strcmp(root->text, ">=")) {
+        return RELGE;
+    }
+    else if (!strcmp(root->text, "<=")) {
+        return RELLE;
     }
     else {
         assert(0);

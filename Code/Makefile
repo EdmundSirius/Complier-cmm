@@ -34,7 +34,7 @@ syntax-c: $(YFILE)
 # 定义的一些伪目标
 .PHONY: clean test
 test:
-	./parser ../Test/testcase/testcase2.txt;
+	./parser ../Test/lab3_more/A-3.cmm;
 
 
 clean:

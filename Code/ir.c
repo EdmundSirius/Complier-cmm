@@ -177,7 +177,12 @@ void printInterCode(InterCode intercode) {
 
         case IR_FUNC:
             getFuncName(func, intercode->code.op.x->u.no);
-            sprintf(code, "\nFUNCTION %s:\n", func);
+            if (intercode->code.op.x->u.no) {
+                sprintf(code, "FUNCTION %s :\n", func);
+            }
+            else {
+                sprintf(code, "\nFUNCTION %s :\n", func);
+            }
             break;
 
         case IR_ASSIGN:
@@ -242,6 +247,8 @@ void printInterCode(InterCode intercode) {
                 case RELGT: strcpy(relop, ">"); break;
                 case RELLT: strcpy(relop, "<"); break;
                 case EQUAL: strcpy(relop, "=="); break;
+                case RELGE: strcpy(relop, ">="); break;
+                case RELLE: strcpy(relop, "<="); break;
                 default: assert(0);
             }
             sprintf(code, "IF %s %s %s GOTO %s\n", op1, relop, op2, op3); break;
@@ -290,7 +297,7 @@ void symbolHandle(char *name, Operand operand) {
         case OP_LABEL: sprintf(name, "label%d", operand->u.no); break;
         case OP_CONSTANT: sprintf(name, "#%d", operand->u.no); break;
         case OP_FUNCTION: break;
-        default: printf("op: %d", operand->u.no); assert(0); break;
+        default: printf("op: %d", operand->kind); assert(0); break;
     }
 }
 

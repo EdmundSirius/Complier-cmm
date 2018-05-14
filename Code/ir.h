@@ -14,7 +14,7 @@ typedef struct Operand_ {
     } u;
 } Operand_;
 
-typedef enum { RELGT, RELLT, EQUAL } Relop;
+typedef enum { RELGT, RELLT, EQUAL, RELGE, RELLE } Relop;
 
 typedef struct InterCode_ {
     enum {
