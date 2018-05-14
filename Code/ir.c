@@ -5,17 +5,17 @@
 
 void insertInterCode(InterCode head) {
     InterCode newhead = (InterCode)malloc(sizeof(InterCode_));
-    InterCode newhead1 = (InterCode)malloc(sizeof(InterCode_));
+    // InterCode newhead1 = (InterCode)malloc(sizeof(InterCode_));
     // InterCode pos;
     // list_for_each(pos, head) {
     //     list_add_tail(pos, &interCodes_head);
     // }
     newhead->code = head->code;
     list_add_tail(newhead, &interCodes_head);
-    if (head->next != NULL) {
-        newhead1->code = head->next->code;
-        list_add_tail(newhead1, &interCodes_head);
-    }
+    // if (head->next != NULL) {
+    //     newhead1->code = head->next->code;
+    //     list_add_tail(newhead1, &interCodes_head);
+    // }
 }
 
 InterCode concatCode(InterCode code1, InterCode code2) {
@@ -177,7 +177,7 @@ void printInterCode(InterCode intercode) {
 
         case IR_FUNC:
             getFuncName(func, intercode->code.op.x->u.no);
-            sprintf(code, "FUNCTION %s:\n", func);
+            sprintf(code, "\nFUNCTION %s:\n", func);
             break;
 
         case IR_ASSIGN:
@@ -241,6 +241,7 @@ void printInterCode(InterCode intercode) {
             switch (intercode->code.ifop.relop) {
                 case RELGT: strcpy(relop, ">"); break;
                 case RELLT: strcpy(relop, "<"); break;
+                case EQUAL: strcpy(relop, "=="); break;
                 default: assert(0);
             }
             sprintf(code, "IF %s %s %s GOTO %s\n", op1, relop, op2, op3); break;
@@ -288,6 +289,7 @@ void symbolHandle(char *name, Operand operand) {
         // case OP_ADDRESS: sprintf(name, "#%d", operand->u.no); break;
         case OP_LABEL: sprintf(name, "label%d", operand->u.no); break;
         case OP_CONSTANT: sprintf(name, "#%d", operand->u.no); break;
+        case OP_FUNCTION: break;
         default: printf("op: %d", operand->u.no); assert(0); break;
     }
 }

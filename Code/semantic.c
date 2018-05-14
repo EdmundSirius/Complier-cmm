@@ -196,7 +196,7 @@ void handleVarDec(Node root, int specifierNo) {
             thisfield->type = thistype;
             strcpy(thisfield->name, Child(0, 0, 0)->text);
             assert(0);
-            insertVarSymbolTable(Child(0, 0, 0)->text, thistype);
+            // insertVarSymbolTable(Child(0, 0, 0)->text, thistype);
 
             #ifdef PHASE_SEM
             printf("insert_5: %d\n", IN_STRUCT);
@@ -231,6 +231,7 @@ void handleVarDec(Node root, int specifierNo) {
                 PrintSemErrorMsg(3, Child(0)->lineno, Child(0)->text);
             }
             else {
+                // assert(0);
                 insertVarSymbolTable(Child(0)->text, thistype);
             }
             break;
@@ -251,8 +252,8 @@ void handleVarDec(Node root, int specifierNo) {
                 #ifdef PHASE_SEM
                 printf("insert_2: %d\n", IN_STRUCT);
                 #endif
-
-                insertVarSymbolTable(Child(0)->text, thistype);
+                assert(0);
+                // insertVarSymbolTable(Child(0)->text, thistype);
 
                 FieldList thisfield = (FieldList)malloc(sizeof(FieldList_));
                 thisfield->type = thistype;
@@ -351,6 +352,7 @@ void handleParamDec(Node root, Function* function) {
             PrintSemErrorMsg(3, Child(1, 0)->lineno, Child(1, 0)->text);
         }
         else {
+            // assert(0);
             insertVarSymbolTable(Child(1, 0)->text, thistype);
         }
         function->argbasic[function->argsum++] = thistype->u.basic;

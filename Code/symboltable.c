@@ -23,12 +23,15 @@ void insertVarSymbolTable(char* text, Type type) {
 
     strcpy(symboltable[key].name, text);
 
+    if (symboltable[key].type->kind == BASIC) {
+        strcpy(varTable[varNo].name, text);
+        varTable[varNo++].type = thistype;
+    }
+
 #ifdef PRINT_TABLE
     if (symboltable[key].type->kind == BASIC) {
         printf("insert BASIC[%d %s]: kind:", key, text);
         printf("%d\n", symboltable[key].type->u.basic);
-        strcpy(varTable[varNo].name, text);
-        varTable[varNo++].type = thistype;
     }
     else if (symboltable[key].type->kind == ARRAY) {
         assert(0);
@@ -308,7 +311,7 @@ void printSymbolTable() {
         }
     }
 
-    printf("------------------------------------------------\n");
+    printf("------------------functionTable------------------\n");
     i = 0;
     for (; i < funcNo; ++i) {
         printf("* %d: * %s ", i, functionTable[i].name);
@@ -316,10 +319,10 @@ void printSymbolTable() {
         printf("argSum[%d]\n", functionTable[i].type->u.function.argsum);
     }
 
-    printf("------------------------------------------------\n");
+    printf("--------------------varTable--------------------\n");
     i = 0;
     for (; i < varNo; ++i) {
-        printf("* %d: * %s ", i, varTable[i].name);
+        printf("* %d: * %s\n", i, varTable[i].name);
     }
 }
 

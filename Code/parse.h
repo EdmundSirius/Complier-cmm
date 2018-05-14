@@ -8,7 +8,7 @@
 
 #define MAX_CHILD_NUM 7
 
-// #define PRINT_TRACE
+#define PRINT_TRACE
 #define PHASE_SEM
 #define PRINT_TABLE
 
