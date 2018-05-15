@@ -17,7 +17,7 @@ extern void translate_ExtDefList(Node);
 extern InterCode translate_ExtDef(Node);
 extern InterCode translate_Specifier(Node);
 extern InterCode translate_FunDec(Node);
-extern InterCode translate_CompSt(Node);
+extern void translate_CompSt(Node);
 extern InterCode translate_Exp(Node, Operand);
 extern InterCode translate_Stmt(Node);
 extern InterCode translate_StmtList(Node);

@@ -1,9 +1,12 @@
 #ifndef IR_H
 #define IR_H
 
-#define MAX_LINE 1024
+// #define MAX_LINE 1024
+#define DEBUG_IR
+#include <string.h>
 
 typedef struct Operand_* Operand;
+
 typedef struct InterCodes* InterCode;
 
 typedef struct Operand_ {
@@ -38,23 +41,23 @@ typedef struct InterCodes {
     struct InterCodes *prev, *next;
 } InterCodes;
 
-static inline void INIT_LIST_HEAD(struct InterCodes *list) {
+static inline void INIT_LIST_HEAD(InterCode list) {
     list->next = list;
     list->prev = list;
 }
 
-static inline void list_insert(struct InterCodes *newhead, struct InterCodes *prev, struct InterCodes *next) {
+static inline void list_insert(InterCode newhead, InterCode prev, InterCode next) {
     next->prev = newhead;
     newhead->next = next;
     newhead->prev = prev;
     prev->next = newhead;
 }
 
-static inline void list_add(struct InterCodes *newhead, struct InterCodes *head) {
+static inline void list_add(InterCode newhead, InterCode head) {
     list_insert(newhead, head, head->next);
 }
 
-static inline void list_add_tail(struct InterCodes *newhead, struct InterCodes *head) {
+static inline void list_add_tail(InterCode newhead, InterCode head) {
     list_insert(newhead, head->prev, head);
 }
 

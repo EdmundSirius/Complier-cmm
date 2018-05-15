@@ -23,7 +23,7 @@ void insertVarSymbolTable(char* text, Type type) {
 
     strcpy(symboltable[key].name, text);
 
-    if (symboltable[key].type->kind == BASIC) {
+    if (symboltable[key].type->kind == BASIC || symboltable[key].type->kind == ARRAY) {
         strcpy(varTable[varNo].name, text);
         varTable[varNo++].type = thistype;
     }
@@ -34,7 +34,6 @@ void insertVarSymbolTable(char* text, Type type) {
         printf("%d\n", symboltable[key].type->u.basic);
     }
     else if (symboltable[key].type->kind == ARRAY) {
-        assert(0);
         printf("insert ARRAY[%d %s]: ", key, text);
         printf("%d\n", symboltable[key].type->u.array.size);
     }
@@ -307,7 +306,16 @@ void printSymbolTable() {
     int i = 0;
     for (; i < SYMBOL_TABLE_SIZE; ++i) {
         if (symboltable[i].occupied) {
-            printf("* %s\t\t%d *\n", symboltable[i].name, symboltable[i].type->kind);
+            printf("* name: %s\ttype: %d ", symboltable[i].name, symboltable[i].type->kind);
+            if (symboltable[i].type->kind == ARRAY) {
+                printf("[%d] ", symboltable[i].type->u.array.size);
+                printf("subtype: %d ", symboltable[i].type->u.array.elem->kind);
+                printf("[%d] ", symboltable[i].type->u.array.elem->u.array.size);
+                if (symboltable[i].type->u.array.elem->kind == ARRAY) {
+                    printf("basic: %d", symboltable[i].type->u.array.elem->u.array.size);
+                }
+            }
+            printf("*\n");
         }
     }
 

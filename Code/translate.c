@@ -77,7 +77,7 @@ void interCodeGenerate() {
     ir[25] = intercodeConstruct(IR_RET, OP_TEMPORARY, 8);
 */
 
-    printInterCodes(&interCodes_head);
+    // printInterCodes(&interCodes_head);
 
 }
 
@@ -113,7 +113,7 @@ InterCode translate_ExtDef(Node root) {
     intercode = translate_FunDec(Child(1));
     /*TODO:*/
     assert(intercode != NULL);
-    intercode = translate_CompSt(Child(2));
+    translate_CompSt(Child(2));
     assert(intercode != NULL);
     return intercode;
 }
@@ -125,30 +125,108 @@ InterCode translate_Specifier(Node root) {
     return intercode;
 }
 
+
+
+// ParamDec -> Specifier VarDec
+// Specifier -> TYPE | StructSpecifier
+// VarDec -> ID | VarDec LB INT RB
+
+void translate_ParamDec(Node root) {
+    InterCode intercode;
+    assert(!strcmp(Child(0, 0)->name, "TYPE"));
+    if (Child(1)->childsum == 1) {
+        intercode = intercodeConstruct(IR_PARAM, OP_VARIABLE, getOpVarNo(Child(1, 0)->text) + 1);
+        insertInterCode(intercode);
+    }
+    else {
+        assert(Child(1)->childsum == 4);
+        intercode = intercodeConstruct(IR_PARAM, OP_VARIABLE, getOpVarNo(Child(1, 0, 0)->text) + 1);
+        insertInterCode(intercode);
+    }
+}
+
+// VarList -> ParamDec COMMA VarList | ParamDec
+void translate_VarList(Node root) {
+    translate_ParamDec(Child(0));
+    if (Childsum == 3) {
+        translate_VarList(Child(2));
+    }
+}
+
+
+
 // FunDec -> ID LP VarList RP | ID LP RP
 InterCode translate_FunDec(Node root) {
+    InterCode intercode = intercodeConstruct(IR_FUNC, getFuncNo(Child(0)->text));
+    insertInterCode(intercode);
     if (Childsum == 3) {
-        InterCode intercode = intercodeConstruct(IR_FUNC, getFuncNo(Child(0)->text));
-        insertInterCode(intercode);
         return intercode;
     }
     else {
         assert(Childsum == 4);
-        InterCode intercode = intercodeConstruct(IR_FUNC, getFuncNo(Child(0)->text));
-        insertInterCode(intercode);
-        intercode = intercodeConstruct(IR_PARAM, OP_VARIABLE, getOpVarNo(Child(2, 0, 1, 0)->text) + 1);
+        //intercode = intercodeConstruct(IR_PARAM, OP_VARIABLE, getOpVarNo(Child(2, 0, 1, 0)->text) + 1);
         /*TODO:*/
-        insertInterCode(intercode);
-        // translate_VarList(Child(2));
+        //insertInterCode(intercode);
+        translate_VarList(Child(2));
         return intercode;
     }
+}
 
+// Dec -> VarDec | VarDec ASSIGNOP Exp
+// VarDec -> ID (| VarDec LB INT RB)
+void translate_Dec(Node root) {
+    InterCode intercode1 = (InterCode)malloc(sizeof(InterCode_));
+    InterCode intercode2 = (InterCode)malloc(sizeof(InterCode_));
+    Operand var = (Operand)malloc(sizeof(Operand_));
+    Operand t1 = (Operand)malloc(sizeof(Operand_));
+    Operand t2 = (Operand)malloc(sizeof(Operand_));
+    if (Childsum == 3) {
+        assert(!strcmp(Child(0, 0)->name, "ID"));
+        t1->kind = OP_TEMPORARY;
+        t1->u.no = ++temp_no;
+
+        var->kind = OP_VARIABLE;
+        var->u.no = getOpVarNo(Child(0, 0)->text) + 1;
+        assert(var->u.no != 0);
+
+        intercode1 = intercodeConstruct(IR_ASSIGN, OP_VARIABLE, var->u.no, OP_TEMPORARY, t1->u.no);
+        insertInterCode(intercode1);
+
+        intercode2 = intercodeConstruct(IR_ASSIGN, t1->kind, t1->u.no, OP_VARIABLE, var->u.no);
+        insertInterCode(intercode2);
+
+        t2->kind = OP_TEMPORARY;
+        t2->u.no = ++temp_no;
+        translate_Exp(Child(2), t2);
+    }
+}
+
+// DecList -> Dec | Dec COMMA DecList
+void translate_DecList(Node root) {
+    translate_Dec(Child(0));
+    if (Childsum == 3) {
+        translate_DecList(Child(2));
+    }
+}
+
+// Def -> Specifier DecList SEMI
+void translate_Def(Node root) {
+    translate_DecList(Child(1));
+}
+
+// DefList -> Def DefList | ϵ
+void translate_DefList(Node root) {
+    if (root == NULL) return;
+    while (root != NULL) {
+        translate_Def(Child(0));
+        root = Child(1);
+    }
 }
 
 // CompSt -> LC DefList StmtList RC
-InterCode translate_CompSt(Node root) {
-    // translate_DefList
-    return translate_StmtList(Child(2));
+void translate_CompSt(Node root) {
+    translate_DefList(Child(1));
+    translate_StmtList(Child(2));
 }
 
 // StmtList -> Stmt StmtList | ϵ
@@ -175,14 +253,14 @@ InterCode translate_Stmt(Node root) {
         translate_Exp(Child(0), NULL);
     }
     else if (!strcmp(Child(0)->name, "CompSt")) {
-        intercode = translate_CompSt(Child(0));
+        translate_CompSt(Child(0));
     }
 
     else if (!strcmp(Child(0)->name, "RETURN")) {
         t1->kind = OP_TEMPORARY;
         t1->u.no = ++temp_no;
         translate_Exp(Child(1), t1);
-        intercode = intercodeConstruct(IR_RET, OP_TEMPORARY, temp_no);
+        intercode = intercodeConstruct(IR_RET, OP_TEMPORARY, t1->u.no);
         insertInterCode(intercode);
     }
 
@@ -314,7 +392,7 @@ InterCode translate_Cond(Node root, int label_true, int label_false) {
 // | NOT Exp 61
 // | ID LP Args RP 8
 // | ID LP RP 7
-// | Exp LB Exp RB
+// | Exp LB Exp RB 81
 // | Exp DOT ID 0
 // | ID 2
 // | INT 1
@@ -342,6 +420,7 @@ int getTranslateExpType(Node root) {
     }
     else if (Childsum == 4) {
         if (!strcmp(Child(0)->name, "ID")) return 8;
+        if (!strcmp(Child(1)->name, "LB")) return 81;
     }
 
     return 0;
@@ -372,7 +451,6 @@ InterCode translate_Exp(Node root, Operand operand) {
     switch (type) {
       case 8:
           code1 = translate_Args(Child(2), arg_list);
-          // insertInterCode(code1);
           if (!strcmp(Child(0)->text, "write")) {
               intercode = intercodeConstruct(IR_WRITE, OP_TEMPORARY, (*arg_list)->u.no);
               insertInterCode(intercode);
@@ -381,7 +459,7 @@ InterCode translate_Exp(Node root, Operand operand) {
           // | ID LP Args RP 8
           /*TODO:*/
           if (operand != NULL) {
-              intercode = intercodeConstruct(IR_ARG, OP_VARIABLE, getOpVarNo(Child(2, 0, 0)->text));
+              intercode = intercodeConstruct(IR_ARG, OP_VARIABLE, getOpVarNo(Child(2, 0, 0)->text) + 1);
               insertInterCode(intercode);
               intercode = intercodeConstruct(IR_CALL, OP_TEMPORARY, operand->u.no, OP_FUNCTION, getFuncNo(Child(0)->text));
               insertInterCode(intercode);
@@ -436,39 +514,34 @@ InterCode translate_Exp(Node root, Operand operand) {
           insertInterCode(intercode);
           break;
       case 6:
-          var->kind = OP_VARIABLE;
-          var->u.no = getOpVarNo(Child(0, 0)->text) + 1;
-          intercode->code.kind = IR_ASSIGN;
-          intercode->code.biop.x = operand;
-          intercode->code.biop.y = var;
+          // var->kind = OP_VARIABLE;
+          // var->u.no = getOpVarNo(Child(0, 0)->text) + 1;
+          // intercode->code.kind = IR_ASSIGN;
+          // intercode->code.biop.x = operand;
+          // intercode->code.biop.y = var;
+          assert(0);
           break;
       case 2:
           assert(!strcmp(Child(0)->name, "ID"));
           var->kind = OP_VARIABLE;
           var->u.no = functionTable[getOpVarNo(Child(0)->text)].t_no + 1;
-          intercode->code.kind = IR_ASSIGN;
-          intercode->code.biop.x = operand;
-          intercode->code.biop.y = var;
+          intercode = intercodeConstruct(IR_ASSIGN, operand->kind, operand->u.no, var->kind, var->u.no);
           insertInterCode(intercode);
           break;
       case 1:
           assert(!strcmp(Child(0)->name, "INT"));
           if (operand != NULL) {
-              // assert(0);
               var->kind = OP_CONSTANT;
               // strcpy(var->u.value, Child(0)->text);
               var->u.no = atoi(Child(0)->text);
-              intercode->code.kind = IR_ASSIGN;
-              intercode->code.biop.x = operand;
-              intercode->code.biop.y = var;
+              intercode = intercodeConstruct(IR_ASSIGN, operand->kind, operand->u.no, var->kind, var->u.no);
               insertInterCode(intercode);
           }
           break;
       case 5:
           t1->kind = OP_TEMPORARY;
           t1->u.no = ++temp_no;
-          code1 = translate_Exp(Child(1), t1);
-          // insertInterCode(code1);
+          translate_Exp(Child(1), t1);
           code2 = intercodeConstruct(IR_SUB, operand->kind, operand->u.no, OP_CONSTANT, 0, t1->kind, t1->u.no);
           insertInterCode(code2);
           break;
@@ -476,7 +549,10 @@ InterCode translate_Exp(Node root, Operand operand) {
           break;
       case 9:
           assert(!strcmp(Child(1)->name, "Exp"));
-          translate_Exp(Child(1), t1);
+          translate_Exp(Child(1), operand);
+          break;
+      case 81:
+          
           break;
       default: printf("%d\n", type); assert(0);
 

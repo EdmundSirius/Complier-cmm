@@ -163,7 +163,6 @@ void handleVarDec(Node root, int specifierNo) {
             thistype->u.array.elem = elemtype;
             thistype->u.array.size = atoi(Child(2)->text);
 
-            assert(0);
             insertVarSymbolTable(Child(0, 0)->text, thistype);
 
             FieldList thisfield = (FieldList)malloc(sizeof(FieldList_));
@@ -195,8 +194,7 @@ void handleVarDec(Node root, int specifierNo) {
             FieldList thisfield = (FieldList)malloc(sizeof(FieldList_));
             thisfield->type = thistype;
             strcpy(thisfield->name, Child(0, 0, 0)->text);
-            assert(0);
-            // insertVarSymbolTable(Child(0, 0, 0)->text, thistype);
+            insertVarSymbolTable(Child(0, 0, 0)->text, thistype);
 
             #ifdef PHASE_SEM
             printf("insert_5: %d\n", IN_STRUCT);
@@ -338,26 +336,56 @@ void handleParamDec(Node root, Function* function) {
 
     PARA = 1;
     if (!strcmp(Child(0, 0)->name, "TYPE")) {
-        assert(!strcmp(Child(1, 0)->name, "ID"));
-        int specifierNo = handleSpecifier(Child(0));
-        Type thistype = (Type)malloc(sizeof(Type_));
-        thistype->kind = BASIC;
-        if (!strcmp(Child(0, 0)->text, "int")) {
-            thistype->u.basic = 0;
+        if (Child(1)->childsum == 1) {
+            assert(!strcmp(Child(1, 0)->name, "ID"));
+            int specifierNo = handleSpecifier(Child(0));
+            Type thistype = (Type)malloc(sizeof(Type_));
+            thistype->kind = BASIC;
+            if (!strcmp(Child(0, 0)->text, "int")) {
+                thistype->u.basic = 0;
+            }
+            else {
+                thistype->u.basic = 1;
+            }
+            if (getStructNo(Child(1, 0)->text)) {
+                PrintSemErrorMsg(3, Child(1, 0)->lineno, Child(1, 0)->text);
+            }
+            else {
+                insertVarSymbolTable(Child(1, 0)->text, thistype);
+            }
+            function->argbasic[function->argsum++] = thistype->u.basic;
+            handleVarDec(Child(1), specifierNo);
         }
         else {
-            thistype->u.basic = 1;
-        }
-        if (getStructNo(Child(1, 0)->text)) {
-            PrintSemErrorMsg(3, Child(1, 0)->lineno, Child(1, 0)->text);
-        }
-        else {
-            // assert(0);
-            insertVarSymbolTable(Child(1, 0)->text, thistype);
-        }
-        function->argbasic[function->argsum++] = thistype->u.basic;
+            assert(Child(1)->childsum == 4);
+            int specifierNo = handleSpecifier(Child(0));
+            Type thistype = (Type)malloc(sizeof(Type_));
+            thistype->kind = ARRAY;
+            // ParamDec -> Specifier VarDec
+            // Specifier -> TYPE | StructSpecifier
+            // VarDec -> ID (| VarDec LB INT RB)
+            Type elemtype = (Type)malloc(sizeof(Type_));
+            if (specifierNo == 0 || specifierNo == 1) {
+                elemtype->kind = BASIC;
+                elemtype->u.basic = specifierNo;
+            }
+            else {
+                assert(0);
+            }
 
-        handleVarDec(Child(1), specifierNo);
+            thistype->u.array.elem = elemtype;
+            thistype->u.array.size = atoi(Child(1, 2)->text);
+
+            if (getStructNo(Child(1, 0, 0)->text)) {
+                PrintSemErrorMsg(3, Child(1, 0, 0)->lineno, Child(1, 0, 0)->text);
+            }
+            else {
+                insertVarSymbolTable(Child(1, 0, 0)->text, thistype);
+            }
+
+            function->argbasic[function->argsum++] = thistype->u.array.elem->u.basic;
+            // handleVarDec(Child(1), specifierNo);
+        }
     }
     else {
         int specifierNo = handleSpecifier(Child(0));
@@ -426,9 +454,7 @@ void handleStmt(Node root, int specifierNo) {
 
     else if (!strcmp(Child(0)->name, "RETURN")) {
         int nodetype = -1;
-
         nodetype = handleExp(Child(1));
-
         int funcreturntype = specifierNo;
 
     #ifdef PHASE_SEM
@@ -584,7 +610,15 @@ int handleExp(Node root) {
                   return getStructNo(symboltable[key].type->u.structure->name);
               }
               else if (symboltable[key].type->kind == ARRAY) {
-                  return ARRAY * 10 + symboltable[key].type->u.array.elem->u.basic;
+                  if (symboltable[key].type->u.array.elem->kind == ARRAY) {
+                      return symboltable[key].type->u.array.elem->u.array.elem->kind;
+                  }
+                  else {
+                      return symboltable[key].type->u.array.elem->kind;
+                  }
+              }
+              else {
+                  assert(0);
               }
         }
     }
@@ -599,6 +633,7 @@ int handleExp(Node root) {
 
       // | Exp LB Exp RB
       if (!strcmp(Child(2, 0)->name, "FLOAT")) {
+        assert(0);
           PrintSemErrorMsg(12, Child(2, 0)->lineno, Child(2, 0)->text);
           return -1;
       }
@@ -608,10 +643,15 @@ int handleExp(Node root) {
               PrintSemErrorMsg(10, Child(0, 0)->lineno, Child(0, 0)->text);
               return -1;
           }
+          else {
+              return handleExp(Child(0));
+          }
       }
+
       else {
-          return handleExp(Child(2));
+          return handleExp(Child(0));
       }
+
       break;
 
       case 3:
@@ -737,9 +777,9 @@ int handleExp(Node root) {
             if (node1_type != -1 && node1_type == node2_type) {
                 return node1_type;
             }
-
             else {
                 PrintSemErrorMsg(7, Child(0)->lineno, "");
+                printf("%d %d\n", node1_type, node2_type);
                 return -1;
             }
         }
@@ -859,7 +899,9 @@ void getVarType(int* p, int argsum, Node root) {
 // | FLOAT 6
 
 int getHandleExpType(Node root) {
-    if (Childsum == 1) return 6;
+    if (Childsum == 1) {
+        return 6;
+    }
     if (!strcmp(Child(0)->name, "LP") || !strcmp(Child(0)->name, "MINUS") || !strcmp(Child(0)->name, "NOT")) {
         return 2;
     }
@@ -918,10 +960,15 @@ void getArguments(char* arguments, int* pargtype, int argsum) {
             strcat(arguments, "float");
         }
         else {
-            assert(pargtype[i] >= 20);
-            char structName[128];
-            getStructName(pargtype[i] - 20, structName);
-            strcat(arguments, structName);
+            if (pargtype[i] >= 20) {
+                char structName[128];
+                getStructName(pargtype[i] - 20, structName);
+                strcat(arguments, structName);
+            }
+            else {
+                printf("T: %d\n", pargtype[i]);
+            }
+
         }
         if (i != argsum - 1) {
             strcat(arguments, ", ");

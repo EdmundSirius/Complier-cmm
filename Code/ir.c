@@ -4,43 +4,38 @@
 #include "translate.h"
 
 void insertInterCode(InterCode head) {
-    InterCode newhead = (InterCode)malloc(sizeof(InterCode_));
-    // InterCode newhead1 = (InterCode)malloc(sizeof(InterCode_));
-    // InterCode pos;
-    // list_for_each(pos, head) {
-    //     list_add_tail(pos, &interCodes_head);
-    // }
-    newhead->code = head->code;
-    list_add_tail(newhead, &interCodes_head);
-    // if (head->next != NULL) {
-    //     newhead1->code = head->next->code;
-    //     list_add_tail(newhead1, &interCodes_head);
-    // }
+    // InterCode newhead = (InterCode)malloc(sizeof(InterCode_));
+    // newhead->code = head->code;
+    // list_add_tail(newhead, &interCodes_head);
+    #ifdef DEBUG_IR
+    printInterCode(head);
+    #endif
+
 }
 
-InterCode concatCode(InterCode code1, InterCode code2) {
-
-    if (code1 == NULL) { assert(0); return code2; }
-    if (code2 == NULL) { assert(0); return code1; }
-
-    InterCode newcode1 = (InterCode)malloc(sizeof(InterCode_));
-    InterCode newcode2 = (InterCode)malloc(sizeof(InterCode_));
-
-    newcode1->code = code1->code;
-    newcode2->code = code2->code;
-    newcode1->next = newcode2;
-
-    // InterCode tail = code1;
-    // while (tail->next != NULL)
-    //     tail = tail->next;
-    // tail->next = code2;
-    // code2->prev = tail;
-    // code1->next = code2;
-    return newcode1;
-}
+// InterCode concatCode(InterCode code1, InterCode code2) {
+//
+//     if (code1 == NULL) { assert(0); return code2; }
+//     if (code2 == NULL) { assert(0); return code1; }
+//
+//     InterCode newcode1 = (InterCode)malloc(sizeof(InterCode_));
+//     InterCode newcode2 = (InterCode)malloc(sizeof(InterCode_));
+//
+//     newcode1->code = code1->code;
+//     newcode2->code = code2->code;
+//     newcode1->next = newcode2;
+//
+//     // InterCode tail = code1;
+//     // while (tail->next != NULL)
+//     //     tail = tail->next;
+//     // tail->next = code2;
+//     // code2->prev = tail;
+//     // code1->next = code2;
+//     return newcode1;
+// }
 
 InterCode intercodeConstruct(int kind,...) {
-    InterCode ir = (InterCode)malloc(sizeof(struct InterCodes));
+    InterCode ir = (InterCode)malloc(sizeof(InterCode_));
     va_list va_ptr;
     ir->code.kind = kind;
     int arg1, arg2, arg3, arg4, arg5, arg6, arg7;
@@ -216,7 +211,7 @@ void printInterCode(InterCode intercode) {
             symbolHandle(op1, intercode->code.triop.x);
             symbolHandle(op2, intercode->code.triop.y);
             symbolHandle(op3, intercode->code.triop.z);
-            sprintf(code, "%s := %s * %s\n", op1, op2, op3);
+            sprintf(code, "%s := %s / %s\n", op1, op2, op3);
             break;
 
         case IR_GETADD:
