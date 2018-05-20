@@ -8,11 +8,13 @@
 
 #define MAX_CHILD_NUM 7
 
+// #define LEX_ANALYSE
 #define PRINT_TRACE
-#define PHASE_SEM
+// #define PHASE_SEM
 #define PRINT_TABLE
+// #define TRANSLATE
 
-#ifdef PRINT_TRACE
+#ifdef LEX_ANALYSE
 
 #define CreateNode(node_name) \
 yylval.node = createNode(node_name, yytext); printf("%s\n", node_name)

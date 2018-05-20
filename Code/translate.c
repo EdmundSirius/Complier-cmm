@@ -7,7 +7,9 @@
 int label_no = 0;
 int temp_no = 0;
 int func_no = 0;
-// int var_no = 0;
+int arg_no = 0;
+int isParam[4096];
+FILE *fp;
 
 void preInterCodeGenerate() {
     Function *readfunction = (Function*)malloc(sizeof(Function));
@@ -23,7 +25,6 @@ void preInterCodeGenerate() {
 
     /* read(), return(int)
        write(int)，return(0) */
-    INIT_LIST_HEAD(&interCodes_head);
 }
 
 void printInterCodes(InterCode head) {
@@ -31,9 +32,6 @@ void printInterCodes(InterCode head) {
     FILE *fp = fopen("out.ir", "wt");
     if(fp == NULL)
         assert(0);
-    list_for_each(pos, head) {
-        printInterCode(pos);
-    }
 }
 
 void interCodeGenerate() {
@@ -42,80 +40,29 @@ void interCodeGenerate() {
     if (!strcmp(root->name, "Program")) {
         translate_ExtDefList(Child(0));
     }
-
-    // InterCode ir[64];
-
-    // ir[0] = intercodeConstruct(IR_PARAM, OP_VARIABLE, 1);
-    // ir[1] = intercodeConstruct(IR_ARG, OP_TEMPORARY, 1);
-    // ir[2] = intercodeConstruct(IR_CALL, OP_TEMPORARY, 5, OP_FUNCTION, 2);
-/*
-    ir[0] = intercodeConstruct(IR_FUNC, 2);
-    ir[1] = intercodeConstruct(IR_READ, OP_TEMPORARY, 1);
-    ir[2] = intercodeConstruct(IR_ASSIGN, OP_VARIABLE, 1, OP_TEMPORARY, 1);
-    ir[3] = intercodeConstruct(IR_ASSIGN, OP_TEMPORARY, 2, OP_ADDRESS, 0);
-    ir[4] = intercodeConstruct(IR_IFGOTO, OP_VARIABLE, 1, OP_TEMPORARY, 2, OP_LABEL, 1, RELGT);
-    ir[5] = intercodeConstruct(IR_GOTO, OP_LABEL, 2);
-    ir[6] = intercodeConstruct(IR_LABEL, OP_LABEL, 1);
-    ir[7] = intercodeConstruct(IR_ASSIGN, OP_TEMPORARY, 3, OP_ADDRESS, 1);
-    ir[8] = intercodeConstruct(IR_WRITE, OP_TEMPORARY, 3);
-    ir[9] = intercodeConstruct(IR_GOTO, OP_LABEL, 3);
-    ir[10] = intercodeConstruct(IR_LABEL, OP_LABEL, 2);
-    ir[11] = intercodeConstruct(IR_ASSIGN, OP_TEMPORARY, 4, OP_ADDRESS, 0);
-    ir[12] = intercodeConstruct(IR_IFGOTO, OP_VARIABLE, 1, OP_TEMPORARY, 4, OP_LABEL, 4, RELLT);
-    ir[13] = intercodeConstruct(IR_GOTO, OP_LABEL, 5);
-    ir[14] = intercodeConstruct(IR_LABEL, OP_LABEL, 4);
-    ir[15] = intercodeConstruct(IR_ASSIGN, OP_TEMPORARY, 5, OP_ADDRESS, 1);
-    ir[16] = intercodeConstruct(IR_SUB, OP_TEMPORARY, 6, OP_ADDRESS, 0, OP_TEMPORARY, 5);
-    ir[17] = intercodeConstruct(IR_WRITE, OP_TEMPORARY, 6);
-    ir[18] = intercodeConstruct(IR_GOTO, OP_LABEL, 6);
-    ir[19] = intercodeConstruct(IR_LABEL, OP_LABEL, 5);
-    ir[20] = intercodeConstruct(IR_ASSIGN, OP_TEMPORARY, 7, OP_ADDRESS, 0);
-    ir[21] = intercodeConstruct(IR_WRITE, OP_TEMPORARY, 7);
-    ir[22] = intercodeConstruct(IR_LABEL, OP_LABEL, 6);
-    ir[23] = intercodeConstruct(IR_LABEL, OP_LABEL, 3);
-    ir[24] = intercodeConstruct(IR_ASSIGN, OP_TEMPORARY, 8, OP_ADDRESS, 0);
-    ir[25] = intercodeConstruct(IR_RET, OP_TEMPORARY, 8);
-*/
-
-    // printInterCodes(&interCodes_head);
+    printInterCodes(NULL);
 
 }
 
 // ExtDefList -> ExtDef ExtDefList | ϵ
 void translate_ExtDefList(Node root) {
-    InterCode intercode;
     if (Childsum == 0) return;
     while (root != NULL) {
-        intercode = translate_ExtDef(Child(0));
-        assert(intercode != NULL);
-        // insertInterCode(intercode);
+        translate_ExtDef(Child(0));
         root = Child(1);
     }
 }
 
-
-//
-// void insertInterCodes(InterCodes codes) {
-//     InterCodes *pos;
-//     list_for_each(pos, &codes) {
-//         list_add_tail(pos, &interCodes_head);
-//     }
-// }
-
 // ExtDef -> Specifier ExtDecList SEMI
 // | Specifier SEMI | Specifier FunDec CompSt
 
-InterCode translate_ExtDef(Node root) {
-    InterCode intercode;
+void translate_ExtDef(Node root) {
     assert(!strcmp(Child(1)->name, "FunDec"));
-    // intercode = translate_Specifier(Child(0));
-    // assert(intercode != NULL);
-    intercode = translate_FunDec(Child(1));
+    translate_FunDec(Child(1));
     /*TODO:*/
-    assert(intercode != NULL);
+
     translate_CompSt(Child(2));
-    assert(intercode != NULL);
-    return intercode;
+
 }
 
 // Specifier -> TYPE | StructSpecifier
@@ -125,23 +72,20 @@ InterCode translate_Specifier(Node root) {
     return intercode;
 }
 
-
-
 // ParamDec -> Specifier VarDec
 // Specifier -> TYPE | StructSpecifier
 // VarDec -> ID | VarDec LB INT RB
 
 void translate_ParamDec(Node root) {
-    InterCode intercode;
     assert(!strcmp(Child(0, 0)->name, "TYPE"));
     if (Child(1)->childsum == 1) {
-        intercode = intercodeConstruct(IR_PARAM, OP_VARIABLE, getOpVarNo(Child(1, 0)->text) + 1);
-        insertInterCode(intercode);
+        CREATE_IR(IR_PARAM, OP_VARIABLE, getOpVarNo(Child(1, 0)->text) + 1);
+        isParam[getOpVarNo(Child(1, 0)->text) + 1] = 1;
     }
     else {
         assert(Child(1)->childsum == 4);
-        intercode = intercodeConstruct(IR_PARAM, OP_VARIABLE, getOpVarNo(Child(1, 0, 0)->text) + 1);
-        insertInterCode(intercode);
+        CREATE_IR(IR_PARAM, OP_VARIABLE, getOpVarNo(Child(1, 0, 0)->text) + 1);
+        isParam[getOpVarNo(Child(1, 0, 0)->text) + 1] = 1;
     }
 }
 
@@ -156,19 +100,31 @@ void translate_VarList(Node root) {
 
 
 // FunDec -> ID LP VarList RP | ID LP RP
-InterCode translate_FunDec(Node root) {
-    InterCode intercode = intercodeConstruct(IR_FUNC, getFuncNo(Child(0)->text));
-    insertInterCode(intercode);
-    if (Childsum == 3) {
-        return intercode;
-    }
-    else {
-        assert(Childsum == 4);
-        //intercode = intercodeConstruct(IR_PARAM, OP_VARIABLE, getOpVarNo(Child(2, 0, 1, 0)->text) + 1);
-        /*TODO:*/
-        //insertInterCode(intercode);
+void translate_FunDec(Node root) {
+    CREATE_IR(IR_FUNC, getFuncNo(Child(0)->text));
+    if (Childsum == 4) {
         translate_VarList(Child(2));
-        return intercode;
+    }
+}
+
+// VarDec -> ID (| VarDec LB INT RB)
+void translate_VarDec(Node root) {
+    if (Childsum != 1) {
+      Array *array = getArray(root);
+      int size = array->dim;
+      // printf("[size:%d]\n", size);
+      Operand var = (Operand)malloc(sizeof(Operand_));
+      Operand operand = (Operand)malloc(sizeof(Operand_));
+      operand->kind = OP_SIZE;
+      var->kind = OP_VARIABLE;
+      int i = 0;
+      operand->u.no = 8;
+      for (; i < size; ++i) {
+          root = Child(0);
+          operand->u.no = operand->u.no * array->size[i];
+      }
+      var->u.no = getOpVarNo(Child(0)->text) + 1;
+      CREATE_IR(IR_DEC, var->kind, var->u.no, operand->kind, operand->u.no);
     }
 }
 
@@ -189,15 +145,14 @@ void translate_Dec(Node root) {
         var->u.no = getOpVarNo(Child(0, 0)->text) + 1;
         assert(var->u.no != 0);
 
-        intercode1 = intercodeConstruct(IR_ASSIGN, OP_VARIABLE, var->u.no, OP_TEMPORARY, t1->u.no);
-        insertInterCode(intercode1);
-
-        intercode2 = intercodeConstruct(IR_ASSIGN, t1->kind, t1->u.no, OP_VARIABLE, var->u.no);
-        insertInterCode(intercode2);
-
         t2->kind = OP_TEMPORARY;
         t2->u.no = ++temp_no;
-        translate_Exp(Child(2), t2);
+        translate_Exp(Child(2), t2, 1);
+        CREATE_IR(IR_ASSIGN, var->kind, var->u.no, t2->kind, t2->u.no);
+    }
+    else {
+        assert(Childsum == 1);
+        translate_VarDec(Child(0));
     }
 }
 
@@ -230,14 +185,13 @@ void translate_CompSt(Node root) {
 }
 
 // StmtList -> Stmt StmtList | ϵ
-InterCode translate_StmtList(Node root) {
-    InterCode intercode;
+void translate_StmtList(Node root) {
     while (root != NULL) {
-        intercode = translate_Stmt(Child(0));
-        // insertInterCode(intercode);
+        assert(Childsum == 2);
+        translate_Stmt(Child(0));
         root = Child(1);
     }
-    return intercode;
+
 }
 
 // Stmt -> Exp SEMI
@@ -246,84 +200,57 @@ InterCode translate_StmtList(Node root) {
 // | IF LP Exp RP Stmt
 // | IF LP Exp RP Stmt ELSE Stmt
 // | WHILE LP Exp RP Stmt
-InterCode translate_Stmt(Node root) {
-    InterCode intercode = (InterCode)malloc(sizeof(InterCode_));
-    Operand t1 = (Operand)malloc(sizeof(Operand_));
+void translate_Stmt(Node root) {
     if (!strcmp(Child(0)->name, "Exp")) {
-        translate_Exp(Child(0), NULL);
+        translate_Exp(Child(0), NULL, -1);
     }
     else if (!strcmp(Child(0)->name, "CompSt")) {
         translate_CompSt(Child(0));
     }
 
     else if (!strcmp(Child(0)->name, "RETURN")) {
+        Operand t1 = CREATE_TEMP_OP();
         t1->kind = OP_TEMPORARY;
         t1->u.no = ++temp_no;
-        translate_Exp(Child(1), t1);
-        intercode = intercodeConstruct(IR_RET, OP_TEMPORARY, t1->u.no);
-        insertInterCode(intercode);
+        translate_Exp(Child(1), t1, 1);
+        CREATE_IR(IR_RET, t1->kind, t1->u.no);
     }
 
     else if (!strcmp(Child(0)->name, "IF")) {
-
         if (Childsum == 5) {
             int label1 = ++label_no;
             int label2 = ++label_no;
             translate_Cond(Child(2), label1, label2);
-            intercode = intercodeConstruct(IR_LABEL, OP_LABEL, label1);
-            insertInterCode(intercode);
-
+            CREATE_IR(IR_LABEL, OP_LABEL, label1);
             translate_Stmt(Child(4));
-            intercode = intercodeConstruct(IR_LABEL, OP_LABEL, label2);
-            insertInterCode(intercode);
+            CREATE_IR(IR_LABEL, OP_LABEL, label2);
         }
         if (Childsum == 7) {
             int label1 = ++label_no;
             int label2 = ++label_no;
             int label3 = ++label_no;
-            // intercode = translate_Exp(Child(2), NULL);
             translate_Cond(Child(2), label1, label2);
-            intercode = intercodeConstruct(IR_LABEL, OP_LABEL, label1);
-            insertInterCode(intercode);
-
+            CREATE_IR(IR_LABEL, OP_LABEL, label1);
             translate_Stmt(Child(4));
-            intercode = intercodeConstruct(IR_GOTO, OP_LABEL, label3);
-            insertInterCode(intercode);
-
-            intercode = intercodeConstruct(IR_LABEL, OP_LABEL, label2);
-            insertInterCode(intercode);
-
+            CREATE_IR(IR_GOTO, OP_LABEL, label3);
+            CREATE_IR(IR_LABEL, OP_LABEL, label2);
             translate_Stmt(Child(6));
-            intercode = intercodeConstruct(IR_LABEL, OP_LABEL, label3);
-            insertInterCode(intercode);
+            CREATE_IR(IR_LABEL, OP_LABEL, label3);
         }
-
     }
 
     else {
         assert(!strcmp(Child(0)->name, "WHILE"));
-
         int label1 = ++label_no;
         int label2 = ++label_no;
         int label3 = ++label_no;
-
-        intercode = intercodeConstruct(IR_LABEL, OP_LABEL, label1);
-        insertInterCode(intercode);
-
+        CREATE_IR(IR_LABEL, OP_LABEL, label1);
         translate_Cond(Child(2), label2, label3);
-
-        intercode = intercodeConstruct(IR_LABEL, OP_LABEL, label2);
-        insertInterCode(intercode);
-
+        CREATE_IR(IR_LABEL, OP_LABEL, label2);
         translate_Stmt(Child(4));
-
-        intercode = intercodeConstruct(IR_GOTO, OP_LABEL, label1);
-        insertInterCode(intercode);
-
-        intercode = intercodeConstruct(IR_LABEL, OP_LABEL, label3);
-        insertInterCode(intercode);
+        CREATE_IR(IR_GOTO, OP_LABEL, label1);
+        CREATE_IR(IR_LABEL, OP_LABEL, label3);
     }
-    return intercode;
 }
 
 int get_relop(Node root) {
@@ -337,6 +264,9 @@ int get_relop(Node root) {
     else if (!strcmp(root->text, "==")) {
         return EQUAL;
     }
+    else if (!strcmp(root->text, "!=")) {
+        return NOTEQ;
+    }
     else if (!strcmp(root->text, ">=")) {
         return RELGE;
     }
@@ -349,33 +279,50 @@ int get_relop(Node root) {
     return 0;
 }
 
-InterCode translate_Cond(Node root, int label_true, int label_false) {
+void translate_Cond(Node root, int label_true, int label_false) {
     int type = getTranslateExpType(root);
     Operand t1 = (Operand)malloc(sizeof(Operand_));
     Operand t2 = (Operand)malloc(sizeof(Operand_));
     int op;
-    InterCode intercode, code1, code2, code3, ir;
-    code1 = (InterCode)malloc(sizeof(InterCode_));
-    code2 = (InterCode)malloc(sizeof(InterCode_));
-    ir = (InterCode)malloc(sizeof(InterCode_));
+    int label1;
+    InterCode ir = (InterCode)malloc(sizeof(InterCode_));
     switch(type) {
         case 60:
-            // assert(0);
             t1->kind = OP_TEMPORARY;
             t1->u.no = ++temp_no;
-            /*code1 = */translate_Exp(Child(0), t1);
+            translate_Exp(Child(0), t1, 1);
 
             t2->kind = OP_TEMPORARY;
             t2->u.no = ++temp_no;
-            /*code2 = */translate_Exp(Child(2), t2);
+            translate_Exp(Child(2), t2, 1);
 
             op = get_relop(Child(1));
-            code3 = intercodeConstruct(IR_IFGOTO, t1->kind, t1->u.no, t2->kind, t2->u.no, OP_LABEL, label_true, op);
-            insertInterCode(code3);
-            insertInterCode(intercodeConstruct(IR_GOTO, OP_LABEL, label_false));
+            CREATE_IR(IR_IFGOTO, t1->kind, t1->u.no, t2->kind, t2->u.no, OP_LABEL, label_true, op);
+            CREATE_IR(IR_GOTO, OP_LABEL, label_false);
             break;
+        case 61:
+            translate_Cond(Child(1), label_false, label_true);
+            break;
+        case 62:
+            label1 = ++label_no;
+            translate_Cond(Child(0), label1, label_false);
+            CREATE_IR(IR_LABEL, OP_LABEL, label1);
+            translate_Cond(Child(2), label_true, label_false);
+            break;
+        case 63:
+            label1 = ++label_no;
+            translate_Cond(Child(0), label_true, label1);
+            CREATE_IR(IR_LABEL, OP_LABEL, label1);
+            translate_Cond(Child(2), label_true, label_false);
+            break;
+        default:
+            t1->kind = OP_TEMPORARY;
+            t1->u.no = ++temp_no;
+            translate_Exp(root, t1, 1);
+            // code2 = [IF t1 != #0 GOTO label_true]
+            CREATE_IR(IR_IFGOTO, t1->kind, t1->u.no, OP_CONSTANT, 0, OP_LABEL, label_true, NOTEQ);
+            CREATE_IR(IR_GOTO, OP_LABEL, label_false);
     }
-    return intercode;
 }
 
 // Exp ->
@@ -426,64 +373,143 @@ int getTranslateExpType(Node root) {
     return 0;
 }
 
-InterCode translate_Args(Node root, Operand *arg_list) {
-    if (Childsum == 1) {
-        Operand t1 = (Operand)malloc(sizeof(Operand_));
-        t1->kind = OP_TEMPORARY;
-        t1->u.no = ++temp_no;
-        InterCode code1 = translate_Exp(Child(0), t1);
-        *arg_list = t1;
-        // insertInterCode(code1);
-        return code1;
+// Args -> Exp COMMA Args | Exp
+void translate_Args(Node root, Operand *arg_list) {
+    Operand t1 = CREATE_TEMP_OP();
+    translate_Exp(Child(0), t1, 1);
+    arg_list[arg_no++] = t1;
+
+    if (Childsum != 1) {
+        translate_Args(Child(2), arg_list);
     }
-    assert(0);
 }
 
-InterCode translate_Exp(Node root, Operand operand) {
+void translate_Array(Node root, Operand operand, int direction) {
+    Node tmp = root;
+    Array *array = getArray(root);
+    int size = array->dim;
+    int opVarNo1;
+
+    root = Child(0);
+    while (strcmp(Child(0)->name, "ID")) {
+        root = Child(0);
+    }
+
+    assert(!strcmp(Child(0)->name, "ID"));
+    opVarNo1 = getOpVarNo(Child(0)->text) + 1;
+    root = tmp;
+
+#ifdef TRANSLATE
+    printf("ARRAY:");
+    int i = 0;
+    for (; i < size; ++i) {
+        printf("[%d]", array->size[i]);
+    }
+    printf("\n");
+#endif
+
+    int n = 3 * size - 1;
+    int no1 = size - 1, no2 = no1 + 1, no3 = no2 + 1, i;
+    Operand tmp1, tmp2, tmp3;
+    Operand *t = malloc(n * sizeof(Operand));
+
+    for (i = 0; i < n; ++i) {
+        t[i] = CREATE_TEMP_OP();
+    }
+    for (i = 0; i < size; ++i) {
+        translate_Exp(Child(2), t[i], direction);
+        root = Child(0);
+    }
+
+    for (i = 0; i < size - 1; ++i) {
+        tmp1 = t[no1];
+        tmp2 = t[no2];
+        tmp3 = t[no3];
+        CREATE_IR(IR_MUL, tmp2->kind, tmp2->u.no, tmp1->kind, tmp1->u.no, OP_CONSTANT, array->size[size - i - 2]);
+        CREATE_IR(IR_ADD, tmp3->kind, tmp3->u.no, tmp2->kind, tmp2->u.no, t[size - i - 2]->kind, t[size - i - 2]->u.no);
+        no1 += 2;
+        no2 += 2;
+        no3 += 2;
+    }
+
+    CREATE_IR(IR_MUL, t[n - 1]->kind, t[n - 1]->u.no, t[n - 2]->kind, t[n - 2]->u.no, OP_CONSTANT, 4);
+    if (isParam[opVarNo1] == 1) {
+        CREATE_IR(IR_ADD, operand->kind, operand->u.no, OP_VARIABLE, opVarNo1, t[n - 1]->kind, t[n - 1]->u.no);
+    }
+    else {
+        CREATE_IR(IR_ADD, operand->kind, operand->u.no, OP_ADDRESS, opVarNo1, t[n - 1]->kind, t[n - 1]->u.no);
+    }
+    Operand var = (Operand)malloc(sizeof(Operand_));
+    if (direction == 1) {
+        var->kind = OP_TEMPORARY;
+        var->u.no = ++temp_no;
+        CREATE_IR(IR_ASSIGN, var->kind, var->u.no, OP_VALUE, operand->u.no);
+        operand->u.no = var->u.no;
+    }
+}
+
+void translate_Exp(Node root, Operand operand, int direction) {
     int type = getTranslateExpType(root);
-    InterCode intercode = (InterCode)malloc(sizeof(InterCode_));
-    InterCode code1, code2;
     Operand var = (Operand)malloc(sizeof(Operand_));
     Operand t1 = (Operand)malloc(sizeof(Operand_));
     Operand t2 = (Operand)malloc(sizeof(Operand_));
-    Operand *arg_list = (Operand *)malloc(sizeof(Operand));
+    Operand arg_list[32];
     int no = -1;
+    int opVarNo1;
+    char name[128];
     switch (type) {
       case 8:
-          code1 = translate_Args(Child(2), arg_list);
+          arg_no = 0;
+          translate_Args(Child(2), arg_list);
           if (!strcmp(Child(0)->text, "write")) {
-              intercode = intercodeConstruct(IR_WRITE, OP_TEMPORARY, (*arg_list)->u.no);
-              insertInterCode(intercode);
-              assert(arg_list != NULL);
-          }
-          // | ID LP Args RP 8
-          /*TODO:*/
-          if (operand != NULL) {
-              intercode = intercodeConstruct(IR_ARG, OP_VARIABLE, getOpVarNo(Child(2, 0, 0)->text) + 1);
-              insertInterCode(intercode);
-              intercode = intercodeConstruct(IR_CALL, OP_TEMPORARY, operand->u.no, OP_FUNCTION, getFuncNo(Child(0)->text));
-              insertInterCode(intercode);
+              CREATE_IR(IR_WRITE, OP_TEMPORARY, arg_list[arg_no - 1]->u.no);
+              break;
           }
 
+          int argSum = getVarSum(Child(0));
+          int i;
+
+          for (i = arg_no - 1; i >= 0; --i) {
+              CREATE_IR(IR_ARG, arg_list[i]->kind, arg_list[i]->u.no);
+          }
+          if (operand != NULL) {
+              CREATE_IR(IR_CALL, operand->kind, operand->u.no, OP_FUNCTION, getFuncNo(Child(0)->text));
+          }
+          else {
+              Operand t1 = CREATE_TEMP_OP();
+              CREATE_IR(IR_CALL, t1->kind, t1->u.no, OP_FUNCTION, getFuncNo(Child(0)->text));
+          }
           break;
       case 7:
           if (!strcmp(Child(0)->text, "read")) {
-              intercode = intercodeConstruct(IR_READ, OP_TEMPORARY, operand->u.no);
               no = getFuncNo(Child(0)->text);
               if (no == -1) assert(0);
-              functionTable[no].t_no = temp_no;
-              insertInterCode(intercode);
+              CREATE_IR(IR_READ, OP_TEMPORARY, operand->u.no);
+          }
+          else {
+              CREATE_IR(IR_CALL, operand->kind, operand->u.no, OP_FUNCTION, getFuncNo(Child(0)->text));
           }
           break;
       case 3:
           // Exp -> Exp(ID) ASSIGNOP Exp
           t1->kind = OP_TEMPORARY;
           t1->u.no = ++temp_no;
-          code1 = translate_Exp(Child(2), t1);
-          // insertInterCode(code1);
-          code2 = intercodeConstruct(IR_ASSIGN, OP_VARIABLE, getOpVarNo(Child(0, 0)->text) + 1, OP_TEMPORARY, t1->u.no);
-          insertInterCode(code2);
-          if (operand != NULL) assert(0);
+          translate_Exp(Child(2), t1, 1);
+          if (!strcmp(Child(0, 0)->name, "ID")) {
+              var->kind = OP_VARIABLE;
+              var->u.no = getOpVarNo(Child(0, 0)->text) + 1;
+              CREATE_IR(IR_ASSIGN, var->kind, var->u.no, t1->kind, t1->u.no);
+              if (operand != NULL)
+                  CREATE_IR(IR_ASSIGN, operand->kind, operand->u.no, var->kind, var->u.no);
+          }
+          else {
+              t2->kind = OP_TEMPORARY;
+              t2->u.no = ++temp_no;
+              translate_Exp(Child(0), t2, 0);
+              CREATE_IR(IR_ASSIGN, OP_VALUE, t2->u.no, t1->kind, t1->u.no);
+              if (operand != NULL)
+                  CREATE_IR(IR_ASSIGN, operand->kind, operand->u.no, OP_VALUE, t2->u.no);
+          }
           break;
       case 40:
       case 41:
@@ -493,69 +519,67 @@ InterCode translate_Exp(Node root, Operand operand) {
           t1->u.no = ++temp_no;
           t2->kind = OP_TEMPORARY;
           t2->u.no = ++temp_no;
-          translate_Exp(Child(0), t1);
-          translate_Exp(Child(2), t2);
+          translate_Exp(Child(0), t1, 1);
+          translate_Exp(Child(2), t2, 1);
           if (type == 40) {
-              intercode = intercodeConstruct(IR_ADD, operand->kind, operand->u.no,
-                t1->kind, t1->u.no, t2->kind, t2->u.no);
+              CREATE_IR(IR_ADD, operand->kind, operand->u.no, t1->kind, t1->u.no, t2->kind, t2->u.no);
           }
           else if (type == 41) {
-              intercode = intercodeConstruct(IR_SUB, operand->kind, operand->u.no,
-                t1->kind, t1->u.no, t2->kind, t2->u.no);
+              CREATE_IR(IR_SUB, operand->kind, operand->u.no, t1->kind, t1->u.no, t2->kind, t2->u.no);
           }
           else if (type == 42) {
-              intercode = intercodeConstruct(IR_MUL, operand->kind, operand->u.no,
-                t1->kind, t1->u.no, t2->kind, t2->u.no);
+              CREATE_IR(IR_MUL, operand->kind, operand->u.no, t1->kind, t1->u.no, t2->kind, t2->u.no);
           }
           else {
-              intercode = intercodeConstruct(IR_DIV, operand->kind, operand->u.no,
-                t1->kind, t1->u.no, t2->kind, t2->u.no);
+              CREATE_IR(IR_DIV, operand->kind, operand->u.no, t1->kind, t1->u.no, t2->kind, t2->u.no);
           }
-          insertInterCode(intercode);
           break;
       case 6:
-          // var->kind = OP_VARIABLE;
-          // var->u.no = getOpVarNo(Child(0, 0)->text) + 1;
-          // intercode->code.kind = IR_ASSIGN;
-          // intercode->code.biop.x = operand;
-          // intercode->code.biop.y = var;
           assert(0);
           break;
       case 2:
           assert(!strcmp(Child(0)->name, "ID"));
-          var->kind = OP_VARIABLE;
-          var->u.no = functionTable[getOpVarNo(Child(0)->text)].t_no + 1;
-          intercode = intercodeConstruct(IR_ASSIGN, operand->kind, operand->u.no, var->kind, var->u.no);
-          insertInterCode(intercode);
+          var->u.no = getOpVarNo(Child(0)->text) + 1;
+          if (isArray(Child(0)->text)) {
+              if (isParam[var->u.no] == 1) {
+                  var->kind = OP_VARIABLE;
+              }
+              else {
+                  var->kind = OP_ADDRESS;
+              }
+          }
+          else {
+              var->kind = OP_VARIABLE;
+          }
+          CREATE_IR(IR_ASSIGN, operand->kind, operand->u.no, var->kind, var->u.no);
           break;
       case 1:
           assert(!strcmp(Child(0)->name, "INT"));
           if (operand != NULL) {
               var->kind = OP_CONSTANT;
-              // strcpy(var->u.value, Child(0)->text);
               var->u.no = atoi(Child(0)->text);
-              intercode = intercodeConstruct(IR_ASSIGN, operand->kind, operand->u.no, var->kind, var->u.no);
-              insertInterCode(intercode);
+              CREATE_IR(IR_ASSIGN, operand->kind, operand->u.no, var->kind, var->u.no);
+          }
+          else {
+              assert(0);
           }
           break;
       case 5:
           t1->kind = OP_TEMPORARY;
           t1->u.no = ++temp_no;
-          translate_Exp(Child(1), t1);
-          code2 = intercodeConstruct(IR_SUB, operand->kind, operand->u.no, OP_CONSTANT, 0, t1->kind, t1->u.no);
-          insertInterCode(code2);
+          translate_Exp(Child(1), t1, 1);
+          CREATE_IR(IR_SUB, operand->kind, operand->u.no, OP_CONSTANT, 0, t1->kind, t1->u.no);
           break;
       case 60:
+          assert(0);
           break;
       case 9:
           assert(!strcmp(Child(1)->name, "Exp"));
-          translate_Exp(Child(1), operand);
+          translate_Exp(Child(1), operand, direction);
           break;
       case 81:
-          
+          translate_Array(root, operand, direction);
           break;
       default: printf("%d\n", type); assert(0);
-
     }
-    return intercode;
 }

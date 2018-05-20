@@ -1,23 +1,22 @@
 #ifndef IR_H
 #define IR_H
 
-// #define MAX_LINE 1024
 #define DEBUG_IR
 #include <string.h>
+#include <stdio.h>
 
 typedef struct Operand_* Operand;
-
-typedef struct InterCodes* InterCode;
+typedef struct InterCode_* InterCode;
 
 typedef struct Operand_ {
-    enum { OP_VARIABLE, OP_TEMPORARY, OP_CONSTANT, OP_ADDRESS, OP_LABEL, OP_FUNCTION } kind;
+    enum { OP_VARIABLE, OP_TEMPORARY, OP_CONSTANT, OP_ADDRESS, OP_LABEL, OP_FUNCTION, OP_VALUE, OP_SIZE } kind;
     union {
         int no;
-        char value[128];
+        int value;
     } u;
 } Operand_;
 
-typedef enum { RELGT, RELLT, EQUAL, RELGE, RELLE } Relop;
+typedef enum { RELGT, RELLT, EQUAL, NOTEQ, RELGE, RELLE } Relop;
 
 typedef struct InterCode_ {
     enum {
@@ -35,52 +34,42 @@ typedef struct InterCode_ {
 
 } InterCode_;
 
+struct list_head {
+    struct list_head *next, *prev;
+};
 
-typedef struct InterCodes {
-    struct InterCode_ code;
-    struct InterCodes *prev, *next;
-} InterCodes;
+#define CREATE_TEMP_OP() \
+createTempOperand()
 
-static inline void INIT_LIST_HEAD(InterCode list) {
-    list->next = list;
-    list->prev = list;
-}
+#define CREATE_IR_8(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8) \
+insertInterCode(intercodeConstruct(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8))
 
-static inline void list_insert(InterCode newhead, InterCode prev, InterCode next) {
-    next->prev = newhead;
-    newhead->next = next;
-    newhead->prev = prev;
-    prev->next = newhead;
-}
+#define CREATE_IR_7(arg1, arg2, arg3, arg4, arg5, arg6, arg7) \
+insertInterCode(intercodeConstruct(arg1, arg2, arg3, arg4, arg5, arg6, arg7))
 
-static inline void list_add(InterCode newhead, InterCode head) {
-    list_insert(newhead, head, head->next);
-}
+#define CREATE_IR_6(arg1, arg2, arg3, arg4, arg5, arg6) \
+insertInterCode(intercodeConstruct(arg1, arg2, arg3, arg4, arg5, arg6))
 
-static inline void list_add_tail(InterCode newhead, InterCode head) {
-    list_insert(newhead, head->prev, head);
-}
+#define CREATE_IR_5(arg1, arg2, arg3, arg4, arg5) \
+insertInterCode(intercodeConstruct(arg1, arg2, arg3, arg4, arg5))
 
-static inline void list_replace(struct InterCodes *old,struct InterCodes *newhead) {
-    newhead->next = old->next;
-    newhead->next->prev = newhead;
-    newhead->prev = old->prev;
-    newhead->prev->next = newhead;
-}
+#define CREATE_IR_4(arg1, arg2, arg3, arg4) \
+insertInterCode(intercodeConstruct(arg1, arg2, arg3, arg4))
 
-static inline int list_empty(const struct InterCodes *head) {
-    return head->next == head;
-}
+#define CREATE_IR_3(arg1, arg2, arg3) \
+insertInterCode(intercodeConstruct(arg1, arg2, arg3))
 
-/*8.遍历节点
-list_for_each(pos, head)通常用于获取节点，而不能用到删除节点的场景。
-*/
+#define CREATE_IR_2(arg1, arg2) \
+insertInterCode(intercodeConstruct(arg1, arg2))
 
-#define list_for_each(pos, head) \
-for (pos = (head)->next; pos != (head); pos = pos->next)
+#define CREATE_IR_1(arg1) \
+insertInterCode(intercodeConstruct(arg1))
 
-struct InterCodes interCodes_head;
+#define CREATE_IR_N(_1, _2, _3, _4, _5, _6, _7, _8, NAME, ...) NAME
+#define CREATE_IR(...) CREATE_IR_N(__VA_ARGS__, CREATE_IR_8, CREATE_IR_7, CREATE_IR_6, CREATE_IR_5, CREATE_IR_4, CREATE_IR_3, CREATE_IR_2, CREATE_IR_1, ...)(__VA_ARGS__)
 
-int no_code;
+#define PrintInterCodeErrorMsg() \
+printf("\033[;31mCannot translate\033[0m: Code contains variables or parameters of structure type.\n"); \
+exit(0)
 
 #endif

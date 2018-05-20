@@ -31,8 +31,12 @@ int main(int argc, char** argv) {
 
         preInterCodeGenerate();
         semanticAnalysis();
+        fp = fopen("out.ir", "w");
+        if(fp == NULL) {
+            assert(0);
+        }
         interCodeGenerate();
-
+        fclose(fp);
     }
 
     return 0;

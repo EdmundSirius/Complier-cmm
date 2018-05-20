@@ -142,6 +142,7 @@ void handleExtDecList(Node root, int specifierNo) {
 // VarDec -> ID | VarDec LB INT RB
 void handleVarDec(Node root, int specifierNo) {
     Type thistype = (Type)malloc(sizeof(Type_));
+    Type thischildtype = (Type)malloc(sizeof(Type_));
     char specifierName[128];
     if (Childsum == 4) {
         if (findSymbolTable(Child(0)->text)) {
@@ -176,8 +177,7 @@ void handleVarDec(Node root, int specifierNo) {
             insertStructList(thisfield);
 
         }
-        else {
-            assert(!strcmp(Child(0, 0, 0)->name, "ID"));
+        else if (!strcmp(Child(0, 0, 0)->name, "ID")) {
             Type elemchildtype = (Type)malloc(sizeof(Type_));
             elemchildtype->kind = BASIC;
             elemchildtype->u.basic = specifierNo;
@@ -201,7 +201,35 @@ void handleVarDec(Node root, int specifierNo) {
             #endif
             insertStructList(thisfield);
         }
+        else {
+            assert(!strcmp(Child(0, 0, 0, 0)->name, "ID"));
+            Type elemchildtype = (Type)malloc(sizeof(Type_));
+            elemchildtype->kind = BASIC;
+            elemchildtype->u.basic = specifierNo;
 
+            Type elemtype = (Type)malloc(sizeof(Type_));
+            elemtype->kind = ARRAY;
+            elemtype->u.array.elem = elemchildtype;
+            elemtype->u.array.size = atoi(Child(0, 0, 2)->text);
+
+            thistype->kind = ARRAY;
+            thistype->u.array.elem = elemtype;
+            thistype->u.array.size = atoi(Child(0, 2)->text);
+
+            thischildtype->kind = ARRAY;
+            thischildtype->u.array.elem = thistype;
+            thischildtype->u.array.size = atoi(Child(2)->text);
+
+            FieldList thisfield = (FieldList)malloc(sizeof(FieldList_));
+            thisfield->type = thischildtype;
+            strcpy(thisfield->name, Child(0, 0, 0, 0)->text);
+            insertVarSymbolTable(Child(0, 0, 0, 0)->text, thischildtype);
+
+            #ifdef PHASE_SEM
+            printf("insert_6: %d\n", IN_STRUCT);
+            #endif
+            insertStructList(thisfield);
+        }
         return;
     }
 
@@ -250,8 +278,8 @@ void handleVarDec(Node root, int specifierNo) {
                 #ifdef PHASE_SEM
                 printf("insert_2: %d\n", IN_STRUCT);
                 #endif
-                assert(0);
-                // insertVarSymbolTable(Child(0)->text, thistype);
+
+                PrintInterCodeErrorMsg();
 
                 FieldList thisfield = (FieldList)malloc(sizeof(FieldList_));
                 thisfield->type = thistype;
@@ -459,7 +487,7 @@ void handleStmt(Node root, int specifierNo) {
 
     #ifdef PHASE_SEM
         printf("Defined returnType: %d; ", funcreturntype);
-        printf("Actual return \"%s\" Type: %d\n", Child(1, 0)->text, nodetype);
+        printf("Actual return Type: %d\n", nodetype);
     #endif
 
         if (funcreturntype != nodetype) {
@@ -644,7 +672,7 @@ int handleExp(Node root) {
               return -1;
           }
           else {
-              return handleExp(Child(0));
+              return getArrayBasicType(Child(0, 0)->text);
           }
       }
 

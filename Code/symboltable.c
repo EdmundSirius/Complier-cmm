@@ -7,6 +7,45 @@ int funcNo = 0;
 int varNo = 0;
 StructNode structlist;
 
+// Exp LB Exp RB 81
+Array *getArray(Node root) {
+    char name[128];
+    int size = 0;
+    while (Childsum == 4) {
+        ++size;
+        root = Child(0);
+        strcpy(name, Child(0)->text);
+    }
+    #ifdef TRANSLATE
+    printf("{size: %d ", size);
+    #endif
+    Array *array = malloc(sizeof(Array));
+    array->dim = size;
+    int i = hashPJW(name);
+    assert(symboltable[i].occupied);
+    if (symboltable[i].occupied) {
+      #ifdef TRANSLATE
+        printf("name: %s (%d) ", symboltable[i].name, symboltable[i].type->kind);
+      #endif
+        Type type = symboltable[i].type;
+        int kind = type->kind;
+        int no = 0;
+        while (kind == ARRAY) {
+            array->size[no++] = type->u.array.size;
+            #ifdef TRANSLATE
+            printf("[%d]", type->u.array.size);
+            #endif
+            type = type->u.array.elem;
+            kind = type->kind;
+        }
+
+    }
+    #ifdef TRANSLATE
+    printf("}\n");
+    #endif
+    return array;
+}
+
 void insertVarSymbolTable(char* text, Type type) {
 
     unsigned int key = hashPJW(text);
@@ -25,6 +64,7 @@ void insertVarSymbolTable(char* text, Type type) {
 
     if (symboltable[key].type->kind == BASIC || symboltable[key].type->kind == ARRAY) {
         strcpy(varTable[varNo].name, text);
+        varTable[varNo].isParam = false;
         varTable[varNo++].type = thistype;
     }
 
@@ -265,6 +305,7 @@ int getOpVarNo(char* name) {
             return i;
         }
     }
+    printf("%s\n", name); assert(0);
     return -1;
 }
 bool isInStructure(int no, char* name) {
@@ -302,17 +343,28 @@ bool isInStructure(int no, char* name) {
 }
 
 void printSymbolTable() {
-    printf("------------------------------------------------\n");
+    printf("-------------------SymbolTable-------------------\n");
     int i = 0;
     for (; i < SYMBOL_TABLE_SIZE; ++i) {
         if (symboltable[i].occupied) {
             printf("* name: %s\ttype: %d ", symboltable[i].name, symboltable[i].type->kind);
-            if (symboltable[i].type->kind == ARRAY) {
-                printf("[%d] ", symboltable[i].type->u.array.size);
-                printf("subtype: %d ", symboltable[i].type->u.array.elem->kind);
-                printf("[%d] ", symboltable[i].type->u.array.elem->u.array.size);
-                if (symboltable[i].type->u.array.elem->kind == ARRAY) {
-                    printf("basic: %d", symboltable[i].type->u.array.elem->u.array.size);
+            if (symboltable[i].occupied) {
+                printf("name: %s ", symboltable[i].name);
+                if (symboltable[i].type->kind == ARRAY) {
+                    printf("[%d]", symboltable[i].type->u.array.size);
+                    printf("(%d)", symboltable[i].type->u.array.elem->kind);
+                    if (symboltable[i].type->u.array.elem->kind == ARRAY) {
+                        printf("[%d]", symboltable[i].type->u.array.elem->u.array.size);
+                        printf("(%d)", symboltable[i].type->u.array.elem->u.array.elem->kind);
+                        if (symboltable[i].type->u.array.elem->u.array.elem->kind == ARRAY) {
+                            printf("[%d]", symboltable[i].type->u.array.elem->u.array.elem->u.array.size);
+                            printf("(%d)", symboltable[i].type->u.array.elem->u.array.elem->u.array.elem->kind);
+                            if (symboltable[i].type->u.array.elem->u.array.elem->u.array.elem->kind == ARRAY) {
+                                printf("[%d]", symboltable[i].type->u.array.elem->u.array.elem->u.array.size);
+                                printf("(%d)", symboltable[i].type->u.array.elem->u.array.elem->u.array.elem->kind);
+                            }
+                        }
+                    }
                 }
             }
             printf("*\n");
@@ -323,8 +375,8 @@ void printSymbolTable() {
     i = 0;
     for (; i < funcNo; ++i) {
         printf("* %d: * %s ", i, functionTable[i].name);
-        printf("ret[%d]; ", functionTable[i].type->u.function.returnvalue);
-        printf("argSum[%d]\n", functionTable[i].type->u.function.argsum);
+        printf("retValue(%d); ", functionTable[i].type->u.function.returnvalue);
+        printf("argSum(%d)\n", functionTable[i].type->u.function.argsum);
     }
 
     printf("--------------------varTable--------------------\n");
@@ -375,7 +427,7 @@ void printStructNode(StructNode tmp) {
 }
 
 void printStructList() {
-    printf("------------------------------------------------\n");
+    printf("-------------------StructList-------------------\n");
     StructNode tmp = structlist;
     if (tmp != NULL) {
         if (tmp->next == NULL) {
@@ -572,4 +624,30 @@ bool isEqualStruct(int node1, int node2) {
       unsigned int key = hashPJW(name);
       assert(symboltable[key].occupied);
       return symboltable[key].type->u.function.returnvalue;
+ }
+
+ int getArrayBasicType(char* name) {
+    unsigned int i = hashPJW(name);
+    assert(symboltable[i].occupied);
+    assert(symboltable[i].type->kind == ARRAY);
+    if (symboltable[i].type->u.array.elem->kind == ARRAY) {
+       if (symboltable[i].type->u.array.elem->u.array.elem->kind == ARRAY) {
+            if (symboltable[i].type->u.array.elem->u.array.elem->u.array.elem->kind == ARRAY) {
+                assert(0);
+            }
+            else {
+                assert(symboltable[i].type->u.array.elem->u.array.elem->u.array.elem->kind == BASIC);
+                return symboltable[i].type->u.array.elem->u.array.elem->u.array.elem->u.basic;
+            }
+       }
+       else {
+          assert(symboltable[i].type->u.array.elem->u.array.elem->kind == BASIC);
+          return symboltable[i].type->u.array.elem->u.array.elem->u.basic;
+       }
+    }
+    else {
+        assert(symboltable[i].type->u.array.elem->kind == BASIC);
+        return symboltable[i].type->u.array.elem->u.basic;
+    }
+    return -1;
  }

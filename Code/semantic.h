@@ -5,7 +5,7 @@
 
 #include "parse.h"
 #include <assert.h>
-
+#include "ir.h"
 
 typedef enum { false, true } bool;
 
@@ -33,6 +33,13 @@ typedef struct Type_
     } u;
 } Type_;
 
+typedef struct Array
+{
+    int dim;
+    int basic;
+    int size[32];
+} Array;
+
 typedef struct FieldList_
 {
     char name[32];
@@ -41,11 +48,11 @@ typedef struct FieldList_
 } FieldList_;
 
 typedef struct SymbolTable {
-    int t_no;
   	char name[32];
     Type type;
     int lineno;
     bool occupied;
+    bool isParam;
 } SymbolTable;
 
 struct SymbolTable symboltable[0x4000];
@@ -143,6 +150,7 @@ int getRetValue(char*);
 void getFuncName(char*, int);
 int getFuncNo(char*);
 int getOpVarNo(char*);
+int getArrayBasicType(char*);
 // #define HANDLE_DEBUG
 
 unsigned int hashPJW(char* name);

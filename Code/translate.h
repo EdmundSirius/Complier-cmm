@@ -14,18 +14,22 @@ extern void symbolHandle(char*, Operand);
 
 extern int getTranslateExpType(Node);
 extern void translate_ExtDefList(Node);
-extern InterCode translate_ExtDef(Node);
+extern void translate_ExtDef(Node);
 extern InterCode translate_Specifier(Node);
-extern InterCode translate_FunDec(Node);
+extern void translate_FunDec(Node);
 extern void translate_CompSt(Node);
-extern InterCode translate_Exp(Node, Operand);
-extern InterCode translate_Stmt(Node);
-extern InterCode translate_StmtList(Node);
-extern InterCode translate_Cond(Node root, int label_true, int label_false);
+extern void translate_Args(Node, Operand*);
+extern void translate_Exp(Node, Operand, int);
+extern void translate_Stmt(Node);
+extern void translate_StmtList(Node);
+extern void translate_Cond(Node root, int label_true, int label_false);
 int atoi(const char *str);
 
 extern InterCode concatCode(InterCode code1, InterCode code2);
 void insertInterCode(InterCode code);
-
+extern Operand createTempOperand();
+extern Array *getArray(Node);
+extern int temp_no;
+extern FILE *fp;
 
 #endif

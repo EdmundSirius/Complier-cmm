@@ -1,7 +1,0 @@
-int main() {
-    int x[5];
-    int i = 0;
-
-    write(x[i]);
-    return 0;
-}
