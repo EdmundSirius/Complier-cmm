@@ -3,11 +3,10 @@
 #include "parse.h"
 #include "translate.h"
 
-void insertInterCode(InterCode head) {
-
-    #ifdef DEBUG_IR
-    printInterCode(head);
-    #endif
+void insertInterCode(InterCode intercode) {
+    InterCodes *newIr = (InterCodes *)malloc(sizeof(InterCodes));
+    newIr->intercode = intercode;
+    list_add_tail(&newIr->list, &head);
 }
 
 Operand createTempOperand() {
@@ -18,7 +17,7 @@ Operand createTempOperand() {
 }
 
 InterCode intercodeConstruct(int kind,...) {
-    InterCode ir = (InterCode)malloc(sizeof(InterCode_));
+    InterCode *ir = (InterCode*)malloc(sizeof(InterCode));
     va_list va_ptr;
     ir->kind = kind;
     int arg1, arg2, arg3, arg4, arg5, arg6, arg7;
@@ -165,7 +164,7 @@ InterCode intercodeConstruct(int kind,...) {
         default: assert(0);
 
     }
-    return ir;
+    return *ir;
 }
 
 void printInterCode(InterCode intercode) {
@@ -176,15 +175,15 @@ void printInterCode(InterCode intercode) {
     char relop[128];
     char code[128];
 
-    switch (intercode->kind) {
+    switch (intercode.kind) {
         case IR_LABEL:
-            symbolHandle(op1, intercode->op.x);
+            symbolHandle(op1, intercode.op.x);
             sprintf(code, "LABEL %s :\n", op1);
             break;
 
         case IR_FUNC:
-            getFuncName(func, intercode->op.x->u.no);
-            if (intercode->op.x->u.no) {
+            getFuncName(func, intercode.op.x->u.no);
+            if (intercode.op.x->u.no) {
                 sprintf(code, "FUNCTION %s :\n", func);
             }
             else {
@@ -193,64 +192,64 @@ void printInterCode(InterCode intercode) {
             break;
 
         case IR_ASSIGN:
-            symbolHandle(op1, intercode->biop.x);
-            symbolHandle(op2, intercode->biop.y);
+            symbolHandle(op1, intercode.biop.x);
+            symbolHandle(op2, intercode.biop.y);
             sprintf(code, "%s := %s\n", op1, op2);
             break;
 
         case IR_ADD:
-            symbolHandle(op1, intercode->triop.x);
-            symbolHandle(op2, intercode->triop.y);
-            symbolHandle(op3, intercode->triop.z);
+            symbolHandle(op1, intercode.triop.x);
+            symbolHandle(op2, intercode.triop.y);
+            symbolHandle(op3, intercode.triop.z);
             sprintf(code, "%s := %s + %s\n", op1, op2, op3);
             break;
 
         case IR_SUB:
-            symbolHandle(op1, intercode->triop.x);
-            symbolHandle(op2, intercode->triop.y);
-            symbolHandle(op3, intercode->triop.z);
+            symbolHandle(op1, intercode.triop.x);
+            symbolHandle(op2, intercode.triop.y);
+            symbolHandle(op3, intercode.triop.z);
             sprintf(code, "%s := %s - %s\n", op1, op2, op3);
             break;
 
         case IR_MUL:
-            symbolHandle(op1, intercode->triop.x);
-            symbolHandle(op2, intercode->triop.y);
-            symbolHandle(op3, intercode->triop.z);
+            symbolHandle(op1, intercode.triop.x);
+            symbolHandle(op2, intercode.triop.y);
+            symbolHandle(op3, intercode.triop.z);
             sprintf(code, "%s := %s * %s\n", op1, op2, op3);
             break;
 
         case IR_DIV:
-            symbolHandle(op1, intercode->triop.x);
-            symbolHandle(op2, intercode->triop.y);
-            symbolHandle(op3, intercode->triop.z);
+            symbolHandle(op1, intercode.triop.x);
+            symbolHandle(op2, intercode.triop.y);
+            symbolHandle(op3, intercode.triop.z);
             sprintf(code, "%s := %s / %s\n", op1, op2, op3);
             break;
 
         case IR_GETADD:
-            symbolHandle(op1, intercode->biop.x);
-            symbolHandle(op2, intercode->biop.y);
+            symbolHandle(op1, intercode.biop.x);
+            symbolHandle(op2, intercode.biop.y);
             sprintf(code, "%s := &%s\n", op1, op2); break;
 
         case IR_GETVAL:
-            symbolHandle(op1, intercode->biop.x);
-            symbolHandle(op2, intercode->biop.y);
+            symbolHandle(op1, intercode.biop.x);
+            symbolHandle(op2, intercode.biop.y);
             sprintf(code, "%s := *%s\n", op1, op2);
             break;
 
         case IR_SETVAL:
-            symbolHandle(op1, intercode->biop.x);
-            symbolHandle(op2, intercode->biop.y);
+            symbolHandle(op1, intercode.biop.x);
+            symbolHandle(op2, intercode.biop.y);
             sprintf(code, "*%s := %s\n", op1, op2); break;
 
         case IR_GOTO:
-            symbolHandle(op1, intercode->op.x);
+            symbolHandle(op1, intercode.op.x);
             sprintf(code, "GOTO %s\n", op1); break;
 
         case IR_IFGOTO:
-            symbolHandle(op1, intercode->ifop.x);
-            symbolHandle(op2, intercode->ifop.y);
-            symbolHandle(op3, intercode->ifop.z);
-            switch (intercode->ifop.relop) {
+            symbolHandle(op1, intercode.ifop.x);
+            symbolHandle(op2, intercode.ifop.y);
+            symbolHandle(op3, intercode.ifop.z);
+            switch (intercode.ifop.relop) {
                 case RELGT: strcpy(relop, ">"); break;
                 case RELLT: strcpy(relop, "<"); break;
                 case EQUAL: strcpy(relop, "=="); break;
@@ -262,38 +261,38 @@ void printInterCode(InterCode intercode) {
             sprintf(code, "IF %s %s %s GOTO %s\n", op1, relop, op2, op3); break;
 
         case IR_RET:
-            symbolHandle(op1, intercode->op.x);
+            symbolHandle(op1, intercode.op.x);
             sprintf(code, "RETURN %s\n", op1);
             break;
 
         case IR_DEC:
-            symbolHandle(op1, intercode->biop.x);
-            symbolHandle(op2, intercode->biop.y);
+            symbolHandle(op1, intercode.biop.x);
+            symbolHandle(op2, intercode.biop.y);
             sprintf(code, "DEC %s %s\n", op1, op2); break;
 
         case IR_ARG:
-            symbolHandle(op1, intercode->op.x);
+            symbolHandle(op1, intercode.op.x);
             sprintf(code, "ARG %s\n", op1); break;
 
         case IR_CALL:
-            symbolHandle(op1, intercode->biop.x);
-            getFuncName(func, intercode->biop.y->u.no);
+            symbolHandle(op1, intercode.biop.x);
+            getFuncName(func, intercode.biop.y->u.no);
             sprintf(code, "%s := CALL %s\n", op1, func); break;
 
         case IR_PARAM:
-            symbolHandle(op1, intercode->op.x);
+            symbolHandle(op1, intercode.op.x);
             sprintf(code, "PARAM %s\n", op1); break;
 
         case IR_READ:
-            symbolHandle(op1, intercode->op.x);
+            symbolHandle(op1, intercode.op.x);
             sprintf(code, "READ %s\n", op1); break;
 
         case IR_WRITE:
-            symbolHandle(op1, intercode->op.x);
+            symbolHandle(op1, intercode.op.x);
             sprintf(code, "WRITE %s\n", op1); break;
 
         default:
-          printf("interkind: %d\n", intercode->kind);
+          printf("interkind: %d\n", intercode.kind);
           assert(0);
     }
 

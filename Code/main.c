@@ -28,7 +28,7 @@ int main(int argc, char** argv) {
 #ifdef PRINT_TRACE
         printTree(root, 0);
 #endif
-
+        INIT_LIST_HEAD(&head);
         preInterCodeGenerate();
         semanticAnalysis();
         fp = fopen("out.ir", "w");

@@ -4,9 +4,9 @@
 #define DEBUG_IR
 #include <string.h>
 #include <stdio.h>
+#include "list.h"
 
 typedef struct Operand_* Operand;
-typedef struct InterCode_* InterCode;
 
 typedef struct Operand_ {
     enum { OP_VARIABLE, OP_TEMPORARY, OP_CONSTANT, OP_ADDRESS, OP_LABEL, OP_FUNCTION, OP_VALUE, OP_SIZE } kind;
@@ -18,7 +18,7 @@ typedef struct Operand_ {
 
 typedef enum { RELGT, RELLT, EQUAL, NOTEQ, RELGE, RELLE } Relop;
 
-typedef struct InterCode_ {
+typedef struct InterCode {
     enum {
       IR_ADD, IR_SUB, IR_MUL, IR_DIV, IR_IFGOTO,
       IR_LABEL, IR_FUNC, IR_GOTO, IR_RET, IR_DEC, IR_ARG, IR_PARAM, IR_READ, IR_WRITE,
@@ -32,11 +32,15 @@ typedef struct InterCode_ {
         struct { Operand x, y, z; Relop relop; } ifop;
     };
 
-} InterCode_;
+} InterCode;
 
-struct list_head {
-    struct list_head *next, *prev;
-};
+typedef struct InterCodes
+{
+    InterCode intercode;
+    struct list_head list;
+} InterCodes;
+
+extern struct list_head head;
 
 #define CREATE_TEMP_OP() \
 createTempOperand()

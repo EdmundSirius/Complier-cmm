@@ -10,8 +10,10 @@ int func_no = 0;
 int arg_no = 0;
 int isParam[4096];
 FILE *fp;
+struct list_head head;
 
 void preInterCodeGenerate() {
+
     Function *readfunction = (Function*)malloc(sizeof(Function));
     readfunction->argsum = 0;
     readfunction->returnvalue = INT;
@@ -25,13 +27,19 @@ void preInterCodeGenerate() {
 
     /* read(), return(int)
        write(int)，return(0) */
+
 }
 
-void printInterCodes(InterCode head) {
+void printInterCodes() {
     InterCode pos;
     FILE *fp = fopen("out.ir", "wt");
     if(fp == NULL)
         assert(0);
+    struct list_head *plist;
+    list_for_each(plist, &head) {
+        struct InterCodes *node = list_entry(plist, struct InterCodes, list);
+        printInterCode(node->intercode);
+    }
 }
 
 void interCodeGenerate() {
@@ -40,7 +48,7 @@ void interCodeGenerate() {
     if (!strcmp(root->name, "Program")) {
         translate_ExtDefList(Child(0));
     }
-    printInterCodes(NULL);
+    printInterCodes();
 
 }
 
@@ -131,8 +139,6 @@ void translate_VarDec(Node root) {
 // Dec -> VarDec | VarDec ASSIGNOP Exp
 // VarDec -> ID (| VarDec LB INT RB)
 void translate_Dec(Node root) {
-    InterCode intercode1 = (InterCode)malloc(sizeof(InterCode_));
-    InterCode intercode2 = (InterCode)malloc(sizeof(InterCode_));
     Operand var = (Operand)malloc(sizeof(Operand_));
     Operand t1 = (Operand)malloc(sizeof(Operand_));
     Operand t2 = (Operand)malloc(sizeof(Operand_));
@@ -280,12 +286,9 @@ int get_relop(Node root) {
 }
 
 void translate_Cond(Node root, int label_true, int label_false) {
-    int type = getTranslateExpType(root);
+    int type = getTranslateExpType(root), op, label1;
     Operand t1 = (Operand)malloc(sizeof(Operand_));
     Operand t2 = (Operand)malloc(sizeof(Operand_));
-    int op;
-    int label1;
-    InterCode ir = (InterCode)malloc(sizeof(InterCode_));
     switch(type) {
         case 60:
             t1->kind = OP_TEMPORARY;
@@ -378,7 +381,6 @@ void translate_Args(Node root, Operand *arg_list) {
     Operand t1 = CREATE_TEMP_OP();
     translate_Exp(Child(0), t1, 1);
     arg_list[arg_no++] = t1;
-
     if (Childsum != 1) {
         translate_Args(Child(2), arg_list);
     }
@@ -462,6 +464,7 @@ void translate_Exp(Node root, Operand operand, int direction) {
           arg_no = 0;
           translate_Args(Child(2), arg_list);
           if (!strcmp(Child(0)->text, "write")) {
+              // printf("arg_no: %d\n\n\n", arg_no);
               CREATE_IR(IR_WRITE, OP_TEMPORARY, arg_list[arg_no - 1]->u.no);
               break;
           }

@@ -1,3 +1,8 @@
+# 优化处理
+## 公共子表达式消除 (Common-subexpression Elimination)
+## 代码移动 (Code Motion）
+## 代数运算简化 (Algebraic Simplification)
+
 # 数组的翻译模式
 temp: v1
 temp[5]
