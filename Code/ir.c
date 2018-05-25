@@ -295,8 +295,9 @@ void printInterCode(InterCode intercode) {
           printf("interkind: %d\n", intercode.kind);
           assert(0);
     }
-
+#ifdef PRINT_IR
     printf("%s", code);
+#endif
     fprintf(fp, "%s", code);
 }
 

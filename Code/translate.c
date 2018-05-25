@@ -11,6 +11,7 @@ int arg_no = 0;
 int isParam[4096];
 FILE *fp;
 struct list_head head;
+char outputFile[128];
 
 void preInterCodeGenerate() {
 
@@ -24,32 +25,29 @@ void preInterCodeGenerate() {
     writefunction->argbasic[0] = INT;
     writefunction->returnvalue = INT;
     insertFuncSymbolTable("write", writefunction);
-
-    /* read(), return(int)
-       write(int)，return(0) */
-
 }
 
 void printInterCodes() {
-    InterCode pos;
     FILE *fp = fopen("out.ir", "wt");
     if(fp == NULL)
         assert(0);
     struct list_head *plist;
     list_for_each(plist, &head) {
-        struct InterCodes *node = list_entry(plist, struct InterCodes, list);
+        InterCodes *node = list_entry(plist, InterCodes, list);
         printInterCode(node->intercode);
     }
+    fclose(fp);
 }
 
 void interCodeGenerate() {
-
     if (root == NULL) return;
     if (!strcmp(root->name, "Program")) {
         translate_ExtDefList(Child(0));
     }
+    writeFile("original.ir");
+#ifdef PRINT_IR
     printInterCodes();
-
+#endif
 }
 
 // ExtDefList -> ExtDef ExtDefList | ϵ
@@ -67,17 +65,8 @@ void translate_ExtDefList(Node root) {
 void translate_ExtDef(Node root) {
     assert(!strcmp(Child(1)->name, "FunDec"));
     translate_FunDec(Child(1));
-    /*TODO:*/
-
     translate_CompSt(Child(2));
 
-}
-
-// Specifier -> TYPE | StructSpecifier
-InterCode translate_Specifier(Node root) {
-    InterCode intercode;
-    assert(!strcmp(Child(0)->text, "int"));
-    return intercode;
 }
 
 // ParamDec -> Specifier VarDec
@@ -104,8 +93,6 @@ void translate_VarList(Node root) {
         translate_VarList(Child(2));
     }
 }
-
-
 
 // FunDec -> ID LP VarList RP | ID LP RP
 void translate_FunDec(Node root) {
@@ -197,7 +184,6 @@ void translate_StmtList(Node root) {
         translate_Stmt(Child(0));
         root = Child(1);
     }
-
 }
 
 // Stmt -> Exp SEMI
@@ -464,7 +450,6 @@ void translate_Exp(Node root, Operand operand, int direction) {
           arg_no = 0;
           translate_Args(Child(2), arg_list);
           if (!strcmp(Child(0)->text, "write")) {
-              // printf("arg_no: %d\n\n\n", arg_no);
               CREATE_IR(IR_WRITE, OP_TEMPORARY, arg_list[arg_no - 1]->u.no);
               break;
           }

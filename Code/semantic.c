@@ -1,5 +1,6 @@
 #include "semantic.h"
 #include "parse.h"
+#include "ir.h"
 
 int FLAG;
 int PARA;
@@ -84,7 +85,6 @@ int handleSpecifier(Node root) {
         return FLOAT;
     }
 }
-
 
 // StructSpecifier -> STRUCT OptTag LC DefList RC | STRUCT Tag
 int handleStructSpecifier(Node root) {

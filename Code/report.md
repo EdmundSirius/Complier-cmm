@@ -1,7 +1,8 @@
 # 优化处理
-## 公共子表达式消除 (Common-subexpression Elimination)
-## 代码移动 (Code Motion）
-## 代数运算简化 (Algebraic Simplification)
+公共子表达式消除 (Common-subexpression Elimination)
+代码移动 (Code Motion）
+代数运算简化 (Algebraic Simplification)
+常量折叠
 
 # 数组的翻译模式
 temp: v1
@@ -132,4 +133,120 @@ t17 := t16 + t13
 
 t14 := v5 * #4
 t18 := t17 + t14
+```
+```
+void printDagOperand(Operand_ operand) {
+    if (operand.kind == VARIABLE) {
+        printf("t");
+        printf("%d", operand.u.no);
+    }
+    else {
+        assert(operand.kind == OPERATOR);
+        switch (operand.u.no) {
+          case SYM_ADD: printf("+"); break;
+          case SYM_SUB: printf("-"); break;
+          case SYM_MUL: printf("*"); break;
+          case SYM_DIV: printf("/"); break;
+          default: assert(0);
+        }
+    }
+}
+
+void printDagNodeNeighbor(DagNode *root) {
+  printf(": ");
+  if (root != NULL) {
+      DagNode *p = root;
+      while (p->neighbor != NULL) {
+        printDagOperand(p->neighbor->operand);
+        p = p->neighbor;
+      }
+  }
+  printf("\n");
+}
+
+void printDag(DagNode *root) {
+    if (root != NULL) {
+        DagNode *p = root;
+        printDagOperand(p->operand);
+        printDagNodeNeighbor(p);
+        while (p->next != NULL) {
+            p = p->next;
+            printDagOperand(p->operand);
+            printDagNodeNeighbor(p);
+        }
+    }
+    else {
+        assert(0);
+    }
+}
+
+bool isRelatedNode(DagNode *node, Operand operand) {
+    assert(node->kind = OPERATOR);
+    if (node->related != NULL) {
+        DagNode* p = node->related;
+        do {
+            if (p->operand.kind == operand->kind || p->operand.u.no == operand->u.no) {
+                return true;
+            }
+            if (p->next != NULL) {
+                p = p->next;
+            }
+            else {
+                break;
+            }
+        } while (p != NULL);
+    }
+    return false;
+}
+
+void insertDag(InterCode intercode, int i) {
+
+    DagNode *dagNode_op = (DagNode *)malloc(sizeof(DagNode));
+    assert (intercode.kind == IR_ADD || intercode.kind == IR_SUB ||
+      intercode.kind == IR_MUL || intercode.kind == IR_DIV);
+
+    DagNode *dagNode_y = (DagNode *)malloc(sizeof(DagNode));
+    assert(intercode.triop.y->kind == OP_TEMPORARY);
+    dagNode_y->operand.kind = intercode.triop.y->kind;
+    dagNode_y->operand.u.no = intercode.triop.y->u.no;
+
+    DagNode *dagNode_z = (DagNode *)malloc(sizeof(DagNode));
+    dagNode_z->operand.kind = intercode.triop.z->kind;
+    dagNode_z->operand.u.no = intercode.triop.z->u.no;
+
+    DagNode *dagNode_x = (DagNode *)malloc(sizeof(DagNode));
+    dagNode_x->operand.kind = intercode.triop.x->kind;
+    dagNode_x->operand.u.no = intercode.triop.x->u.no;
+
+    dagNode_op->operand.kind = OPERATOR;
+    dagNode_op->operand.u.no = OP(intercode.kind);
+    dagNode_op->related = dagNode_x;
+
+    dagNode_y->neighbor = dagNode_op;
+    dagNode_z->neighbor = dagNode_op;
+
+    dagNode_y->next = dagNode_z;
+    dagNode_z->next = dagNode_op;
+
+    if (rootDagNode[i] == NULL) {
+        rootDagNode[i] = dagNode_y;
+        printf("(%d)\n", dagNode_y->operand.u.no);
+    }
+
+    if (rootDagNode[i]->next == NULL) {
+        rootDagNode[i] = dagNode_y;
+        printf("<%d>\n", dagNode_y->operand.u.no);
+    }
+    else {
+        DagNode *p = rootDagNode[i];
+        while (p->next != NULL) {
+            p = p->next;
+        }
+        p->next = dagNode_y;
+        printf("[%d]\n", dagNode_y->operand.u.no);
+    }
+
+
+
+}
 ```

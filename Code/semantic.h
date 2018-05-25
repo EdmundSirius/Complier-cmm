@@ -5,7 +5,6 @@
 
 #include "parse.h"
 #include <assert.h>
-#include "ir.h"
 
 typedef enum { false, true } bool;
 
@@ -151,7 +150,6 @@ void getFuncName(char*, int);
 int getFuncNo(char*);
 int getOpVarNo(char*);
 int getArrayBasicType(char*);
-// #define HANDLE_DEBUG
 
 unsigned int hashPJW(char* name);
 void insertVarSymbolTable(char* text, Type type);

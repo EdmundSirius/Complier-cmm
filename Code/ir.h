@@ -1,10 +1,10 @@
 #ifndef IR_H
 #define IR_H
 
-#define DEBUG_IR
 #include <string.h>
 #include <stdio.h>
 #include "list.h"
+#include "semantic.h"
 
 typedef struct Operand_* Operand;
 
@@ -38,6 +38,7 @@ typedef struct InterCodes
 {
     InterCode intercode;
     struct list_head list;
+    bool isLeader;
 } InterCodes;
 
 extern struct list_head head;

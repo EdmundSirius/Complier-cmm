@@ -2,6 +2,7 @@
 #include "parse.h"
 #include "semantic.h"
 #include "translate.h"
+#include "ir.h"
 extern void yyparse();
 extern void yyrestart(FILE*);
 
@@ -31,11 +32,16 @@ int main(int argc, char** argv) {
         INIT_LIST_HEAD(&head);
         preInterCodeGenerate();
         semanticAnalysis();
-        fp = fopen("out.ir", "w");
+        fp = fopen(argv[2], "w");
         if(fp == NULL) {
-            assert(0);
+            fp = fopen("out.ir", "w");
+            strcpy(outputFile, "out.ir");
+        }
+        else {
+            strcpy(outputFile, argv[2]);
         }
         interCodeGenerate();
+        interCodeOptimize();
         fclose(fp);
     }
 
