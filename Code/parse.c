@@ -1,8 +1,8 @@
 #include "parse.h"
 
-Node* createNode(char* name, char* text) {
+Node createNode(char* name, char* text) {
 
-    Node* p = (Node*)malloc(sizeof(Node));
+    Node p = (Node)malloc(sizeof(Node_));
 
     strcpy(p->name, name);
     strcpy(p->text, text);
@@ -16,14 +16,14 @@ Node* createNode(char* name, char* text) {
     return p;
 }
 
-void insertNode(int childsum, Node* parent, ...) {
+void insertNode(int childsum, Node parent, ...) {
 
     va_list ap;
     va_start(ap, parent);
 
     int i = 0;
     for (; i < childsum; ++i) {
-        parent->child[i] = va_arg(ap, Node*);
+        parent->child[i] = va_arg(ap, Node);
     }
 
     parent->lineno = parent->child[0]->lineno;
@@ -45,7 +45,7 @@ void printNode(char* name, char* text) {
 }
 
 
-void printTree(Node* parent, int blank) {
+void printTree(Node parent, int blank) {
     if (parent == NULL) return;
     int i = 0;
     for(; i < blank; ++i) printf(" ");
