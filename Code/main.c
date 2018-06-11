@@ -3,6 +3,8 @@
 #include "semantic.h"
 #include "translate.h"
 #include "ir.h"
+#include "generate.h"
+
 extern void yyparse();
 extern void yyrestart(FILE*);
 
@@ -42,6 +44,7 @@ int main(int argc, char** argv) {
         }
         interCodeGenerate();
         interCodeOptimize();
+        CodeGenerate();
         fclose(fp);
     }
 

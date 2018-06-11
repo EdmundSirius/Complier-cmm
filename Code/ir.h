@@ -31,7 +31,6 @@ typedef struct InterCode {
         struct { Operand x, y, z; } triop;
         struct { Operand x, y, z; Relop relop; } ifop;
     };
-
 } InterCode;
 
 typedef struct InterCodes
