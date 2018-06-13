@@ -43,7 +43,7 @@ int main(int argc, char** argv) {
             strcpy(outputFile, argv[2]);
         }
         interCodeGenerate();
-        interCodeOptimize();
+        // interCodeOptimize();
         CodeGenerate();
         fclose(fp);
     }

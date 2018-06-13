@@ -833,6 +833,16 @@ void handleArgs(Node root) {
     }
 }
 
+int getFuncArgSum(char* text) {
+    unsigned int key = hashPJW(text);
+    if (symboltable[key].occupied) {
+        if (symboltable[key].type->kind == FUNCTION) {
+            return symboltable[key].type->u.function.argsum;
+        }
+    }
+    return -1;
+}
+
 int getFuncReturnType(char* text) {
     unsigned int key = hashPJW(text);
     if (symboltable[key].occupied) {

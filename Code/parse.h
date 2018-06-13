@@ -13,7 +13,7 @@
 // #define PHASE_SEM
 // #define PRINT_TABLE
 // #define TRANSLATE
-// #define PRINT_IR
+#define PRINT_IR
 
 #ifdef LEX_ANALYSE
 

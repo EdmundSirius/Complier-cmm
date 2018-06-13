@@ -136,6 +136,7 @@ void initSymbolTable();
 void printSymbolTable();
 void printStructList();
 int getFuncReturnType(char*);
+int getFuncArgSum(char*);
 int getArgSum(Node);
 int getVarSum(Node);
 void getVarType(int[], int, Node);
