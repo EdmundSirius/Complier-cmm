@@ -1,12 +1,16 @@
 #ifndef GENERATE_H
 #define GENERATE_H
 
-extern void CodeGenerate();
-extern int getRegNo(Operand operand);
-extern void printRegTable();
+#include "ir.h"
+#include "semantic.h"
 
-struct {
-   Operand op;
-} regTable[10000];
+extern void CodeGenerate();
+extern void printRegTable();
+extern void printVar();
+extern int getRegSum();
+extern int funcNo;
+extern void setupTable();
+extern void setTempVar(Operand);
+// extern int vCounter;
 
 #endif

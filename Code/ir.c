@@ -296,7 +296,12 @@ void printInterCode(InterCode intercode) {
           assert(0);
     }
 #ifdef PRINT_IR
-    printf("%s", code);
+    // printf("%s", code);
+    FILE *fps = fopen("out.s", "a+");
+    if(fps == NULL)
+        assert(0);
+    fprintf(fps, "%s", code);
+    fclose(fps);
 #endif
     fprintf(fp, "%s", code);
 }

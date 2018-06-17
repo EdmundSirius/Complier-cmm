@@ -389,9 +389,9 @@ void translate_Array(Node root, Operand operand, int direction) {
 
 #ifdef TRANSLATE
     printf("ARRAY:");
-    int i = 0;
-    for (; i < size; ++i) {
-        printf("[%d]", array->size[i]);
+    int j = 0;
+    for (; j < size; ++j) {
+        printf("[%d]", array->size[j]);
     }
     printf("\n");
 #endif

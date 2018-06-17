@@ -37,7 +37,7 @@ typedef struct InterCodes
 {
     InterCode intercode;
     struct list_head list;
-    bool isLeader;
+    int isLeader;
 } InterCodes;
 
 extern struct list_head head;
