@@ -8,13 +8,14 @@
 int reg_no = 0;
 int depth = 12;
 int tCounter = 0;
-int vCounter = 0;
+int pCounter = 0;
 char func_name[128];
-char name[128];
 Operand regTable[1024];
 int getRegNo(Operand operand);
 int curFuncNo = -1;
-
+int argNo = 0;
+extern void setTempVar(Operand);
+extern void setArrayVar(Operand, int);
 
 void setupTable() {
   int reg1_no;
@@ -25,94 +26,75 @@ void setupTable() {
           InterCodes *node = list_entry(plist, InterCodes, list);
           InterCode intercode = node->intercode;
           switch (intercode.kind) {
+              case IR_DEC:
+                  setArrayVar(intercode.biop.x, intercode.biop.y->u.no);
+                  /*TODO:*/
+                  break;
+              case IR_CALL:
+                  setTempVar(intercode.op.x);
+
+                  break;
+              case IR_ARG:
+                  functionTable[key].argno = ++argNo;
+                  break;
               case IR_PARAM:
-                  functionTable[key].para.no[vCounter] = intercode.op.x->u.no;
-                  functionTable[key].para.type[vCounter] = intercode.op.x->kind;
-                  ++vCounter;
-                  functionTable[key].para.size = vCounter;
+                  functionTable[key].para.no[pCounter] = intercode.op.x->u.no;
+                  functionTable[key].para.type[pCounter] = intercode.op.x->kind;
+                  ++pCounter;
+                  functionTable[key].para.size = pCounter;
                   break;
               case IR_ASSIGN:
                   if (intercode.biop.y->kind == OP_CONSTANT) {
                       setTempVar(intercode.biop.x);
-                      reg1_no = getRegNo(intercode.biop.x);
-                      if (!reg1_no) {
-                          regTable[tCounter++] = intercode.biop.y;
-                      }
                   }
                   else {
-                      reg1_no = getRegNo(intercode.biop.x);
                       setTempVar(intercode.biop.x);
-                      reg2_no = getRegNo(intercode.biop.y);
                       setTempVar(intercode.biop.y);
-                      printf("::%s %d %d\n", name, reg1_no, reg2_no);
-                      if (!reg1_no) {
-
-                          regTable[tCounter++] = intercode.biop.x;
-                      }
-                      if (!reg2_no) {
-                          regTable[tCounter++] = intercode.biop.y;
-                      }
                   }
                   break;
               case IR_ADD:
               case IR_SUB:
               case IR_MUL:
               case IR_DIV:
-                  reg1_no = getRegNo(intercode.triop.x);
-                  if (reg1_no == -1) {
-                      regTable[tCounter++] = intercode.triop.x;
-                  }
+                  setTempVar(intercode.triop.x);
                   break;
               case IR_IFGOTO:
                   if (intercode.ifop.y->kind == OP_CONSTANT) {
-                      regTable[tCounter++] = intercode.ifop.x;
+                      setTempVar(intercode.ifop.x);
                   }
                   break;
               case IR_READ:
-                  regTable[tCounter++] = intercode.op.x;
+                  setTempVar(intercode.op.x);
                   break;
               case IR_FUNC:
                   ++curFuncNo;
-                  getFuncName(name, intercode.op.x->u.no);
+                  getFuncName(func_name, intercode.op.x->u.no);
+                  printf("NAME: (%s)", func_name);
                   for (i = 0; i < 128; ++i) {
-                      if (!strcmp(name, functionTable[i].name)) {
+                      if (!strcmp(func_name, functionTable[i].name)) {
                           key = i;
+                          printf("(%d)\n", key);
                           break;
                       }
                   }
-                  if (curFuncNo) {
-                      // printVar(func_name, tCounter);
-                      for (j = 0; j < functionTable[key].para.size; ++j) {
-                          assert(0);
-                          printf("v:%d\t", j);
-                          if (functionTable[key].temp.type[j] == OP_TEMPORARY) {
-                              printf("t");
-                          }
-                          else {
-                              printf("v");
-                          }
-                          printf("%d\n", functionTable[key].para.no[j]);
-                      }
-                  }
-                  getFuncName(func_name, intercode.op.x->u.no);
-                  printf("%s: ", func_name);
-                  vCounter = 0;
+                  assert(i != 128);
+                  pCounter = 0;
                   tCounter = 0;
-                  // functionTable[key].para.size = 0;
+                  argNo = 0;
                   break;
               default:
                   break;
           }
       }
-     // printVar(func_name, tCounter);
 }
 
 void printPara(){
-  printf("**----------------------------------\n");
+  printf("**----------------------------------**\n");
   int i, j;
-  for (i = 2; i < curFuncNo + 2; ++i) {
+  for (i = 2; i < curFuncNo + 2 + 1; ++i) {
+      printf("%s TempNo: %d ArgNo: %d\n", functionTable[i].name, functionTable[i].temp.size, functionTable[i].argno);
       for (j = 0; j < functionTable[i].para.size; ++j) {
-          printf("%s PARAM%d\t", functionTable[i].name, j + 1);
+          printf("PARAM%d\t", j + 1);
           if (functionTable[i].para.type[j] == OP_TEMPORARY) {
               printf("t");
           }
@@ -124,24 +106,44 @@ void printPara(){
   }
 }
 
+void printTemp(){
+  printf("**----------------------------------**\n");
+  int i, j;
+  for (i = 2; i < curFuncNo + 2 + 1; ++i) {
+      printf("%s TempNo: %d ArgNo: %d\n", functionTable[i].name, functionTable[i].temp.size, functionTable[i].argno);
+      for (j = 0; j < functionTable[i].temp.size; ++j) {
+          printf("TEMP%d\t", j + 1);
+          if (functionTable[i].temp.type[j] == OP_TEMPORARY) {
+              printf("t");
+          }
+          else {
+              printf("v");
+          }
+          printf("%d ", functionTable[i].temp.no[j]);
+          printf("%d\n", functionTable[i].temp.scale[j]);
+      }
+  }
+}
+
 void CodeGenerate() {
     setupTable();
     printPara();
+    printTemp();
     curFuncNo = -1;
     FILE *fp = fopen("out.s", "wt");
     if(fp == NULL)
         assert(0);
     char *preCodeGenerate = ".data\n_prompt: .asciiz \"Enter an integer:\"\n_ret: .asciiz \"\\n\"\n.globl main\n.text\nread:\n\tli $v0, 4\n\tla $a0, _prompt\n\tsyscall\n\tli $v0, 5\n\tsyscall\n\tjr $ra\n\nwrite:\n\tli $v0, 1\n\tsyscall\n\tli $v0, 4\n\tla $a0, _ret\n\tsyscall\n\tmove $v0, $0\n\tjr $ra\n";
     fprintf(fp, "%s", preCodeGenerate);
-    int frameSize, paraSize;
+    int frameSize = 0, paraSize, frameCur;
     char func[128], op1[128], op3[128], code[128];
     int reg1_no, reg2_no, reg3_no;
-    int funcSum = -1, i;
+    int funcSum = -1, i, j, flag = 0;
     struct list_head *plist;
     list_for_each(plist, &head) {
         InterCodes *node = list_entry(plist, InterCodes, list);
         InterCode intercode = node->intercode;
-        printInterCode(intercode);
+        fputs("# ", fp); printInterCode(intercode);
         switch (intercode.kind) {
             case IR_LABEL:
                 symbolHandle(op1, intercode.op.x);
@@ -151,10 +153,13 @@ void CodeGenerate() {
             case IR_FUNC:
                 ++curFuncNo;
                 getFuncName(func, intercode.op.x->u.no);
-                for (; i < 128; ++i) {
+                for (i = 0; i < 128; ++i) {
                     if (!strcmp(func, functionTable[i].name)) {
-                        printf("%d %s: ", i, func);
-                        frameSize = functionTable[i].temp.size * 4;
+                        for (j = 0; j < functionTable[i].temp.size; ++j) {
+                              frameSize += functionTable[i].temp.scale[j];
+                        }
+                        frameSize *= 4;
+                        frameCur = frameSize;
                         paraSize = functionTable[i].para.size * 4;
                         printf("frameSize: %d ", frameSize);
                         printf("paraSize: %d\n", paraSize);
@@ -164,108 +169,159 @@ void CodeGenerate() {
                 assert(i != 128);
                 sprintf(code, "\n%s:\n", func);
                 fputs(code, fp);
-                sprintf(code, "\tsubu $sp, $sp, %d\n", frameSize);
+                sprintf(code, "\taddi $sp, $sp, -%d\n", frameSize);
                 fputs(code, fp);
                 break;
 
             case IR_ASSIGN:
                 if (intercode.biop.y->kind == OP_CONSTANT) {
-                    regTable[reg_no++] = intercode.biop.x;
                     sprintf(code, "\tli $t1, %d\n", intercode.biop.y->u.no);
+                    if (intercode.biop.x->kind != OP_VALUE) {
+                        fputs(code, fp);
+                        strcpy(code, "\tmove $t0, $t1\n");
+                    }
+                    else {
+                        flag = 1;
+                    }
+                }
+                else if (intercode.biop.y->kind == OP_ADDRESS) {
+                    reg2_no = getRegNo(intercode.biop.y);
+                    sprintf(code, "\tla $t0, %d($sp)\n", frameCur - 4 * reg2_no);
+                }
+                else if (intercode.biop.y->kind == OP_VALUE) {
+                    reg2_no = getRegNo(intercode.biop.y);
+                    sprintf(code, "\tlw $t1, %d($sp)\n", frameCur - 4 * reg2_no);
                     fputs(code, fp);
-                    reg1_no = getRegNo(intercode.biop.x);
-                    sprintf(code, "\tsw $t1, %d($fp)\n", frameSize - 4 * reg1_no);
-                    fputs(code, fp);
+                    strcpy(code, "\tlw $t0, 0($t1)\n");
+                }
+                else {
+                    reg2_no = getRegNo(intercode.biop.y);
+                    sprintf(code, "\tlw $t1, %d($sp)\n", frameCur - 4 * reg2_no);
+                    if (intercode.biop.x->kind != OP_VALUE) {
+                        fputs(code, fp);
+                        strcpy(code, "\tmove $t0, $t1\n");
+                    }
+                    else {
+                        flag = 1;
+                    }
+                }
+                fputs(code, fp);
+
+                if (flag == 1) {
+                    strcpy(code, "\tsw $t1, 0($t0)\n");
+                    flag = 0;
                 }
                 else {
                     reg1_no = getRegNo(intercode.biop.x);
-                    reg2_no = getRegNo(intercode.biop.y);
-                    sprintf(code, "\tlw $t1, %d($fp)\n", frameSize - 4 * reg2_no);
-                    fputs(code, fp);
-                    strcpy(code, "\tmove $t0, $t1\n");
-                    fputs(code, fp);
-                    sprintf(code, "\tsw $t0, %d($fp)\n", frameSize - 4 * reg1_no);
-                    fputs(code, fp);
-
+                    sprintf(code, "\tsw $t0, %d($sp)\n", frameCur - 4 * reg1_no);
                 }
+                fputs(code, fp);
                 break;
 
             case IR_ADD:
                 reg1_no = getRegNo(intercode.triop.x);
-                if (!reg1_no) {
-                    regTable[reg_no++] = intercode.triop.x;
-                    reg1_no = reg_no;
-                }
                 reg2_no = getRegNo(intercode.triop.y);
-                // assert(reg2_no > 0);
-
-                if (intercode.triop.z->kind == OP_CONSTANT) {
-                    sprintf(code, "\taddi $t%d, $t%d, %d\n", reg1_no, reg2_no, intercode.triop.z->u.no);
-                    fputs(code, fp);
+                reg3_no = getRegNo(intercode.triop.z);
+                if (intercode.triop.y->kind == OP_CONSTANT) {
+                    sprintf(code, "\tli $t1, %d\n", intercode.triop.y->u.no);
+                }
+                else if (intercode.triop.y->kind == OP_ADDRESS) {
+                    sprintf(code, "\tla $t1, %d($sp)\n", frameCur - 4 * reg2_no);
                 }
                 else {
-                    int reg3_no = getRegNo(intercode.triop.z);
-                    sprintf(code, "\tlw $t1, %d($fp)\n", depth + 4 * reg2_no);
-                    fputs(code, fp);
-                    sprintf(code, "\tlw $t2, %d($fp)\n", depth + 4 * reg3_no);
-                    fputs(code, fp);
-                    sprintf(code, "\tadd $t3, $t1, $t2\n");
-                    fputs(code, fp);
-                    sprintf(code, "\tsw $t3, %d($fp)\n", depth + 4 * reg1_no);
-                    fputs(code, fp);
+                    sprintf(code, "\tlw $t1, %d($sp)\n", frameCur - 4 * reg2_no);
                 }
+                fputs(code, fp);
+
+                if (intercode.triop.z->kind == OP_CONSTANT) {
+                    sprintf(code, "\tli $t2, %d\n", intercode.triop.z->u.no);
+                }
+                else if (intercode.triop.z->kind == OP_ADDRESS) {
+                    sprintf(code, "\tla $t2, %d($sp)\n", frameCur - 4 * reg3_no);
+                }
+                else {
+                    sprintf(code, "\tlw $t2, %d($sp)\n", frameCur - 4 * reg3_no);
+                }
+                fputs(code, fp);
+                strcpy(code, "\tadd $t0, $t1, $t2\n");
+                fputs(code, fp);
+                sprintf(code, "\tsw $t0, %d($sp)\n", frameCur - 4 * reg1_no);
+                fputs(code, fp);
                 break;
 
             case IR_SUB:
                 reg1_no = getRegNo(intercode.triop.x);
-                // if (!reg1_no) {
-                //     regTable[reg_no++] = intercode.triop.x;
-                //     reg1_no = reg_no;
-                // }
                 reg2_no = getRegNo(intercode.triop.y);
-                // assert(reg2_no > 0);
-
-                if (intercode.triop.z->kind == OP_CONSTANT) {
-                    sprintf(code, "\taddi $t%d, $t%d, -%d\n", reg1_no, reg2_no, intercode.triop.z->u.no);
-                    fputs(code, fp);
+                reg3_no = getRegNo(intercode.triop.z);
+                if (intercode.triop.y->kind == OP_CONSTANT) {
+                    sprintf(code, "\tli $t1, %d\n", intercode.triop.y->u.no);
                 }
                 else {
-                    reg3_no = getRegNo(intercode.triop.z);
-                    sprintf(code, "\tsub $t%d, $t%d, $t%d\n", reg1_no, reg2_no, reg3_no);
-                    fputs(code, fp);
+                    sprintf(code, "\tlw $t1, %d($sp)\n", frameCur - 4 * reg2_no);
                 }
+                fputs(code, fp);
+                if (intercode.triop.z->kind == OP_CONSTANT) {
+                    sprintf(code, "\tli $t2, %d\n", intercode.triop.z->u.no);
+                    fputs(code, fp);
+                    sprintf(code, "\taddi $t0, $t1, -%d\n", intercode.triop.z->u.no);
+                }
+                else {
+                    sprintf(code, "\tlw $t2, %d($sp)\n", frameCur - 4 * reg3_no);
+                    fputs(code, fp);
+                    strcpy(code, "\tsub $t0, $t1, $t2\n");
+                }
+                fputs(code, fp);
+                sprintf(code, "\tsw $t0, %d($sp)\n", frameCur - 4 * reg1_no);
+                fputs(code, fp);
                 break;
 
             case IR_MUL:
                 reg1_no = getRegNo(intercode.triop.x);
-                if (!reg1_no) {
-                    regTable[reg_no++] = intercode.triop.x;
-                    reg1_no = reg_no;
-                }
                 reg2_no = getRegNo(intercode.triop.y);
                 reg3_no = getRegNo(intercode.triop.z);
-                sprintf(code, "\tlw $t1, %d($fp)\n", depth + 4 * reg2_no);
+                if (intercode.triop.y->kind == OP_CONSTANT) {
+                    sprintf(code, "\tli $t1, %d\n", intercode.triop.y->u.no);
+                }
+                else {
+                    sprintf(code, "\tlw $t1, %d($sp)\n", frameCur - 4 * reg2_no);
+                }
                 fputs(code, fp);
-                sprintf(code, "\tlw $t2, %d($fp)\n", depth + 4 * reg3_no);
+                if (intercode.triop.z->kind == OP_CONSTANT) {
+                    sprintf(code, "\tli $t2, %d\n", intercode.triop.z->u.no);
+                }
+                else {
+                    sprintf(code, "\tlw $t2, %d($sp)\n", frameCur - 4 * reg3_no);
+                }
                 fputs(code, fp);
-                sprintf(code, "\tmul $t3, $t1, $t2\n");
+                strcpy(code, "\tmul $t0, $t1, $t2\n");
                 fputs(code, fp);
-                sprintf(code, "\tsw $t3, %d($fp)\n", depth + 4 * reg1_no);
+                sprintf(code, "\tsw $t0, %d($sp)\n", frameCur - 4 * reg1_no);
                 fputs(code, fp);
                 break;
 
             case IR_DIV:
-                reg1_no = getRegNo(intercode.biop.x);
-                if (!reg1_no) {
-                    regTable[reg_no++] = intercode.biop.x;
-                    reg1_no = reg_no;
-                }
+                reg1_no = getRegNo(intercode.triop.x);
                 reg2_no = getRegNo(intercode.triop.y);
-                // assert(reg2_no > 0);
                 reg3_no = getRegNo(intercode.triop.z);
-                sprintf(code, "\tdiv $t%d, $t%d\n", reg2_no, reg3_no);
+                if (intercode.triop.y->kind == OP_CONSTANT) {
+                    sprintf(code, "\tli $t1, %d\n", intercode.triop.y->u.no);
+                }
+                else {
+                    sprintf(code, "\tlw $t1, %d($sp)\n", frameCur - 4 * reg2_no);
+                }
                 fputs(code, fp);
-                sprintf(code, "\tmflo $t%d\n", reg1_no);
+                if (intercode.triop.z->kind == OP_CONSTANT) {
+                    sprintf(code, "\tli $t2, %d\n", intercode.triop.z->u.no);
+                }
+                else {
+                    sprintf(code, "\tlw $t2, %d($sp)\n", frameCur - 4 * reg3_no);
+                }
+                fputs(code, fp);
+                strcpy(code, "\tdiv $t1, $t2\n");
+                fputs(code, fp);
+                strcpy(code, "\tmflo $t0\n");
+                fputs(code, fp);
+                sprintf(code, "\tsw $t0, %d($sp)\n", frameCur - 4 * reg1_no);
                 fputs(code, fp);
                 break;
 /*
@@ -302,16 +358,16 @@ void CodeGenerate() {
                 symbolHandle(op3, intercode.ifop.z);
                 reg1_no = getRegNo(intercode.ifop.x);
                 reg2_no = getRegNo(intercode.ifop.y);
+                sprintf(code, "\tlw $t1, %d($sp)\n", frameCur - 4 * reg1_no);
+                fputs(code, fp);
                 if (intercode.ifop.y->kind == OP_CONSTANT) {
-                    regTable[reg_no++] = intercode.ifop.x;
-                    sprintf(code, "\tli $t%d, %d\n", reg_no, intercode.ifop.y->u.value);
-                    fputs(code, fp);
-                    reg2_no = reg_no;
+                    sprintf(code, "\tli $t2, %d\n", intercode.ifop.y->u.value);
                 }
-                sprintf(code, "\tlw $t1, %d($fp)\n", depth + 4 * reg1_no);
+                else {
+                    sprintf(code, "\tlw $t2, %d($sp)\n", frameCur - 4 * reg2_no);
+                }
                 fputs(code, fp);
-                sprintf(code, "\tlw $t2, %d($fp)\n", depth + 4 * reg2_no);
-                fputs(code, fp);
+
 
                 switch (intercode.ifop.relop) {
                     case RELGT: fputs("\tbgt ", fp); break;
@@ -327,59 +383,105 @@ void CodeGenerate() {
                 break;
 
             case IR_RET:
-                reg1_no = getRegNo(intercode.op.x);
-                sprintf(code, "\tsw $t1, %d($fp)\n", depth + 4 * reg1_no);
+                if (intercode.op.x->kind == OP_TEMPORARY) {
+                    reg1_no = getRegNo(intercode.op.x);
+                    sprintf(code, "\tlw $t0, %d($sp)\n", frameCur - 4 * reg1_no);
+                }
+                else {
+                    assert(intercode.op.x->kind == OP_CONSTANT);
+                    sprintf(code, "\tli $t0, %d\n", intercode.op.x->u.no);
+                }
                 fputs(code, fp);
-                sprintf(code, "\tlw $v0, %d($fp)\n", depth + 4 * reg1_no);
+                strcpy(code, "\tmove $v0, $t0\n");
                 fputs(code, fp);
-                sprintf(code, "\tmove $sp, $fp\n\tlw $ra, %d($sp)\n\tlw $fp, %d($sp)\n\taddiu $sp, $sp, %d\n\tjr $ra\n", frameSize - 4, frameSize - 8, frameSize);
+                sprintf(code, "\taddi $sp, $sp, %d\n", frameSize);
+                fputs(code, fp);
+                strcpy(code, "\tjr $ra\n");
                 fputs(code, fp);
                 break;
-/*
+
             case IR_DEC:
-                symbolHandle(op1, intercode.biop.x);
-                symbolHandle(op2, intercode.biop.y);
-                sprintf(code, "DEC %s %s\n", op1, op2); break;
-*/
+                break;
+
             case IR_ARG:
-                reg1_no = getRegNo(intercode.op.x);
-                sprintf(code, "\tlw $a0, %d($fp)\n", depth + 4 * reg1_no);
+                if (intercode.op.x->kind == OP_CONSTANT) {
+                    sprintf(code, "\tli $t0, %d\n", intercode.op.x->u.no);
+                }
+                else {
+                    reg1_no = getRegNo(intercode.op.x);
+                    sprintf(code, "\tlw $t0, %d($sp)\n", frameCur - 4 * reg1_no);
+                }
+                fputs(code, fp);
+                sprintf(code, "\taddi $sp, $sp, -4\n");
+                frameCur += 4;
+                fputs(code, fp);
+                strcpy(code, "\tsw $t0, 0($sp)\n");
                 fputs(code, fp);
                 break;
 
             case IR_CALL:
                 getFuncName(func, intercode.biop.y->u.no);
-                // funcSum = getFuncArgSum(func);
+                paraSize =  getFuncArgSum(func);
+                reg1_no = getRegNo(intercode.biop.x);
+                strcpy(code, "\taddi $sp, $sp, -4\n");
+                frameCur += 4;
+                fputs(code, fp);
+                strcpy(code, "\tsw $ra, 0($sp)\n");
+                fputs(code, fp);
                 sprintf(code, "\tjal %s\n", func);
                 fputs(code, fp);
-                reg1_no = getRegNo(intercode.biop.x);
-                sprintf(code, "\tsw $v0, %d($fp)\n", depth + 4 * reg1_no);
+                strcpy(code, "\tlw $ra, 0($sp)\n");
+                fputs(code, fp);
+                sprintf(code, "\taddi $sp, $sp, %d\n", 4 * paraSize + 4);
+                frameCur -= (4 * paraSize + 4);
+                fputs(code, fp);
+                strcpy(code, "\tmove $t0, $v0\n");
+                fputs(code, fp);
+                sprintf(code, "\tsw $t0, %d($sp)\n", frameCur - 4 * reg1_no);
                 fputs(code, fp);
                 break;
 
             case IR_PARAM:
-                reg1_no = getRegNo(intercode.op.x);
-                // sprintf(code, "\tsw $a0, %d($fp)\n", depth + 4 * reg1_no);
-                // fputs(code, fp);
-                // sprintf(code, "\tlw $t1, %d($fp)\n", depth + 4 * reg1_no);
-                // fputs(code, fp);
                 break;
 
             case IR_READ:
+                strcpy(code, "\taddi $sp, $sp, -4\n");
+                fputs(code, fp);
+                strcpy(code, "\tsw $ra, 0($sp)\n");
+                fputs(code, fp);
                 strcpy(code, "\tjal read\n");
                 fputs(code, fp);
-                regTable[reg_no++] = intercode.op.x;
+                strcpy(code, "\tlw $ra, 0($sp)\n");
+                fputs(code, fp);
+                strcpy(code, "\taddi $sp, $sp, 4\n");
+                fputs(code, fp);
+                strcpy(code, "\tmove $t0, $v0\n");
+                fputs(code, fp);
                 reg1_no = getRegNo(intercode.op.x);
-                sprintf(code, "\tsw $v0, %d($fp)\n", depth + 4 * reg1_no);
+                sprintf(code, "\tsw $t0, %d($sp)\n", frameCur - 4 * reg1_no);
                 fputs(code, fp);
                 break;
 
             case IR_WRITE:
-                symbolHandle(op1, intercode.op.x);
-                reg1_no = getRegNo(intercode.op.x);
-                sprintf(code, "\tlw $a0, %d($fp)\n", depth + 4 * reg1_no);
+                if (intercode.op.x->kind == OP_CONSTANT) {
+                    sprintf(code, "\tli $t0, %d\n", intercode.op.x->u.no);
+                }
+                else {
+                    reg1_no = getRegNo(intercode.op.x);
+                    sprintf(code, "\tlw $t0, %d($sp)\n", frameCur - 4 * reg1_no);
+                }
                 fputs(code, fp);
-                strcat(code, "\tjal write\n");
+                strcpy(code, "\tmove $a0, $t0\n");
+                fputs(code, fp);
+                strcpy(code, "\taddi $sp, $sp, -4\n");
+                fputs(code, fp);
+                strcpy(code, "\tsw $ra, 0($sp)\n");
+                fputs(code, fp);
+                strcpy(code, "\tjal write\n");
+                fputs(code, fp);
+                strcpy(code, "\tlw $ra, 0($sp)\n");
+                fputs(code, fp);
+                strcpy(code, "\taddi $sp, $sp, 4\n");
                 fputs(code, fp);
                 break;
 
@@ -389,78 +491,123 @@ void CodeGenerate() {
 
     }
     fclose(fp);
-    // printRegTable();
 }
 
 
 void setTempVar(Operand operand) {
-    int i, j, k;
+    int i, j, k, kind = operand->kind;
+    if (operand->kind == OP_ADDRESS) kind = OP_VARIABLE;
+    if (operand->kind == OP_VALUE) kind = OP_TEMPORARY;
     for (i = 0; i < 128; ++i) {
-        if (!strcmp(name, functionTable[i].name)) {
+        if (!strcmp(func_name, functionTable[i].name)) {
             for (k = 0; k < tCounter; ++k) {
                 if (functionTable[i].temp.no[k] == operand->u.no) {
-                    if (functionTable[i].temp.type[k] == operand->kind) {
+                    if (functionTable[i].temp.type[k] == kind) {
                         return;
                     }
                 }
             }
+            for (k = 0; k < pCounter; ++k) {
+                if (functionTable[i].para.no[k] == operand->u.no) {
+                    if (functionTable[i].para.type[k] == kind) {
+                        return;
+                    }
+                }
+            }
+            printf("+%d: ", tCounter);
+            if (kind == OP_TEMPORARY) printf("t");
+            else printf("v");
+            printf("%d\n", operand->u.no);
             functionTable[i].temp.no[tCounter] = operand->u.no;
-            functionTable[i].temp.type[tCounter] = operand->kind;
+            functionTable[i].temp.type[tCounter] = kind;
+            functionTable[i].temp.scale[tCounter] = 1;
+            tCounter++;
+            functionTable[i].temp.size = tCounter;
+            break;
         }
-     }
+    }
+    assert(i != 128);
+}
+
+void setArrayVar(Operand operand, int size) {
+  int i, j, k;
+  for (i = 0; i < 128; ++i) {
+      if (!strcmp(func_name, functionTable[i].name)) {
+          for (k = 0; k < tCounter; ++k) {
+              if (functionTable[i].temp.no[k] == operand->u.no) {
+                  if (functionTable[i].temp.type[k] == operand->kind) {
+                      assert(0);
+                  }
+              }
+          }
+          for (k = 0; k < pCounter; ++k) {
+              if (functionTable[i].para.no[k] == operand->u.no) {
+                  if (functionTable[i].para.type[k] == operand->kind) {
+                      assert(0);
+                  }
+              }
+          }
+          printf("%d %d: (ARRAY)", i, tCounter);
+          if (operand->kind == OP_TEMPORARY) printf("t");
+          else printf("v");
+          printf("%d\n", operand->u.no);
+          functionTable[i].temp.no[tCounter] = operand->u.no;
+          functionTable[i].temp.type[tCounter] = operand->kind;
+          functionTable[i].temp.scale[tCounter] = size / 4;
+          functionTable[i].temp.size = ++tCounter;
+          break;
+      }
+  }
+  assert(i != 128);
+}
+int getFuncArgSum(char* text) {
+    int i;
+    for (i = 0; i < 128; ++i) {
+        if (!strcmp(text, functionTable[i].name)) {
+            return functionTable[i].para.size;
+        }
+    }
+    return -1;
 }
 
 int getRegNo(Operand operand) {
     int ret = 0;
-    int i = curFuncNo + 2, j = 0;
-    for (; j < functionTable[i].temp.size; ++j) {
-        if (operand->u.no == functionTable[i].temp.no[j] && operand->kind == functionTable[i].temp.type[j]) {
-            ret = j + 1;
-            return -ret;
+    int i = curFuncNo + 2, j, k, kind = operand->kind;
+    if (operand->kind == OP_ADDRESS) {
+        kind = OP_VARIABLE;
+    }
+    if (operand->kind == OP_VALUE) {
+        kind = OP_TEMPORARY;
+    }
+    if (operand->kind == OP_CONSTANT) {
+        return 0;
+    }
+    for (j = 0; j < functionTable[i].temp.size; ++j) {
+        if (operand->u.no == functionTable[i].temp.no[j] && kind == functionTable[i].temp.type[j]) {
+            for (k = 0; k <= j; ++k)
+                ret += functionTable[i].temp.scale[k];
+            if (kind == OP_TEMPORARY) printf("t"); else printf("v");
+            printf("%d :%d\n", operand->u.no, ret);
+            return ret;
        }
     }
-    if (ret != -1)
-        return ret;
+
     for (j = 0; j < functionTable[i].para.size; ++j) {
-        if (operand->u.no == functionTable[i].para.no[j] && operand->kind == functionTable[i].para.type[j]) {
+        if (operand->u.no == functionTable[i].para.no[j] && kind == functionTable[i].para.type[j]) {
             ret = j + 1;
+            printf("-ret :%d\n", -ret);
             return -ret;
         }
     }
     return 0;
 }
 
-void printVar(char *name, int no) {
-    printf("%s: %d %d\n", name, tCounter, vCounter);
-    int i = 0, j;
-    for (; i < funcNo + 1; ++i) {
-        if (!strcmp(name, functionTable[i].name)) {
-            for (j = 0; j < no; ++j) {
-                functionTable[i].temp.no[j] = regTable[j]->u.no;
-                functionTable[i].temp.type[j] = regTable[j]->kind;
-                printf("%d\t", j);
-                if (functionTable[i].temp.type[j] == OP_TEMPORARY) {
-                    printf("t");
-                }
-                else {
-                    printf("v");
-                }
-                printf("%d\n", functionTable[i].temp.no[j]);
-                // ++tCounter;
-            }
-            functionTable[i].temp.size = no;
-            printf("------------------------------------\n");
-
-            break;
-        }
-    }
-}
-void printRegTable() {
-    int i = 0;
-    for (; i < reg_no; ++i) {
-        printf("$t%d\t", i + 1);
-        if (regTable[i]->kind == OP_TEMPORARY) printf("t");
-        else printf("v");
-        printf("%d\n", regTable[i]->u.no);
-    }
-}
+// void printRegTable() {
+//     int i = 0;
+//     for (; i < reg_no; ++i) {
+//         printf("$t%d\t", i + 1);
+//         if (regTable[i]->kind == OP_TEMPORARY) printf("t");
+//         else printf("v");
+//         printf("%d\n", regTable[i]->u.no);
+//     }
+// }

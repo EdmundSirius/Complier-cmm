@@ -53,6 +53,7 @@ typedef struct FieldList_
 typedef struct Symbol {
     int no[512];
     int type[512];
+    int scale[512];
     int size;
 } Symbol;
 
@@ -64,6 +65,7 @@ typedef struct SymbolTable {
     bool isParam;
     Symbol para;
     Symbol temp;
+    int argno;
 } SymbolTable;
 
 struct SymbolTable symboltable[0x4000];

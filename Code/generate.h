@@ -10,7 +10,8 @@ extern void printVar();
 extern int getRegSum();
 extern int funcNo;
 extern void setupTable();
-extern void setTempVar(Operand);
+extern int getFuncArgSum(char*);
+
 // extern int vCounter;
 
 #endif

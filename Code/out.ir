@@ -1,155 +1,90 @@
-FUNCTION mod :
+FUNCTION squaRever :
 PARAM v1
-PARAM v2
-t3 := v1
-t7 := v1
-t8 := v2
-t5 := t7 / t8
-t6 := v2
-t4 := t5 * t6
-t2 := t3 - t4
-v3 := t2
-t10 := v3
-v4 := t10
-t12 := v3
-RETURN t12
-FUNCTION power :
-PARAM v5
-PARAM v6
-t18 := v6
-t15 := #1 + t18
-t16 := v6
-t14 := t15 - t16
-v7 := t14
+v2 := #0
+DEC v3 12
+v4 := #0
+t6 := v1
+t5 := t6 / #100
+t8 := &v3 + #0
+*t8 := t5
+t14 := v1
+t12 := t14 / #10
+t17 := &v3 + #0
+t20 := *t17
+t13 := #10 * t20
+t11 := t12 - t13
+t21 := &v3 + #4
+*t21 := t11
+t27 := v1
+t30 := &v3 + #0
+t33 := *t30
+t28 := #100 * t33
+t25 := t27 - t28
+t35 := &v3 + #4
+t38 := *t35
+t26 := #10 * t38
+t24 := t25 - t26
+t39 := &v3 + #8
+*t39 := t24
+t42 := &v3 + #0
+t45 := *t42
+t46 := &v3 + #8
+t49 := *t46
+IF t45 != t49 GOTO label1
+GOTO label2
 LABEL label1 :
-t19 := v6
-t29 := v7
-t30 := v7
-t27 := t29 - t30
-t25 := t27 + #90
-t23 := t25 - #89
-t21 := t23 + #1
-t20 := t21 - #2
-IF t19 > t20 GOTO label2
+v2 := #0
 GOTO label3
 LABEL label2 :
-t32 := v7
-t33 := v5
-t31 := t32 * t33
-v7 := t31
-t40 := v6
-t37 := #2 * t40
-t44 := v6
-t38 := #1 * t44
-t35 := t37 - t38
-t34 := t35 - #1
-v6 := t34
-GOTO label1
-LABEL label3 :
-t46 := v7
-RETURN t46
-FUNCTION getNumDigits :
-PARAM v8
-v9 := #0
-t49 := v8
-IF t49 < #0 GOTO label4
-GOTO label5
 LABEL label4 :
-RETURN #-1
+t51 := v4
+IF t51 < #12 GOTO label5
+GOTO label6
 LABEL label5 :
-LABEL label6 :
-t54 := v8
-IF t54 > #0 GOTO label7
+t56 := v4
+t57 := v4
+t54 := t56 * t57
+t55 := v1
+t53 := t54 - t55
+IF t53 == #0 GOTO label7
 GOTO label8
 LABEL label7 :
-t57 := v8
-t56 := t57 / #10
-v8 := t56
-t60 := v9
-t59 := t60 + #2
-v9 := t59
-t63 := v9
-t62 := t63 + #2
-v9 := t62
-t66 := v9
-t65 := t66 - #3
-v9 := t65
-GOTO label6
+v2 := #1
 LABEL label8 :
-t69 := v9
-RETURN t69
-FUNCTION isNarcissistic :
-PARAM v10
-t76 := v10
-t73 := #1 + t76
-t72 := t73 - #1
-ARG t72
-t71 := CALL getNumDigits
-v11 := t71
-v12 := #0
-t80 := v10
-v13 := t80
+t61 := v4
+t60 := t61 + #1
+v4 := t60
+GOTO label4
+LABEL label6 :
+LABEL label3 :
+t63 := v2
+IF t63 == #1 GOTO label9
+GOTO label10
 LABEL label9 :
-t81 := v13
-IF t81 > #0 GOTO label10
+RETURN #1
 GOTO label11
 LABEL label10 :
-t84 := v13
-ARG #10
-ARG t84
-t83 := CALL mod
-v14 := t83
-t89 := v13
-t90 := v14
-t87 := t89 - t90
-t86 := t87 / #10
-v13 := t86
-t92 := v12
-t94 := v14
-t95 := v11
-ARG t95
-ARG t94
-t93 := CALL power
-t91 := t92 + t93
-v12 := t91
-GOTO label9
+RETURN #0
 LABEL label11 :
-t96 := v12
-t97 := v10
-IF t96 == t97 GOTO label12
-GOTO label13
+FUNCTION main :
+v5 := #100
 LABEL label12 :
-RETURN #1
+t71 := v5
+IF t71 < #150 GOTO label13
 GOTO label14
 LABEL label13 :
-RETURN #0
-LABEL label14 :
-FUNCTION main :
-v15 := #0
-v16 := #300
+t74 := v5
+ARG t74
+t73 := CALL squaRever
+IF t73 == #1 GOTO label15
+GOTO label16
 LABEL label15 :
-t106 := v16
-IF t106 < #500 GOTO label16
-GOTO label17
+t76 := v5
+WRITE t76
 LABEL label16 :
-t109 := v16
-ARG t109
-t108 := CALL isNarcissistic
-IF t108 == #1 GOTO label18
-GOTO label19
-LABEL label18 :
-t111 := v16
-WRITE t111
-t113 := v15
-t112 := t113 + #1
-v15 := t112
-LABEL label19 :
-t116 := v16
-t115 := t116 + #1
-v16 := t115
-GOTO label15
-LABEL label17 :
-t118 := v15
-WRITE t118
-t120 := v15
-RETURN t120
+t78 := v5
+t77 := t78 + #1
+v5 := t77
+GOTO label12
+LABEL label14 :
+RETURN #0

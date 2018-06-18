@@ -113,7 +113,8 @@ void translate_VarDec(Node root) {
       operand->kind = OP_SIZE;
       var->kind = OP_VARIABLE;
       int i = 0;
-      operand->u.no = 8;
+      operand->u.no = 4;
+      /*TODO: ???*/
       for (; i < size; ++i) {
           root = Child(0);
           operand->u.no = operand->u.no * array->size[i];

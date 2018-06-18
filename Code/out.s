@@ -19,528 +19,335 @@ write:
 	syscall
 	move $v0, $0
 	jr $ra
-FUNCTION mod :
+# FUNCTION squaRever :
 
-mod:
-	subu $sp, $sp, 0
-PARAM v1
-PARAM v2
-t3 := v1
-	lw $t1, 0($fp)
+squaRever:
+	addi $sp, $sp, -152
+# PARAM v1
+# v2 := #0
+	li $t1, 0
 	move $t0, $t1
-	sw $t0, 0($fp)
-t7 := v1
-	lw $t1, 0($fp)
+	sw $t0, 148($sp)
+# DEC v3 12
+# v4 := #0
+	li $t1, 0
 	move $t0, $t1
-	sw $t0, 0($fp)
-t8 := v2
-	lw $t1, 0($fp)
+	sw $t0, 132($sp)
+# t6 := v1
+	lw $t1, 156($sp)
 	move $t0, $t1
-	sw $t0, 0($fp)
-t5 := t7 / t8
-	div $t0, $t0
-	mflo $t1
-t6 := v2
-	lw $t1, 0($fp)
+	sw $t0, 128($sp)
+# t5 := t6 / #100
+	lw $t1, 128($sp)
+	li $t2, 100
+	div $t1, $t2
+	mflo $t0
+	sw $t0, 124($sp)
+# t8 := &v3 + #0
+	la $t1, 136($sp)
+	li $t2, 0
+	add $t0, $t1, $t2
+	sw $t0, 120($sp)
+# *t8 := t5
+	lw $t1, 124($sp)
+	sw $t1, 0($t0)
+# t14 := v1
+	lw $t1, 156($sp)
 	move $t0, $t1
-	sw $t0, 0($fp)
-t4 := t5 * t6
-	lw $t1, 12($fp)
-	lw $t2, 12($fp)
-	mul $t3, $t1, $t2
-	sw $t3, 20($fp)
-t2 := t3 - t4
-	sub $t0, $t0, $t0
-v3 := t2
-	lw $t1, 0($fp)
+	sw $t0, 116($sp)
+# t12 := t14 / #10
+	lw $t1, 116($sp)
+	li $t2, 10
+	div $t1, $t2
+	mflo $t0
+	sw $t0, 112($sp)
+# t17 := &v3 + #0
+	la $t1, 136($sp)
+	li $t2, 0
+	add $t0, $t1, $t2
+	sw $t0, 108($sp)
+# t20 := *t17
+	lw $t1, 108($sp)
+	lw $t0, 0($t1)
+	sw $t0, 104($sp)
+# t13 := #10 * t20
+	li $t1, 10
+	lw $t2, 104($sp)
+	mul $t0, $t1, $t2
+	sw $t0, 100($sp)
+# t11 := t12 - t13
+	lw $t1, 112($sp)
+	lw $t2, 100($sp)
+	sub $t0, $t1, $t2
+	sw $t0, 96($sp)
+# t21 := &v3 + #4
+	la $t1, 136($sp)
+	li $t2, 4
+	add $t0, $t1, $t2
+	sw $t0, 92($sp)
+# *t21 := t11
+	lw $t1, 96($sp)
+	sw $t1, 0($t0)
+# t27 := v1
+	lw $t1, 156($sp)
 	move $t0, $t1
-	sw $t0, 0($fp)
-t10 := v3
-	lw $t1, 0($fp)
-	move $t0, $t1
-	sw $t0, 0($fp)
-v4 := t10
-	lw $t1, 0($fp)
-	move $t0, $t1
-	sw $t0, 0($fp)
-t12 := v3
-	lw $t1, 0($fp)
-	move $t0, $t1
-	sw $t0, 0($fp)
-RETURN t12
-	sw $t1, 12($fp)
-	lw $v0, 12($fp)
-	move $sp, $fp
-	lw $ra, -4($sp)
-	lw $fp, -8($sp)
-	addiu $sp, $sp, 0
-	jr $ra
-FUNCTION power :
-
-power:
-	subu $sp, $sp, 0
-PARAM v5
-PARAM v6
-t18 := v6
-	lw $t1, 0($fp)
-	move $t0, $t1
-	sw $t0, 0($fp)
-t15 := #1 + t18
-	lw $t1, 12($fp)
-	lw $t2, 12($fp)
-	add $t3, $t1, $t2
-	sw $t3, 24($fp)
-t16 := v6
-	lw $t1, 0($fp)
-	move $t0, $t1
-	sw $t0, 0($fp)
-t14 := t15 - t16
-	sub $t0, $t0, $t0
-v7 := t14
-	lw $t1, 0($fp)
-	move $t0, $t1
-	sw $t0, 0($fp)
-LABEL label1 :
+	sw $t0, 88($sp)
+# t30 := &v3 + #0
+	la $t1, 136($sp)
+	li $t2, 0
+	add $t0, $t1, $t2
+	sw $t0, 84($sp)
+# t33 := *t30
+	lw $t1, 84($sp)
+	lw $t0, 0($t1)
+	sw $t0, 80($sp)
+# t28 := #100 * t33
+	li $t1, 100
+	lw $t2, 80($sp)
+	mul $t0, $t1, $t2
+	sw $t0, 76($sp)
+# t25 := t27 - t28
+	lw $t1, 88($sp)
+	lw $t2, 76($sp)
+	sub $t0, $t1, $t2
+	sw $t0, 72($sp)
+# t35 := &v3 + #4
+	la $t1, 136($sp)
+	li $t2, 4
+	add $t0, $t1, $t2
+	sw $t0, 68($sp)
+# t38 := *t35
+	lw $t1, 68($sp)
+	lw $t0, 0($t1)
+	sw $t0, 64($sp)
+# t26 := #10 * t38
+	li $t1, 10
+	lw $t2, 64($sp)
+	mul $t0, $t1, $t2
+	sw $t0, 60($sp)
+# t24 := t25 - t26
+	lw $t1, 72($sp)
+	lw $t2, 60($sp)
+	sub $t0, $t1, $t2
+	sw $t0, 56($sp)
+# t39 := &v3 + #8
+	la $t1, 136($sp)
+	li $t2, 8
+	add $t0, $t1, $t2
+	sw $t0, 52($sp)
+# *t39 := t24
+	lw $t1, 56($sp)
+	sw $t1, 0($t0)
+# t42 := &v3 + #0
+	la $t1, 136($sp)
+	li $t2, 0
+	add $t0, $t1, $t2
+	sw $t0, 48($sp)
+# t45 := *t42
+	lw $t1, 48($sp)
+	lw $t0, 0($t1)
+	sw $t0, 44($sp)
+# t46 := &v3 + #8
+	la $t1, 136($sp)
+	li $t2, 8
+	add $t0, $t1, $t2
+	sw $t0, 40($sp)
+# t49 := *t46
+	lw $t1, 40($sp)
+	lw $t0, 0($t1)
+	sw $t0, 36($sp)
+# IF t45 != t49 GOTO label1
+	lw $t1, 44($sp)
+	lw $t2, 36($sp)
+	bne $t1, $t2, label1
+# GOTO label2
+	j label2
+# LABEL label1 :
 label1:
-t19 := v6
-	lw $t1, 0($fp)
+# v2 := #0
+	li $t1, 0
 	move $t0, $t1
-	sw $t0, 0($fp)
-t29 := v7
-	lw $t1, 0($fp)
-	move $t0, $t1
-	sw $t0, 0($fp)
-t30 := v7
-	lw $t1, 0($fp)
-	move $t0, $t1
-	sw $t0, 0($fp)
-t27 := t29 - t30
-	sub $t0, $t0, $t0
-t25 := t27 + #90
-	addi $t4, $t0, 90
-t23 := t25 - #89
-	addi $t0, $t0, -89
-t21 := t23 + #1
-	addi $t5, $t0, 1
-t20 := t21 - #2
-	addi $t0, $t0, -2
-IF t19 > t20 GOTO label2
-	lw $t1, 12($fp)
-	lw $t2, 12($fp)
-	bgt $t1, $t2, label2
-GOTO label3
+	sw $t0, 148($sp)
+# GOTO label3
 	j label3
-LABEL label2 :
+# LABEL label2 :
 label2:
-t32 := v7
-	lw $t1, 0($fp)
-	move $t0, $t1
-	sw $t0, 0($fp)
-t33 := v5
-	lw $t1, 0($fp)
-	move $t0, $t1
-	sw $t0, 0($fp)
-t31 := t32 * t33
-	lw $t1, 12($fp)
-	lw $t2, 12($fp)
-	mul $t3, $t1, $t2
-	sw $t3, 36($fp)
-v7 := t31
-	lw $t1, 0($fp)
-	move $t0, $t1
-	sw $t0, 0($fp)
-t40 := v6
-	lw $t1, 0($fp)
-	move $t0, $t1
-	sw $t0, 0($fp)
-t37 := #2 * t40
-	lw $t1, 12($fp)
-	lw $t2, 12($fp)
-	mul $t3, $t1, $t2
-	sw $t3, 40($fp)
-t44 := v6
-	lw $t1, 0($fp)
-	move $t0, $t1
-	sw $t0, 0($fp)
-t38 := #1 * t44
-	lw $t1, 12($fp)
-	lw $t2, 12($fp)
-	mul $t3, $t1, $t2
-	sw $t3, 44($fp)
-t35 := t37 - t38
-	sub $t0, $t0, $t0
-t34 := t35 - #1
-	addi $t0, $t0, -1
-v6 := t34
-	lw $t1, 0($fp)
-	move $t0, $t1
-	sw $t0, 0($fp)
-GOTO label1
-	j label1
-LABEL label3 :
-label3:
-t46 := v7
-	lw $t1, 0($fp)
-	move $t0, $t1
-	sw $t0, 0($fp)
-RETURN t46
-	sw $t1, 12($fp)
-	lw $v0, 12($fp)
-	move $sp, $fp
-	lw $ra, -4($sp)
-	lw $fp, -8($sp)
-	addiu $sp, $sp, 0
-	jr $ra
-FUNCTION getNumDigits :
-
-getNumDigits:
-	subu $sp, $sp, 0
-PARAM v8
-v9 := #0
-	li $t1, 0
-	sw $t1, 0($fp)
-t49 := v8
-	lw $t1, 0($fp)
-	move $t0, $t1
-	sw $t0, 0($fp)
-IF t49 < #0 GOTO label4
-	li $t10, 0
-	lw $t1, 12($fp)
-	lw $t2, 52($fp)
-	blt $t1, $t2, label4
-GOTO label5
-	j label5
-LABEL label4 :
+# LABEL label4 :
 label4:
-RETURN #-1
-	sw $t1, 12($fp)
-	lw $v0, 12($fp)
-	move $sp, $fp
-	lw $ra, -4($sp)
-	lw $fp, -8($sp)
-	addiu $sp, $sp, 0
-	jr $ra
-LABEL label5 :
-label5:
-LABEL label6 :
-label6:
-t54 := v8
-	lw $t1, 0($fp)
+# t51 := v4
+	lw $t1, 132($sp)
 	move $t0, $t1
-	sw $t0, 0($fp)
-IF t54 > #0 GOTO label7
-	li $t11, 0
-	lw $t1, 12($fp)
-	lw $t2, 56($fp)
-	bgt $t1, $t2, label7
-GOTO label8
-	j label8
-LABEL label7 :
-label7:
-t57 := v8
-	lw $t1, 0($fp)
-	move $t0, $t1
-	sw $t0, 0($fp)
-t56 := t57 / #10
-	div $t0, $t0
-	mflo $t12
-v8 := t56
-	lw $t1, 0($fp)
-	move $t0, $t1
-	sw $t0, 0($fp)
-t60 := v9
-	lw $t1, 0($fp)
-	move $t0, $t1
-	sw $t0, 0($fp)
-t59 := t60 + #2
-	addi $t13, $t0, 2
-v9 := t59
-	lw $t1, 0($fp)
-	move $t0, $t1
-	sw $t0, 0($fp)
-t63 := v9
-	lw $t1, 0($fp)
-	move $t0, $t1
-	sw $t0, 0($fp)
-t62 := t63 + #2
-	addi $t14, $t0, 2
-v9 := t62
-	lw $t1, 0($fp)
-	move $t0, $t1
-	sw $t0, 0($fp)
-t66 := v9
-	lw $t1, 0($fp)
-	move $t0, $t1
-	sw $t0, 0($fp)
-t65 := t66 - #3
-	addi $t0, $t0, -3
-v9 := t65
-	lw $t1, 0($fp)
-	move $t0, $t1
-	sw $t0, 0($fp)
-GOTO label6
+	sw $t0, 32($sp)
+# IF t51 < #12 GOTO label5
+	lw $t1, 32($sp)
+	li $t2, 12
+	blt $t1, $t2, label5
+# GOTO label6
 	j label6
-LABEL label8 :
+# LABEL label5 :
+label5:
+# t56 := v4
+	lw $t1, 132($sp)
+	move $t0, $t1
+	sw $t0, 28($sp)
+# t57 := v4
+	lw $t1, 132($sp)
+	move $t0, $t1
+	sw $t0, 24($sp)
+# t54 := t56 * t57
+	lw $t1, 28($sp)
+	lw $t2, 24($sp)
+	mul $t0, $t1, $t2
+	sw $t0, 20($sp)
+# t55 := v1
+	lw $t1, 156($sp)
+	move $t0, $t1
+	sw $t0, 16($sp)
+# t53 := t54 - t55
+	lw $t1, 20($sp)
+	lw $t2, 16($sp)
+	sub $t0, $t1, $t2
+	sw $t0, 12($sp)
+# IF t53 == #0 GOTO label7
+	lw $t1, 12($sp)
+	li $t2, 0
+	beq $t1, $t2, label7
+# GOTO label8
+	j label8
+# LABEL label7 :
+label7:
+# v2 := #1
+	li $t1, 1
+	move $t0, $t1
+	sw $t0, 148($sp)
+# LABEL label8 :
 label8:
-t69 := v9
-	lw $t1, 0($fp)
+# t61 := v4
+	lw $t1, 132($sp)
 	move $t0, $t1
-	sw $t0, 0($fp)
-RETURN t69
-	sw $t1, 12($fp)
-	lw $v0, 12($fp)
-	move $sp, $fp
-	lw $ra, -4($sp)
-	lw $fp, -8($sp)
-	addiu $sp, $sp, 0
-	jr $ra
-FUNCTION isNarcissistic :
-
-isNarcissistic:
-	subu $sp, $sp, 0
-PARAM v10
-t76 := v10
-	lw $t1, 0($fp)
+	sw $t0, 8($sp)
+# t60 := t61 + #1
+	lw $t1, 8($sp)
+	li $t2, 1
+	add $t0, $t1, $t2
+	sw $t0, 4($sp)
+# v4 := t60
+	lw $t1, 4($sp)
 	move $t0, $t1
-	sw $t0, 0($fp)
-t73 := #1 + t76
-	lw $t1, 12($fp)
-	lw $t2, 12($fp)
-	add $t3, $t1, $t2
-	sw $t3, 72($fp)
-t72 := t73 - #1
-	addi $t0, $t0, -1
-ARG t72
-	lw $a0, 12($fp)
-t71 := CALL getNumDigits
-	jal getNumDigits
-	sw $v0, 12($fp)
-v11 := t71
-	lw $t1, 0($fp)
+	sw $t0, 132($sp)
+# GOTO label4
+	j label4
+# LABEL label6 :
+label6:
+# LABEL label3 :
+label3:
+# t63 := v2
+	lw $t1, 148($sp)
 	move $t0, $t1
-	sw $t0, 0($fp)
-v12 := #0
-	li $t1, 0
-	sw $t1, 0($fp)
-t80 := v10
-	lw $t1, 0($fp)
-	move $t0, $t1
-	sw $t0, 0($fp)
-v13 := t80
-	lw $t1, 0($fp)
-	move $t0, $t1
-	sw $t0, 0($fp)
-LABEL label9 :
+	sw $t0, 0($sp)
+# IF t63 == #1 GOTO label9
+	lw $t1, 0($sp)
+	li $t2, 1
+	beq $t1, $t2, label9
+# GOTO label10
+	j label10
+# LABEL label9 :
 label9:
-t81 := v13
-	lw $t1, 0($fp)
-	move $t0, $t1
-	sw $t0, 0($fp)
-IF t81 > #0 GOTO label10
-	li $t17, 0
-	lw $t1, 12($fp)
-	lw $t2, 80($fp)
-	bgt $t1, $t2, label10
-GOTO label11
+# RETURN #1
+	li $t0, 1
+	move $v0, $t0
+	addi $sp, $sp, 152
+	jr $ra
+# GOTO label11
 	j label11
-LABEL label10 :
+# LABEL label10 :
 label10:
-t84 := v13
-	lw $t1, 0($fp)
-	move $t0, $t1
-	sw $t0, 0($fp)
-ARG #10
-	lw $a0, 12($fp)
-ARG t84
-	lw $a0, 12($fp)
-t83 := CALL mod
-	jal mod
-	sw $v0, 12($fp)
-v14 := t83
-	lw $t1, 0($fp)
-	move $t0, $t1
-	sw $t0, 0($fp)
-t89 := v13
-	lw $t1, 0($fp)
-	move $t0, $t1
-	sw $t0, 0($fp)
-t90 := v14
-	lw $t1, 0($fp)
-	move $t0, $t1
-	sw $t0, 0($fp)
-t87 := t89 - t90
-	sub $t0, $t0, $t0
-t86 := t87 / #10
-	div $t0, $t0
-	mflo $t18
-v13 := t86
-	lw $t1, 0($fp)
-	move $t0, $t1
-	sw $t0, 0($fp)
-t92 := v12
-	lw $t1, 0($fp)
-	move $t0, $t1
-	sw $t0, 0($fp)
-t94 := v14
-	lw $t1, 0($fp)
-	move $t0, $t1
-	sw $t0, 0($fp)
-t95 := v11
-	lw $t1, 0($fp)
-	move $t0, $t1
-	sw $t0, 0($fp)
-ARG t95
-	lw $a0, 12($fp)
-ARG t94
-	lw $a0, 12($fp)
-t93 := CALL power
-	jal power
-	sw $v0, 12($fp)
-t91 := t92 + t93
-	lw $t1, 12($fp)
-	lw $t2, 12($fp)
-	add $t3, $t1, $t2
-	sw $t3, 88($fp)
-v12 := t91
-	lw $t1, 0($fp)
-	move $t0, $t1
-	sw $t0, 0($fp)
-GOTO label9
-	j label9
-LABEL label11 :
+# RETURN #0
+	li $t0, 0
+	move $v0, $t0
+	addi $sp, $sp, 152
+	jr $ra
+# LABEL label11 :
 label11:
-t96 := v12
-	lw $t1, 0($fp)
-	move $t0, $t1
-	sw $t0, 0($fp)
-t97 := v10
-	lw $t1, 0($fp)
-	move $t0, $t1
-	sw $t0, 0($fp)
-IF t96 == t97 GOTO label12
-	lw $t1, 12($fp)
-	lw $t2, 12($fp)
-	beq $t1, $t2, label12
-GOTO label13
-	j label13
-LABEL label12 :
-label12:
-RETURN #1
-	sw $t1, 12($fp)
-	lw $v0, 12($fp)
-	move $sp, $fp
-	lw $ra, -4($sp)
-	lw $fp, -8($sp)
-	addiu $sp, $sp, 0
-	jr $ra
-GOTO label14
-	j label14
-LABEL label13 :
-label13:
-RETURN #0
-	sw $t1, 12($fp)
-	lw $v0, 12($fp)
-	move $sp, $fp
-	lw $ra, -4($sp)
-	lw $fp, -8($sp)
-	addiu $sp, $sp, 0
-	jr $ra
-LABEL label14 :
-label14:
-FUNCTION main :
+# FUNCTION main :
 
 main:
-	subu $sp, $sp, 0
-v15 := #0
-	li $t1, 0
-	sw $t1, 0($fp)
-v16 := #300
-	li $t1, 300
-	sw $t1, 0($fp)
-LABEL label15 :
+	addi $sp, $sp, -636
+# v5 := #100
+	li $t1, 100
+	move $t0, $t1
+	sw $t0, 632($sp)
+# LABEL label12 :
+label12:
+# t71 := v5
+	lw $t1, 632($sp)
+	move $t0, $t1
+	sw $t0, 628($sp)
+# IF t71 < #150 GOTO label13
+	lw $t1, 628($sp)
+	li $t2, 150
+	blt $t1, $t2, label13
+# GOTO label14
+	j label14
+# LABEL label13 :
+label13:
+# t74 := v5
+	lw $t1, 632($sp)
+	move $t0, $t1
+	sw $t0, 624($sp)
+# ARG t74
+	lw $t0, 624($sp)
+	addi $sp, $sp, -4
+	sw $t0, 0($sp)
+# t73 := CALL squaRever
+	addi $sp, $sp, -4
+	sw $ra, 0($sp)
+	jal squaRever
+	lw $ra, 0($sp)
+	addi $sp, $sp, 8
+	move $t0, $v0
+	sw $t0, 620($sp)
+# IF t73 == #1 GOTO label15
+	lw $t1, 620($sp)
+	li $t2, 1
+	beq $t1, $t2, label15
+# GOTO label16
+	j label16
+# LABEL label15 :
 label15:
-t106 := v16
-	lw $t1, 0($fp)
+# t76 := v5
+	lw $t1, 632($sp)
 	move $t0, $t1
-	sw $t0, 0($fp)
-IF t106 < #500 GOTO label16
-	li $t22, 500
-	lw $t1, 12($fp)
-	lw $t2, 100($fp)
-	blt $t1, $t2, label16
-GOTO label17
-	j label17
-LABEL label16 :
+	sw $t0, 616($sp)
+# WRITE t76
+	lw $t0, 616($sp)
+	move $a0, $t0
+	addi $sp, $sp, -4
+	sw $ra, 0($sp)
+	jal write
+	lw $ra, 0($sp)
+	addi $sp, $sp, 4
+# LABEL label16 :
 label16:
-t109 := v16
-	lw $t1, 0($fp)
+# t78 := v5
+	lw $t1, 632($sp)
 	move $t0, $t1
-	sw $t0, 0($fp)
-ARG t109
-	lw $a0, 12($fp)
-t108 := CALL isNarcissistic
-	jal isNarcissistic
-	sw $v0, 12($fp)
-IF t108 == #1 GOTO label18
-	li $t23, 1
-	lw $t1, 12($fp)
-	lw $t2, 104($fp)
-	beq $t1, $t2, label18
-GOTO label19
-	j label19
-LABEL label18 :
-label18:
-t111 := v16
-	lw $t1, 0($fp)
+	sw $t0, 612($sp)
+# t77 := t78 + #1
+	lw $t1, 612($sp)
+	li $t2, 1
+	add $t0, $t1, $t2
+	sw $t0, 608($sp)
+# v5 := t77
+	lw $t1, 608($sp)
 	move $t0, $t1
-	sw $t0, 0($fp)
-WRITE t111
-	lw $a0, 12($fp)
-	lw $a0, 12($fp)
-	jal write
-t113 := v15
-	lw $t1, 0($fp)
-	move $t0, $t1
-	sw $t0, 0($fp)
-t112 := t113 + #1
-	addi $t24, $t0, 1
-v15 := t112
-	lw $t1, 0($fp)
-	move $t0, $t1
-	sw $t0, 0($fp)
-LABEL label19 :
-label19:
-t116 := v16
-	lw $t1, 0($fp)
-	move $t0, $t1
-	sw $t0, 0($fp)
-t115 := t116 + #1
-	addi $t25, $t0, 1
-v16 := t115
-	lw $t1, 0($fp)
-	move $t0, $t1
-	sw $t0, 0($fp)
-GOTO label15
-	j label15
-LABEL label17 :
-label17:
-t118 := v15
-	lw $t1, 0($fp)
-	move $t0, $t1
-	sw $t0, 0($fp)
-WRITE t118
-	lw $a0, 12($fp)
-	lw $a0, 12($fp)
-	jal write
-t120 := v15
-	lw $t1, 0($fp)
-	move $t0, $t1
-	sw $t0, 0($fp)
-RETURN t120
-	sw $t1, 12($fp)
-	lw $v0, 12($fp)
-	move $sp, $fp
-	lw $ra, -4($sp)
-	lw $fp, -8($sp)
-	addiu $sp, $sp, 0
+	sw $t0, 632($sp)
+# GOTO label12
+	j label12
+# LABEL label14 :
+label14:
+# RETURN #0
+	li $t0, 0
+	move $v0, $t0
+	addi $sp, $sp, 636
 	jr $ra
