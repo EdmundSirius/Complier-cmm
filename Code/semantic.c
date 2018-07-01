@@ -843,6 +843,26 @@ int getFuncReturnType(char* text) {
     return -1;
 }
 
+// void setFuncFrameSize(char *text, int reg_no) {
+//     unsigned int key = hashPJW(text);
+//     if (!strcmp(text, "")) {
+//         return;
+//     }
+//     if (symboltable[key].occupied) {
+//       if (symboltable[key].type->kind == FUNCTION) {
+//           symboltable[key].type->u.function.framesize = 24 + 4 * reg_no;
+//       }
+//       else {
+//           assert(0);
+//       }
+//     }
+//     else {
+//         printf("%s\n", text);
+//         // assert(0);
+//     }
+// }
+
+
 // FunDec -> ID LP VarList RP
 // | ID LP RP
 

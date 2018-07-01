@@ -4,6 +4,8 @@
 #define SYMBOL_TABLE_SIZE 0x4000
 
 #include "parse.h"
+#include "generate.h"
+#include "ir.h"
 #include <assert.h>
 
 typedef enum { false, true } bool;
@@ -17,6 +19,7 @@ typedef struct Function
     enum { INT, FLOAT } returnvalue;
     int argsum;
     int argbasic[8];
+    int framesize;
 } Function;
 
 
@@ -46,17 +49,34 @@ typedef struct FieldList_
     FieldList tail;
 } FieldList_;
 
+typedef struct Symbol {
+    int no[512];
+    int type[512];
+    int scale[512];
+    int size;
+} Symbol;
+
 typedef struct SymbolTable {
   	char name[32];
     Type type;
     int lineno;
     bool occupied;
     bool isParam;
+    Symbol para;
+    Symbol temp;
+    int argno;
 } SymbolTable;
+
+typedef struct FunctionTable {
+    SymbolTable symboltable;
+    Symbol para;
+    Symbol temp;
+    int argno;
+} FunctionTable;
 
 struct SymbolTable symboltable[0x4000];
 
-struct SymbolTable functionTable[128];
+struct FunctionTable functionTable[128];
 
 struct SymbolTable varTable[128];
 
@@ -143,6 +163,7 @@ void getFuncPrototype(char*, char*);
 void getArgType(int*, Node);
 void getArguments(char*, int*, int);
 bool isLegalField(Node, Node);
+// void setFuncFrameSize(char *, int);
 
 int getNodeType(Node);
 int getRetValue(char*);
@@ -163,6 +184,7 @@ bool isInStructure(int, char*);
 bool isArray(char*);
 bool isEqualStruct(int, int);
 bool isFunction(char*);
+
 
 extern char functionName[128];
 extern char name[128];

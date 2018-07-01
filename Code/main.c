@@ -3,8 +3,11 @@
 #include "semantic.h"
 #include "translate.h"
 #include "ir.h"
+#include "generate.h"
+
 extern void yyparse();
 extern void yyrestart(FILE*);
+char outputFile[128];
 
 int main(int argc, char** argv) {
     if (argc <= 1)
@@ -34,14 +37,15 @@ int main(int argc, char** argv) {
         semanticAnalysis();
         fp = fopen(argv[2], "w");
         if(fp == NULL) {
-            fp = fopen("out.ir", "w");
-            strcpy(outputFile, "out.ir");
+            fp = fopen("out.s", "w");
+            strcpy(outputFile, "out.s");
         }
         else {
             strcpy(outputFile, argv[2]);
         }
         interCodeGenerate();
         interCodeOptimize();
+        codeGenerate();
         fclose(fp);
     }
 

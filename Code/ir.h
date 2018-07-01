@@ -31,14 +31,13 @@ typedef struct InterCode {
         struct { Operand x, y, z; } triop;
         struct { Operand x, y, z; Relop relop; } ifop;
     };
-
 } InterCode;
 
 typedef struct InterCodes
 {
     InterCode intercode;
     struct list_head list;
-    bool isLeader;
+    int isLeader;
 } InterCodes;
 
 extern struct list_head head;

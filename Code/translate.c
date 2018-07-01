@@ -11,7 +11,6 @@ int arg_no = 0;
 int isParam[4096];
 FILE *fp;
 struct list_head head;
-char outputFile[128];
 
 void preInterCodeGenerate() {
 
@@ -28,7 +27,7 @@ void preInterCodeGenerate() {
 }
 
 void printInterCodes() {
-    FILE *fp = fopen("out.ir", "wt");
+    fp = fopen("out.ir", "wt");
     if(fp == NULL)
         assert(0);
     struct list_head *plist;
@@ -44,7 +43,10 @@ void interCodeGenerate() {
     if (!strcmp(root->name, "Program")) {
         translate_ExtDefList(Child(0));
     }
+#ifdef OUTPUT_ORI_IR
     writeFile("original.ir");
+#endif
+
 #ifdef PRINT_IR
     printInterCodes();
 #endif
@@ -113,7 +115,8 @@ void translate_VarDec(Node root) {
       operand->kind = OP_SIZE;
       var->kind = OP_VARIABLE;
       int i = 0;
-      operand->u.no = 8;
+      operand->u.no = 4;
+      /*TODO: ???*/
       for (; i < size; ++i) {
           root = Child(0);
           operand->u.no = operand->u.no * array->size[i];
@@ -389,9 +392,9 @@ void translate_Array(Node root, Operand operand, int direction) {
 
 #ifdef TRANSLATE
     printf("ARRAY:");
-    int i = 0;
-    for (; i < size; ++i) {
-        printf("[%d]", array->size[i]);
+    int j = 0;
+    for (; j < size; ++j) {
+        printf("[%d]", array->size[j]);
     }
     printf("\n");
 #endif

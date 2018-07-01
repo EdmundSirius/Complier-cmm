@@ -228,7 +228,8 @@ void printInterCode(InterCode intercode) {
         case IR_GETADD:
             symbolHandle(op1, intercode.biop.x);
             symbolHandle(op2, intercode.biop.y);
-            sprintf(code, "%s := &%s\n", op1, op2); break;
+            sprintf(code, "%s := &%s\n", op1, op2);
+            break;
 
         case IR_GETVAL:
             symbolHandle(op1, intercode.biop.x);
@@ -296,7 +297,12 @@ void printInterCode(InterCode intercode) {
           assert(0);
     }
 #ifdef PRINT_IR
-    printf("%s", code);
+    // printf("%s", code);
+    FILE *fps = fopen("out.s", "a+");
+    if(fps == NULL)
+        assert(0);
+    fprintf(fps, "%s", code);
+    fclose(fps);
 #endif
     fprintf(fp, "%s", code);
 }
