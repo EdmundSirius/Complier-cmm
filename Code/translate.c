@@ -11,7 +11,6 @@ int arg_no = 0;
 int isParam[4096];
 FILE *fp;
 struct list_head head;
-char outputFile[128];
 
 void preInterCodeGenerate() {
 
@@ -28,7 +27,7 @@ void preInterCodeGenerate() {
 }
 
 void printInterCodes() {
-    FILE *fp = fopen("out.ir", "wt");
+    fp = fopen("out.ir", "wt");
     if(fp == NULL)
         assert(0);
     struct list_head *plist;
@@ -44,7 +43,10 @@ void interCodeGenerate() {
     if (!strcmp(root->name, "Program")) {
         translate_ExtDefList(Child(0));
     }
+#ifdef OUTPUT_ORI_IR
     writeFile("original.ir");
+#endif
+
 #ifdef PRINT_IR
     printInterCodes();
 #endif

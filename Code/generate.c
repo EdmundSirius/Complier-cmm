@@ -6,11 +6,9 @@
 #include <stdlib.h>
 
 int reg_no = 0;
-int depth = 12;
 int tCounter = 0;
 int pCounter = 0;
 char func_name[128];
-Operand regTable[1024];
 int getRegNo(Operand operand);
 int curFuncNo = -1;
 int argNo = 0;
@@ -28,11 +26,9 @@ void setupTable() {
           switch (intercode.kind) {
               case IR_DEC:
                   setArrayVar(intercode.biop.x, intercode.biop.y->u.no);
-                  /*TODO:*/
                   break;
               case IR_CALL:
                   setTempVar(intercode.op.x);
-
                   break;
               case IR_ARG:
                   functionTable[key].argno = ++argNo;
@@ -69,11 +65,15 @@ void setupTable() {
               case IR_FUNC:
                   ++curFuncNo;
                   getFuncName(func_name, intercode.op.x->u.no);
+              #ifdef PRINT_GENERATE
                   printf("NAME: (%s)", func_name);
+              #endif
                   for (i = 0; i < 128; ++i) {
-                      if (!strcmp(func_name, functionTable[i].name)) {
+                      if (!strcmp(func_name, functionTable[i].symboltable.name)) {
                           key = i;
+                      #ifdef PRINT_GENERATE
                           printf("(%d)\n", key);
+                      #endif
                           break;
                       }
                   }
@@ -89,10 +89,10 @@ void setupTable() {
 }
 
 void printPara(){
-  printf("**----------------------------------**\n");
+  printf("----------------------------------\n");
   int i, j;
   for (i = 2; i < curFuncNo + 2 + 1; ++i) {
-      printf("%s TempNo: %d ArgNo: %d\n", functionTable[i].name, functionTable[i].temp.size, functionTable[i].argno);
+      printf("%s TempNo: %d ArgNo: %d\n", functionTable[i].symboltable.name, functionTable[i].symboltable.temp.size, functionTable[i].symboltable.argno);
       for (j = 0; j < functionTable[i].para.size; ++j) {
           printf("PARAM%d\t", j + 1);
           if (functionTable[i].para.type[j] == OP_TEMPORARY) {
@@ -107,30 +107,32 @@ void printPara(){
 }
 
 void printTemp(){
-  printf("**----------------------------------**\n");
+  printf("----------------------------------\n");
   int i, j;
   for (i = 2; i < curFuncNo + 2 + 1; ++i) {
-      printf("%s TempNo: %d ArgNo: %d\n", functionTable[i].name, functionTable[i].temp.size, functionTable[i].argno);
-      for (j = 0; j < functionTable[i].temp.size; ++j) {
+      printf("%s TempNo: %d ArgNo: %d\n", functionTable[i].symboltable.name, functionTable[i].symboltable.temp.size, functionTable[i].symboltable.argno);
+      for (j = 0; j < functionTable[i].symboltable.temp.size; ++j) {
           printf("TEMP%d\t", j + 1);
-          if (functionTable[i].temp.type[j] == OP_TEMPORARY) {
+          if (functionTable[i].symboltable.temp.type[j] == OP_TEMPORARY) {
               printf("t");
           }
           else {
               printf("v");
           }
-          printf("%d ", functionTable[i].temp.no[j]);
-          printf("%d\n", functionTable[i].temp.scale[j]);
+          printf("%d ", functionTable[i].symboltable.temp.no[j]);
+          printf("%d\n", functionTable[i].symboltable.temp.scale[j]);
       }
   }
 }
 
-void CodeGenerate() {
+void codeGenerate() {
     setupTable();
+  #ifdef PRINT_GENERATE
     printPara();
     printTemp();
+  #endif
     curFuncNo = -1;
-    FILE *fp = fopen("out.s", "wt");
+    FILE *fp = fopen(outputFile, "wt");
     if(fp == NULL)
         assert(0);
     char *preCodeGenerate = ".data\n_prompt: .asciiz \"Enter an integer:\"\n_ret: .asciiz \"\\n\"\n.globl main\n.text\nread:\n\tli $v0, 4\n\tla $a0, _prompt\n\tsyscall\n\tli $v0, 5\n\tsyscall\n\tjr $ra\n\nwrite:\n\tli $v0, 1\n\tsyscall\n\tli $v0, 4\n\tla $a0, _ret\n\tsyscall\n\tmove $v0, $0\n\tjr $ra\n";
@@ -143,7 +145,8 @@ void CodeGenerate() {
     list_for_each(plist, &head) {
         InterCodes *node = list_entry(plist, InterCodes, list);
         InterCode intercode = node->intercode;
-        fputs("# ", fp); printInterCode(intercode);
+        fputs("# ", fp);
+        printInterCode(intercode);
         switch (intercode.kind) {
             case IR_LABEL:
                 symbolHandle(op1, intercode.op.x);
@@ -154,15 +157,17 @@ void CodeGenerate() {
                 ++curFuncNo;
                 getFuncName(func, intercode.op.x->u.no);
                 for (i = 0; i < 128; ++i) {
-                    if (!strcmp(func, functionTable[i].name)) {
+                    if (!strcmp(func, functionTable[i].symboltable.name)) {
                         for (j = 0; j < functionTable[i].temp.size; ++j) {
                               frameSize += functionTable[i].temp.scale[j];
                         }
                         frameSize *= 4;
                         frameCur = frameSize;
                         paraSize = functionTable[i].para.size * 4;
+                        #ifdef PRINT_GENERATE
                         printf("frameSize: %d ", frameSize);
                         printf("paraSize: %d\n", paraSize);
+                        #endif
                         break;
                     }
                 }
@@ -324,12 +329,16 @@ void CodeGenerate() {
                 sprintf(code, "\tsw $t0, %d($sp)\n", frameCur - 4 * reg1_no);
                 fputs(code, fp);
                 break;
-/*
+
             case IR_GETADD:
-                symbolHandle(op1, intercode.biop.x);
-                symbolHandle(op2, intercode.biop.y);
-                sprintf(code, "%s := &%s\n", op1, op2); break;
-*/
+                reg2_no = getRegNo(intercode.biop.y);
+                sprintf(code, "\tla $t0, %d($sp)\n", frameCur - 4 * reg2_no);
+                fputs(code, fp);
+                reg1_no = getRegNo(intercode.biop.x);
+                sprintf(code, "\tsw $t0, %d($sp)\n", frameCur - 4 * reg1_no);
+                fputs(code, fp);
+                break;
+
             case IR_GETVAL:
                 reg1_no = getRegNo(intercode.biop.x);
                 reg2_no = getRegNo(intercode.biop.y);
@@ -368,7 +377,6 @@ void CodeGenerate() {
                 }
                 fputs(code, fp);
 
-
                 switch (intercode.ifop.relop) {
                     case RELGT: fputs("\tbgt ", fp); break;
                     case RELLT: fputs("\tblt ", fp); break;
@@ -401,6 +409,7 @@ void CodeGenerate() {
                 break;
 
             case IR_DEC:
+            case IR_PARAM:
                 break;
 
             case IR_ARG:
@@ -439,9 +448,6 @@ void CodeGenerate() {
                 fputs(code, fp);
                 sprintf(code, "\tsw $t0, %d($sp)\n", frameCur - 4 * reg1_no);
                 fputs(code, fp);
-                break;
-
-            case IR_PARAM:
                 break;
 
             case IR_READ:
@@ -499,7 +505,7 @@ void setTempVar(Operand operand) {
     if (operand->kind == OP_ADDRESS) kind = OP_VARIABLE;
     if (operand->kind == OP_VALUE) kind = OP_TEMPORARY;
     for (i = 0; i < 128; ++i) {
-        if (!strcmp(func_name, functionTable[i].name)) {
+        if (!strcmp(func_name, functionTable[i].symboltable.name)) {
             for (k = 0; k < tCounter; ++k) {
                 if (functionTable[i].temp.no[k] == operand->u.no) {
                     if (functionTable[i].temp.type[k] == kind) {
@@ -514,10 +520,6 @@ void setTempVar(Operand operand) {
                     }
                 }
             }
-            printf("+%d: ", tCounter);
-            if (kind == OP_TEMPORARY) printf("t");
-            else printf("v");
-            printf("%d\n", operand->u.no);
             functionTable[i].temp.no[tCounter] = operand->u.no;
             functionTable[i].temp.type[tCounter] = kind;
             functionTable[i].temp.scale[tCounter] = 1;
@@ -532,7 +534,7 @@ void setTempVar(Operand operand) {
 void setArrayVar(Operand operand, int size) {
   int i, j, k;
   for (i = 0; i < 128; ++i) {
-      if (!strcmp(func_name, functionTable[i].name)) {
+      if (!strcmp(func_name, functionTable[i].symboltable.name)) {
           for (k = 0; k < tCounter; ++k) {
               if (functionTable[i].temp.no[k] == operand->u.no) {
                   if (functionTable[i].temp.type[k] == operand->kind) {
@@ -547,10 +549,16 @@ void setArrayVar(Operand operand, int size) {
                   }
               }
           }
+
+      #ifdef PRINT_GENERATE
           printf("%d %d: (ARRAY)", i, tCounter);
-          if (operand->kind == OP_TEMPORARY) printf("t");
-          else printf("v");
+          if (operand->kind == OP_TEMPORARY)
+              printf("t");
+          else
+              printf("v");
           printf("%d\n", operand->u.no);
+      #endif
+
           functionTable[i].temp.no[tCounter] = operand->u.no;
           functionTable[i].temp.type[tCounter] = operand->kind;
           functionTable[i].temp.scale[tCounter] = size / 4;
@@ -563,7 +571,7 @@ void setArrayVar(Operand operand, int size) {
 int getFuncArgSum(char* text) {
     int i;
     for (i = 0; i < 128; ++i) {
-        if (!strcmp(text, functionTable[i].name)) {
+        if (!strcmp(text, functionTable[i].symboltable.name)) {
             return functionTable[i].para.size;
         }
     }
@@ -586,8 +594,12 @@ int getRegNo(Operand operand) {
         if (operand->u.no == functionTable[i].temp.no[j] && kind == functionTable[i].temp.type[j]) {
             for (k = 0; k <= j; ++k)
                 ret += functionTable[i].temp.scale[k];
+
+        #ifdef PRINT_GENERATE
             if (kind == OP_TEMPORARY) printf("t"); else printf("v");
             printf("%d :%d\n", operand->u.no, ret);
+        #endif
+
             return ret;
        }
     }
@@ -595,19 +607,13 @@ int getRegNo(Operand operand) {
     for (j = 0; j < functionTable[i].para.size; ++j) {
         if (operand->u.no == functionTable[i].para.no[j] && kind == functionTable[i].para.type[j]) {
             ret = j + 1;
+
+        #ifdef PRINT_GENERATE
             printf("-ret :%d\n", -ret);
+        #endif
+
             return -ret;
         }
     }
     return 0;
 }
-
-// void printRegTable() {
-//     int i = 0;
-//     for (; i < reg_no; ++i) {
-//         printf("$t%d\t", i + 1);
-//         if (regTable[i]->kind == OP_TEMPORARY) printf("t");
-//         else printf("v");
-//         printf("%d\n", regTable[i]->u.no);
-//     }
-// }

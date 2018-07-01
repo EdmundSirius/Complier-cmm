@@ -228,7 +228,8 @@ void printInterCode(InterCode intercode) {
         case IR_GETADD:
             symbolHandle(op1, intercode.biop.x);
             symbolHandle(op2, intercode.biop.y);
-            sprintf(code, "%s := &%s\n", op1, op2); break;
+            sprintf(code, "%s := &%s\n", op1, op2);
+            break;
 
         case IR_GETVAL:
             symbolHandle(op1, intercode.biop.x);

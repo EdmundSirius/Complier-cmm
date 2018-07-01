@@ -1,6 +1,6 @@
 int main() {
     int x[3];
-    x[1] = read();
-    write(x[1]);
+    x[0] = read();
+    write(x[0]);
     return 0;
 }

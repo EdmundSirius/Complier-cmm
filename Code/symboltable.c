@@ -110,8 +110,8 @@ void insertFuncSymbolTable(char* name, Function *function) {
     symboltable[key].type = thistype;
     strcpy(symboltable[key].name, name);
 
-    functionTable[funcNo].type = thistype;
-    strcpy(functionTable[funcNo++].name, name);
+    functionTable[funcNo].symboltable.type = thistype;
+    strcpy(functionTable[funcNo++].symboltable.name, name);
 
 #ifdef PRINT_TABLE
     printf("insert FUNCTION[%d %s]: ", key, name);
@@ -122,13 +122,13 @@ void insertFuncSymbolTable(char* name, Function *function) {
 }
 
 void getFuncName(char* name, int no) {
-    strcpy(name, functionTable[no].name);
+    strcpy(name, functionTable[no].symboltable.name);
 }
 
 int getFuncNo(char* name) {
     int i = 0;
     for (; i < funcNo; ++i) {
-        if (!strcmp(name, functionTable[i].name)) {
+        if (!strcmp(name, functionTable[i].symboltable.name)) {
             return i;
         }
     }
@@ -374,9 +374,9 @@ void printSymbolTable() {
     printf("------------------functionTable------------------\n");
     i = 0;
     for (; i < funcNo; ++i) {
-        printf("* %d: * %s ", i, functionTable[i].name);
-        printf("retValue(%d); ", functionTable[i].type->u.function.returnvalue);
-        printf("argSum(%d)\n", functionTable[i].type->u.function.argsum);
+        printf("* %d: * %s ", i, functionTable[i].symboltable.name);
+        printf("retValue(%d); ", functionTable[i].symboltable.type->u.function.returnvalue);
+        printf("argSum(%d)\n", functionTable[i].symboltable.type->u.function.argsum);
     }
 
     printf("--------------------varTable--------------------\n");

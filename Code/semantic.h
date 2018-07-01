@@ -20,7 +20,6 @@ typedef struct Function
     int argsum;
     int argbasic[8];
     int framesize;
-
 } Function;
 
 
@@ -68,9 +67,16 @@ typedef struct SymbolTable {
     int argno;
 } SymbolTable;
 
+typedef struct FunctionTable {
+    SymbolTable symboltable;
+    Symbol para;
+    Symbol temp;
+    int argno;
+} FunctionTable;
+
 struct SymbolTable symboltable[0x4000];
 
-struct SymbolTable functionTable[128];
+struct FunctionTable functionTable[128];
 
 struct SymbolTable varTable[128];
 
