@@ -7,6 +7,6 @@
 extern void codeGenerate();
 extern int getRegSum();
 extern void setupTable();
-extern int getFuncArgSum(char*);
+extern int getFuncArgSum(char *);
 
 #endif

@@ -9,7 +9,8 @@ int IN_STRUCT;
 void semanticAnalysis() {
     // initSymbolTable();
     /* unnecessary cuz struct varaibles are initialized impicitly
-    the same way as objects that have static storage duration. */
+     * the same way as objects that have static storage duration.
+     */
     if (root == NULL) return;
     if (!strcmp(root->name, "Program")) {
         handleExtDefList(Child(0));
