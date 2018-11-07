@@ -148,11 +148,13 @@ void codeGenerate() {
         fputs("# ", fp);
         printInterCode(intercode);
         switch (intercode.kind) {
+            
             case IR_LABEL:
                 symbolHandle(op1, intercode.op.x);
                 sprintf(code, "%s:\n", op1);
                 fputs(code, fp);
                 break;
+
             case IR_FUNC:
                 ++curFuncNo;
                 getFuncName(func, intercode.op.x->u.no);

@@ -1,6 +1,0 @@
-int main() {
-    int x[3];
-    x[0] = read();
-    write(x[0]);
-    return 0;
-}
